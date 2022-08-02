@@ -14,6 +14,8 @@ const Auth = () => {
     <>
       <h1>Sign up</h1>
       <SignUpForm />
+      <h1>Sign in</h1>
+      <SignInForm />
       <Button theme="primary" themeType="outline" onClick={handleClick}>
         Go back home
       </Button>

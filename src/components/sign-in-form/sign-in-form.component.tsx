@@ -1,26 +1,24 @@
 import { Form, TextField, Password } from "@react-md/form";
 import { Button } from "@react-md/button";
 import { useState, FormEvent } from "react";
+import { createUserDocFromAuth, getUserDocFromAuth, signInAuthUserWithEmailAndPassword } from "../../utils/firebase/firebase.utils";
 
-import { createAuthUserWithEmailAndPassword, createUserDocFromAuth } from "../../utils/firebase/firebase.utils";
-
-const SignUpForm = () => {
-  const [displayName, setDisplayName] = useState("");
+const SignInForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log("signup")
 
     try {
-      const userCredential = await createAuthUserWithEmailAndPassword(email, password);
+      const userCredential = await signInAuthUserWithEmailAndPassword(email, password);
 
       if (userCredential) {
-        await createUserDocFromAuth(userCredential.user, { displayName });
+        const userData = await getUserDocFromAuth(userCredential.user);
+        alert(`Hello again, ${userData?.displayName}!`);
       }
     } catch (error: any) {
-      alert("error signing up");
+      alert("error signing in");
       console.log(error)
     }
   };
@@ -28,14 +26,6 @@ const SignUpForm = () => {
   return (
     <div>
       <Form onSubmit={handleSubmit}>
-        <TextField
-          id="displayName"
-          label="DisplayName"
-          name="displayName"
-          value={displayName}
-          onChange={(event) => setDisplayName(event.currentTarget.value)}
-          required
-        />
         <TextField
           id="email"
           label="Email"
@@ -54,11 +44,11 @@ const SignUpForm = () => {
           required
         />
         <Button id="submit" type="submit" themeType="outline">
-          Sign up
+          Sign in
         </Button>
       </Form>
     </div>
   )
 }
 
-export default SignUpForm
+export default SignInForm

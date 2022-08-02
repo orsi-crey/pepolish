@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { createUserWithEmailAndPassword, getAuth, User } from 'firebase/auth';
+import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword, User } from 'firebase/auth';
 import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore'
 
 const firebaseConfig = {
@@ -45,8 +45,22 @@ export const createUserDocFromAuth = async (userAuth: User, additionalInfo = {})
   return userDocRef;
 }
 
+export const getUserDocFromAuth = async (userAuth: User) => {
+  if (!userAuth) return;
+
+  const userDocRef = doc(db, 'users', userAuth.uid);
+  const userSnapshot = await getDoc(userDocRef);
+  return userSnapshot.data();
+}
+
 export const createAuthUserWithEmailAndPassword = async (email: string, password: string) => {
   if (!email || !password) return;
 
   return await createUserWithEmailAndPassword(auth, email, password);
+}
+
+export const signInAuthUserWithEmailAndPassword = async (email: string, password: string) => {
+  if (!email || !password) return;
+
+  return await signInWithEmailAndPassword(auth, email, password);
 }
