@@ -2,7 +2,7 @@ import { createContext, ReactNode, useState } from "react";
 
 export type UserContextType = {
   currentUser: string | null,
-  setCurrentUser: React.Dispatch<React.SetStateAction<string>>
+  setCurrentUser: (value: string) => void
 }
 
 export const UserContext = createContext<UserContextType>({
@@ -11,8 +11,10 @@ export const UserContext = createContext<UserContextType>({
 });
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
-  const [currentUser, setCurrentUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState("");
   const value = { currentUser, setCurrentUser };
 
-  return <UserContext.Provider value={{ currentUser, setCurrentUser }}>{children}</UserContext.Provider>
+  
+
+  return <UserContext.Provider value={value}>{children}</UserContext.Provider>
 };
