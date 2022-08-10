@@ -7,7 +7,7 @@ import { UserContext } from "../../contexts/user.context";
 const Home = () => {
   const navigate = useNavigate();
 
-  const { currentUser } = useContext(UserContext);
+  const { username } = useContext(UserContext);
 
   function handleClick() {
     navigate("/auth");
@@ -15,7 +15,7 @@ const Home = () => {
 
   return (
     <>
-      {currentUser ? <div>Hi {currentUser}!</div>
+      {username ? <div>Hi {username}!</div>
         :
         <>
           <div>Hi!</div>

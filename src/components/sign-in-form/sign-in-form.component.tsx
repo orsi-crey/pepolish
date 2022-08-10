@@ -11,7 +11,7 @@ const SignInForm = () => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const { setCurrentUser } = useContext(UserContext);
+  const { setUsername } = useContext(UserContext);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -21,7 +21,7 @@ const SignInForm = () => {
 
       if (userCredential) {
         const userData = await getUserDocFromAuth(userCredential.user);
-        setCurrentUser(userData?.displayName);
+        setUsername(userData?.displayName);
         navigate("/");
       }
     } catch (error: any) {
