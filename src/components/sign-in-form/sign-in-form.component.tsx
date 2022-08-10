@@ -1,17 +1,17 @@
 import { Form, TextField, Password } from "@react-md/form";
 import { Button } from "@react-md/button";
 import { useState, FormEvent, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { getUserDocFromAuth, signInAuthUserWithEmailAndPassword } from "../../utils/firebase/firebase.utils";
 import { UserContext } from "../../contexts/user.context";
-import { useNavigate } from "react-router-dom";
 
 const SignInForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const { setUsername } = useContext(UserContext);
+  const { setUsername, setIsLoggedIn } = useContext(UserContext);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -22,6 +22,7 @@ const SignInForm = () => {
       if (userCredential) {
         const userData = await getUserDocFromAuth(userCredential.user);
         setUsername(userData?.displayName);
+        setIsLoggedIn(true);
         navigate("/");
       }
     } catch (error: any) {

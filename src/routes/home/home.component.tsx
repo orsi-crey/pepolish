@@ -7,19 +7,28 @@ import { UserContext } from "../../contexts/user.context";
 const Home = () => {
   const navigate = useNavigate();
 
-  const { username } = useContext(UserContext);
+  const { isLoggedIn, username } = useContext(UserContext);
 
-  function handleClick() {
+  function handleLoginClick() {
     navigate("/auth");
+  }
+  function handleProfileClick() {
+    navigate("/profile");
   }
 
   return (
     <>
-      {username ? <div>Hi {username}!</div>
+      {isLoggedIn ?
+        <>
+          <div>Hi {username}!</div>
+          <Button theme="primary" onClick={handleProfileClick}>
+            Click to edit profile!
+          </Button>
+        </>
         :
         <>
           <div>Hi!</div>
-          <Button theme="primary" themeType="contained" onClick={handleClick}>
+          <Button theme="primary" themeType="contained" onClick={handleLoginClick}>
             Click to log in
           </Button>
         </>
