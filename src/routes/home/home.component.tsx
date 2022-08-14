@@ -3,6 +3,7 @@ import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { UserContext } from "../../contexts/user.context";
+import { HomeContainer } from "./home.styles";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -17,23 +18,27 @@ const Home = () => {
   }
 
   return (
-    <>
+    <HomeContainer>
       {isLoggedIn ?
         <>
           <div>Hi {username}!</div>
-          <Button theme="primary" onClick={handleProfileClick}>
-            Click to edit profile!
-          </Button>
+          <div>
+            <Button theme="primary" onClick={handleProfileClick}>
+              Click to edit profile!
+            </Button>
+          </div>
         </>
         :
         <>
           <div>Hi!</div>
-          <Button theme="primary" themeType="contained" onClick={handleLoginClick}>
-            Click to log in
-          </Button>
+          <div>
+            <Button theme="primary" themeType="contained" onClick={handleLoginClick}>
+              Click to log in
+            </Button>
+          </div>
         </>
       }
-    </>
+    </HomeContainer>
 
   )
 }
