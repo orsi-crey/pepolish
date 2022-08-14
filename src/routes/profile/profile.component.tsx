@@ -10,7 +10,7 @@ const Profile = () => {
   const { isLoggedIn, username, userdata, setUserdata } = useContext(UserContext);
 
   function handleClick() {
-    navigate("/auth");
+    navigate("/sign-in");
   }
 
   return (

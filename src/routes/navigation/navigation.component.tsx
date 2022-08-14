@@ -17,7 +17,7 @@ const Navigation = () => {
           <div>Log out</div>
           :
           <div>
-            <Link to='/auth'>Sign in</Link>
+            <Link to='/sign-in'>Sign in</Link>
           </div>}
       </NavigationContainer>
       <Outlet />

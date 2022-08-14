@@ -11,7 +11,7 @@ const Home = () => {
   const { isLoggedIn, username } = useContext(UserContext);
 
   function handleLoginClick() {
-    navigate("/auth");
+    navigate("/sign-in");
   }
   function handleProfileClick() {
     navigate("/profile");
