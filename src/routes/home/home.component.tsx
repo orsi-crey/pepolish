@@ -1,9 +1,9 @@
-import { Button } from "@react-md/button";
-import { useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { Button } from '@react-md/button';
+import { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import { UserContext } from "../../contexts/user.context";
-import { HomeContainer } from "./home.styles";
+import { UserContext } from '../../contexts/user.context';
+import { HomeContainer } from './home.styles';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -11,10 +11,10 @@ const Home = () => {
   const { isLoggedIn, username } = useContext(UserContext);
 
   function handleLoginClick() {
-    navigate("/sign-in");
+    navigate('/sign-in');
   }
   function handleProfileClick() {
-    navigate("/profile");
+    navigate('/profile');
   }
 
   return (
@@ -40,7 +40,7 @@ const Home = () => {
       }
     </HomeContainer>
 
-  )
-}
+  );
+};
 
-export default Home
+export default Home;

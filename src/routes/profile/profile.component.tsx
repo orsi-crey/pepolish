@@ -1,8 +1,8 @@
-import { Button } from "@react-md/button";
-import { useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { Button } from '@react-md/button';
+import { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import { UserContext } from "../../contexts/user.context";
+import { UserContext } from '../../contexts/user.context';
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -10,7 +10,7 @@ const Profile = () => {
   const { isLoggedIn, username, userdata, setUserdata } = useContext(UserContext);
 
   function handleClick() {
-    navigate("/sign-in");
+    navigate('/sign-in');
   }
 
   return (
@@ -34,7 +34,7 @@ const Profile = () => {
       }
     </>
 
-  )
-}
+  );
+};
 
-export default Profile
+export default Profile;

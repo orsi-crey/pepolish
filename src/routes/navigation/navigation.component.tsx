@@ -1,8 +1,8 @@
-import { useContext } from "react";
-import { useNavigate, Link, Outlet } from "react-router-dom";
+import { useContext } from 'react';
+import { useNavigate, Link, Outlet } from 'react-router-dom';
 
-import { UserContext } from "../../contexts/user.context";
-import { NavigationContainer } from "./navigation.styles";
+import { UserContext } from '../../contexts/user.context';
+import { NavigationContainer } from './navigation.styles';
 
 const Navigation = () => {
   const navigate = useNavigate();
@@ -22,7 +22,7 @@ const Navigation = () => {
       </NavigationContainer>
       <Outlet />
     </div>
-  )
-}
+  );
+};
 
-export default Navigation
+export default Navigation;

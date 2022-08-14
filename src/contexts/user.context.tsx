@@ -1,7 +1,7 @@
-import { User } from "firebase/auth";
-import { createContext, ReactNode, useEffect, useState } from "react";
+import { User } from 'firebase/auth';
+import { createContext, ReactNode, useEffect, useState } from 'react';
 
-import { onAuthStateChangedListener, getUserDocFromAuth } from '../utils/firebase/firebase.utils'
+import { onAuthStateChangedListener, getUserDocFromAuth } from '../utils/firebase/firebase.utils';
 
 type userData = {
   name: string,
@@ -10,10 +10,10 @@ type userData = {
 }
 
 const initialUserdata = {
-  name: "",
-  city: "",
-  phone: ""
-}
+  name: '',
+  city: '',
+  phone: ''
+};
 
 export type UserContextType = {
   username: string | null,
@@ -34,7 +34,7 @@ export const UserContext = createContext<UserContextType>({
 });
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useState('');
   const [userdata, setUserdata] = useState(initialUserdata);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const value = { username, setUsername, userdata, setUserdata, isLoggedIn, setIsLoggedIn };
@@ -46,12 +46,12 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         setUsername(userData?.displayName);
         setIsLoggedIn(true);
       }
-      console.log('===========', user)
+      console.log('===========', user);
       //setUsername(user);
-    })
+    });
 
-    return unsubscribe
+    return unsubscribe;
   }, []);
 
-  return <UserContext.Provider value={value}>{children}</UserContext.Provider>
+  return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };

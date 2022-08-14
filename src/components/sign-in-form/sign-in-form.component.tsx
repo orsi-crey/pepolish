@@ -1,18 +1,18 @@
-import { TextField, Password } from "@react-md/form";
-import { Button } from "@react-md/button";
-import { useState, FormEvent, useContext } from "react";
-import { useNavigate } from "react-router-dom";
-import { RemoveRedEyeSVGIcon } from "@react-md/material-icons";
+import { TextField, Password } from '@react-md/form';
+import { Button } from '@react-md/button';
+import { useState, FormEvent, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { RemoveRedEyeSVGIcon } from '@react-md/material-icons';
 
-import { getUserDocFromAuth, signInAuthUserWithEmailAndPassword } from "../../utils/firebase/firebase.utils";
-import { UserContext } from "../../contexts/user.context";
+import { getUserDocFromAuth, signInAuthUserWithEmailAndPassword } from '../../utils/firebase/firebase.utils';
+import { UserContext } from '../../contexts/user.context';
 
-import { StyledSignInForm } from "./sign-in-form.styles";
+import { StyledSignInForm } from './sign-in-form.styles';
 
 
 const SignInForm = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
   const { setUsername, setIsLoggedIn } = useContext(UserContext);
@@ -27,11 +27,11 @@ const SignInForm = () => {
         const userData = await getUserDocFromAuth(userCredential.user);
         setUsername(userData?.displayName);
         setIsLoggedIn(true);
-        navigate("/");
+        navigate('/');
       }
     } catch (error: any) {
-      alert("error signing in");
-      console.log(error)
+      alert('error signing in');
+      console.log(error);
     }
   };
 
@@ -62,7 +62,7 @@ const SignInForm = () => {
         </Button>
       </div>
     </StyledSignInForm>
-  )
-}
+  );
+};
 
-export default SignInForm
+export default SignInForm;
