@@ -22,6 +22,7 @@ export type UserContextType = {
   setUserdata: (value: userData) => void,
   isLoggedIn: boolean,
   setIsLoggedIn: (value: boolean) => void,
+  clearUserData: () => void
 }
 
 export const UserContext = createContext<UserContextType>({
@@ -30,16 +31,23 @@ export const UserContext = createContext<UserContextType>({
   userdata: initialUserdata,
   setUserdata: () => { },
   isLoggedIn: false,
-  setIsLoggedIn: () => { }
+  setIsLoggedIn: () => { },
+  clearUserData: () => { }
 });
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [username, setUsername] = useState('');
   const [userdata, setUserdata] = useState(initialUserdata);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const value = { username, setUsername, userdata, setUserdata, isLoggedIn, setIsLoggedIn };
+  const clearUserData = () => {
+    setUsername('');
+    setUserdata(initialUserdata);
+    setIsLoggedIn(false);
+  };
 
-  useEffect(() =>  {
+  const value = { username, setUsername, userdata, setUserdata, isLoggedIn, setIsLoggedIn, clearUserData };
+
+  useEffect(() => {
     const unsubscribe = onAuthStateChangedListener(async (user: User) => {
       if (user) {
         const userData = await getUserDocFromAuth(user);

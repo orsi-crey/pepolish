@@ -1,20 +1,28 @@
 import { useContext } from 'react';
-import { useNavigate, Link, Outlet } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
 
 import { UserContext } from '../../contexts/user.context';
+import { signOutUser } from '../../utils/firebase/firebase.utils';
+
 import { NavigationContainer } from './navigation.styles';
 
-const Navigation = () => {
-  const navigate = useNavigate();
 
-  const { isLoggedIn } = useContext(UserContext);
+const Navigation = () => {
+  const { isLoggedIn, clearUserData } = useContext(UserContext);
+
+  const signOutHandler = () => {
+    signOutUser();
+    clearUserData();
+  };
 
   return (
     <div>
       <NavigationContainer>
         <h2>🐸 pepolish 💅</h2>
         {isLoggedIn ?
-          <div>Log out</div>
+          <div>
+            <Link to='/' onClick={signOutHandler}>Log out</Link>
+          </div>
           :
           <div>
             <Link to='/sign-in'>Sign in</Link>
