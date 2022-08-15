@@ -4,9 +4,11 @@ import React from 'react';
 import reportWebVitals from './reportWebVitals';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
+import { Provider } from 'react-redux'; 
 
 import App from './App';
 import { UserProvider } from './contexts/user.context';
+import { store } from './store/store';
 
 
 const root = ReactDOM.createRoot(
@@ -14,11 +16,13 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <UserProvider>
-        <App />
-      </UserProvider>
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+        <UserProvider>
+          <App />
+        </UserProvider>
+      </BrowserRouter>
+    </Provider>
   </React.StrictMode>
 );
 

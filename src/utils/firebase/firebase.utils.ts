@@ -1,6 +1,8 @@
 import { initializeApp } from 'firebase/app';
 import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut, User } from 'firebase/auth';
-import { getFirestore, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+import { getFirestore, doc, getDoc, setDoc, updateDoc, getDocs, collection } from 'firebase/firestore';
+
+import { Polish } from '../../store/product/product.types';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyB7sKt1z5cSOFJXLCPvG3QAyc4i2R4hEdY',
@@ -68,6 +70,13 @@ const uploadDocFromAuth = async (userAuth: User | null, data: any) => {
   }
 };
 
+export const getProductListDoc = async () => {
+  const productsSnapshot = await getDocs(collection(db, 'products'));
+  const products: Polish[] = [];
+  productsSnapshot.forEach((product) => products.push(product.data() as Polish));
+  return products;
+};
+
 export const createAuthUserWithEmailAndPassword = async (email: string, password: string) => {
   if (!email || !password) return;
 
@@ -87,3 +96,5 @@ export const signOutUser = async () => signOut(auth);
 export const getAllUserData = async () => getUserDocFromAuth(auth.currentUser);
 
 export const uploadDataToUser = async (data: any) => uploadDocFromAuth(auth.currentUser, data);
+
+export const getProductList = async () => getProductListDoc();
