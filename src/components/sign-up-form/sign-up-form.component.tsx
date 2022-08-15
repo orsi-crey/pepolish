@@ -5,7 +5,7 @@ import { useState, FormEvent, useContext } from 'react';
 import { RemoveRedEyeSVGIcon } from '@react-md/material-icons';
 
 import { createAuthUserWithEmailAndPassword, createUserDocFromAuth } from '../../utils/firebase/firebase.utils';
-import { UserContext } from '../../contexts/user.context';
+import { UserContext, authState } from '../../contexts/user.context';
 import { StyledSignUpForm } from './sign-up-form.styles';
 
 const SignUpForm = () => {
@@ -26,7 +26,7 @@ const SignUpForm = () => {
       if (userCredential) {
         await createUserDocFromAuth(userCredential.user, { displayName });
         setUsername(displayName);
-        setIsLoggedIn(true);
+        setIsLoggedIn(authState.SignedIn);
         navigate('/');
       }
     } catch (error: any) {

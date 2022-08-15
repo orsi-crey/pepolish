@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { Link, Outlet } from 'react-router-dom';
 
-import { UserContext } from '../../contexts/user.context';
+import { authState, UserContext } from '../../contexts/user.context';
 import { signOutUser } from '../../utils/firebase/firebase.utils';
 
 import { NavigationContainer } from './navigation.styles';
@@ -15,18 +15,24 @@ const Navigation = () => {
     clearUserData();
   };
 
+  const navLinks = () => {
+    switch (isLoggedIn) {
+    case authState.LoggedOut:
+      return <div><Link to='/sign-in'>Sign in</Link></div>;
+    case authState.SignedIn:
+      return <div><Link to='/' onClick={signOutHandler}>Log out</Link></div>;
+    case authState.Loading:
+      return <div>loading...</div>;
+    default:
+      return;
+    }
+  };
+
   return (
     <div>
       <NavigationContainer>
         <h2>🐸 pepolish 💅</h2>
-        {isLoggedIn ?
-          <div>
-            <Link to='/' onClick={signOutHandler}>Log out</Link>
-          </div>
-          :
-          <div>
-            <Link to='/sign-in'>Sign in</Link>
-          </div>}
+        {navLinks()}
       </NavigationContainer>
       <Outlet />
     </div>

@@ -28,11 +28,11 @@
       "unix"
     ],
     "quotes": [
-      "error",
+      "warn",
       "single"
     ],
     "semi": [
-      "error",
+      "warn",
       "always"
     ],
     "react/react-in-jsx-scope": "off",

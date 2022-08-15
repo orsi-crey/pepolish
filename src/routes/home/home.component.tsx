@@ -2,7 +2,7 @@ import { Button } from '@react-md/button';
 import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { UserContext } from '../../contexts/user.context';
+import { authState, UserContext } from '../../contexts/user.context';
 import { HomeContainer } from './home.styles';
 
 const Home = () => {
@@ -17,27 +17,37 @@ const Home = () => {
     navigate('/profile');
   }
 
+  const homeLinks = () => {
+    switch (isLoggedIn) {
+    case authState.LoggedOut:
+      return <>
+        <div>Hi!</div>
+        <div>
+          <Button theme="primary" themeType="contained" onClick={handleLoginClick}>
+              Click to log in
+          </Button>
+        </div>
+      </>;
+    case authState.SignedIn:
+      return <>
+        <div>Hi {username}!</div>
+        <div>
+          <Button theme="primary" onClick={handleProfileClick}>
+              Click to edit profile!
+          </Button>
+        </div>
+      </>;
+    case authState.Loading:
+      return <div>loading...</div>;
+    default:
+      return;
+    }
+  };
+
+
   return (
     <HomeContainer>
-      {isLoggedIn ?
-        <>
-          <div>Hi {username}!</div>
-          <div>
-            <Button theme="primary" onClick={handleProfileClick}>
-              Click to edit profile!
-            </Button>
-          </div>
-        </>
-        :
-        <>
-          <div>Hi!</div>
-          <div>
-            <Button theme="primary" themeType="contained" onClick={handleLoginClick}>
-              Click to log in
-            </Button>
-          </div>
-        </>
-      }
+      { homeLinks() }
     </HomeContainer>
 
   );

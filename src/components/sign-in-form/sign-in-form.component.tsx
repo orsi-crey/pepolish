@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { RemoveRedEyeSVGIcon } from '@react-md/material-icons';
 
 import { getUserDocFromAuth, signInAuthUserWithEmailAndPassword } from '../../utils/firebase/firebase.utils';
-import { UserContext } from '../../contexts/user.context';
+import { UserContext, authState } from '../../contexts/user.context';
 
 import { StyledSignInForm } from './sign-in-form.styles';
 
@@ -25,8 +25,9 @@ const SignInForm = () => {
 
       if (userCredential) {
         const userData = await getUserDocFromAuth(userCredential.user);
+        console.log(userData);
         setUsername(userData?.displayName);
-        setIsLoggedIn(true);
+        setIsLoggedIn(authState.SignedIn);
         navigate('/');
       }
     } catch (error: any) {

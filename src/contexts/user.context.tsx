@@ -15,13 +15,19 @@ const initialUserdata = {
   phone: ''
 };
 
+export enum authState {
+  SignedIn,
+  LoggedOut,
+  Loading
+}
+
 export type UserContextType = {
   username: string | null,
   setUsername: (value: string) => void,
   userdata: userData
   setUserdata: (value: userData) => void,
-  isLoggedIn: boolean,
-  setIsLoggedIn: (value: boolean) => void,
+  isLoggedIn: authState,
+  setIsLoggedIn: (value: authState) => void,
   clearUserData: () => void
 }
 
@@ -30,7 +36,7 @@ export const UserContext = createContext<UserContextType>({
   setUsername: () => { },
   userdata: initialUserdata,
   setUserdata: () => { },
-  isLoggedIn: false,
+  isLoggedIn: authState.Loading,
   setIsLoggedIn: () => { },
   clearUserData: () => { }
 });
@@ -38,11 +44,11 @@ export const UserContext = createContext<UserContextType>({
 export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [username, setUsername] = useState('');
   const [userdata, setUserdata] = useState(initialUserdata);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(authState.Loading);
   const clearUserData = () => {
     setUsername('');
     setUserdata(initialUserdata);
-    setIsLoggedIn(false);
+    setIsLoggedIn(authState.LoggedOut);
   };
 
   const value = { username, setUsername, userdata, setUserdata, isLoggedIn, setIsLoggedIn, clearUserData };
@@ -52,10 +58,10 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       if (user) {
         const userData = await getUserDocFromAuth(user);
         setUsername(userData?.displayName);
-        setIsLoggedIn(true);
+        setIsLoggedIn(authState.SignedIn);
+      } else {
+        setIsLoggedIn(authState.LoggedOut);
       }
-      console.log('===========', user);
-      //setUsername(user);
     });
 
     return unsubscribe;
