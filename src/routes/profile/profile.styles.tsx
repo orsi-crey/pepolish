@@ -20,4 +20,4 @@ export const ProfileContainer = styled.div`
 
 export const StyledTextField = styled(TextField)`
 
-`
+`;

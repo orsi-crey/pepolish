@@ -21,7 +21,7 @@ const Profile = () => {
 
   const userdataSaveHandler = () => {
     uploadDataToUser({ userdata: userdata });
-  }
+  };
 
   return (
     <ProfileContainer>
