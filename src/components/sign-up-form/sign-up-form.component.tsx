@@ -18,7 +18,6 @@ const SignUpForm = () => {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log('signup');
 
     try {
       const userCredential = await createAuthUserWithEmailAndPassword(email, password);

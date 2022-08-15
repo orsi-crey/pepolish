@@ -23,8 +23,6 @@ const Profile = () => {
     uploadDataToUser({ userdata: userdata });
   }
 
-  console.log("userdata:::::", userdata)
-
   return (
     <ProfileContainer>
       {isLoggedIn === authState.SignedIn ?

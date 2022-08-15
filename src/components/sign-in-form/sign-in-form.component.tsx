@@ -25,7 +25,6 @@ const SignInForm = () => {
 
       if (userCredential) {
         const userData = await getUserDocFromAuth(userCredential.user);
-        console.log(userData);
         setUsername(userData?.displayName);
         setIsLoggedIn(authState.SignedIn);
         navigate('/');
