@@ -1,39 +1,71 @@
-import { Button } from '@react-md/button';
-import { useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useContext, useEffect } from 'react';
+import { Button, TextField } from 'react-md';
 
-import { UserContext } from '../../contexts/user.context';
+import { authState, initialUserdata, UserContext } from '../../contexts/user.context';
+import { getAllUserData, uploadDataToUser } from '../../utils/firebase/firebase.utils';
+
+import { ProfileContainer } from './profile.styles';
+
 
 const Profile = () => {
-  const navigate = useNavigate();
-
   const { isLoggedIn, username, userdata, setUserdata } = useContext(UserContext);
 
-  function handleClick() {
-    navigate('/sign-in');
+  useEffect(() => {
+    (async () => {
+      const data = await getAllUserData();
+      if (data?.userdata) {
+        setUserdata({ initialUserdata, ...data?.userdata });
+      }
+    })();
+  }, [isLoggedIn]);
+
+  const userdataSaveHandler = () => {
+    uploadDataToUser({ userdata: userdata });
   }
 
+  console.log("userdata:::::", userdata)
+
   return (
-    <>
-      {isLoggedIn ?
+    <ProfileContainer>
+      {isLoggedIn === authState.SignedIn ?
         <>
           <div>
-            Hi {username}!
+            <h2>Hi {username}!</h2>
+            <p>Your profile details:</p>
           </div>
-          <p>Name: {userdata.name}</p>
-          <p>City: {userdata.city}</p>
-          <p>Phone: {userdata.phone}</p>
+          <TextField
+            id="name"
+            label="Name"
+            name="name"
+            value={userdata.name}
+            onChange={(event) => setUserdata({ ...userdata, name: event.currentTarget.value })}
+          />
+          <TextField
+            id="city"
+            label="City"
+            name="city"
+            value={userdata.city}
+            onChange={(event) => setUserdata({ ...userdata, city: event.currentTarget.value })}
+          />
+          <TextField
+            id="phone"
+            label="Phone"
+            name="phone"
+            value={userdata.phone}
+            onChange={(event) => setUserdata({ ...userdata, phone: event.currentTarget.value })}
+          />
+          <div>
+            <Button theme="primary" themeType="contained" onClick={userdataSaveHandler}>
+              Save data
+            </Button>
+          </div>
         </>
         :
         <>
           <div>Hi! You're not logged in!</div>
-          <Button theme="primary" themeType="contained" onClick={handleClick}>
-            Click to log in
-          </Button>
         </>
       }
-    </>
-
+    </ProfileContainer>
   );
 };
 

@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut, User } from 'firebase/auth';
-import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
+import { getFirestore, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyB7sKt1z5cSOFJXLCPvG3QAyc4i2R4hEdY',
@@ -45,12 +45,27 @@ export const createUserDocFromAuth = async (userAuth: User, additionalInfo = {})
   return userDocRef;
 };
 
-export const getUserDocFromAuth = async (userAuth: User) => {
+export const getUserDocFromAuth = async (userAuth: User | null) => {
   if (!userAuth) return;
 
   const userDocRef = doc(db, 'users', userAuth.uid);
   const userSnapshot = await getDoc(userDocRef);
   return userSnapshot.data();
+};
+
+const uploadDocFromAuth = async (userAuth: User | null, data: any) => {
+  if (!userAuth) return;
+
+  const userDocRef = doc(db, 'users', userAuth.uid);
+
+  try {
+    await updateDoc(userDocRef, {
+      ...data
+    });
+  } catch (error) {
+    alert('error uploading data');
+    console.log('error uploading data: ', error);
+  }
 };
 
 export const createAuthUserWithEmailAndPassword = async (email: string, password: string) => {
@@ -68,3 +83,7 @@ export const signInAuthUserWithEmailAndPassword = async (email: string, password
 export const onAuthStateChangedListener = (callback: any) => onAuthStateChanged(auth, callback);
 
 export const signOutUser = async () => signOut(auth);
+
+export const getAllUserData = async () => getUserDocFromAuth(auth.currentUser);
+
+export const uploadDataToUser = async (data: any) => uploadDocFromAuth(auth.currentUser, data);

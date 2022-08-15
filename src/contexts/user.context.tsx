@@ -9,7 +9,7 @@ type userData = {
   phone: string
 }
 
-const initialUserdata = {
+export const initialUserdata = {
   name: '',
   city: '',
   phone: ''

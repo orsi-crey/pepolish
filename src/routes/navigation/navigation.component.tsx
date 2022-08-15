@@ -20,7 +20,11 @@ const Navigation = () => {
     case authState.LoggedOut:
       return <div><Link to='/sign-in'>Sign in</Link></div>;
     case authState.SignedIn:
-      return <div><Link to='/' onClick={signOutHandler}>Log out</Link></div>;
+      return <>
+        <div><Link to='/'>Home</Link></div>
+        <div><Link to='/profile'>Profile</Link></div>
+        <div><Link to='/' onClick={signOutHandler}>Log out</Link></div>
+      </>;
     case authState.Loading:
       return <div>loading...</div>;
     default:
