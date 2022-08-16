@@ -1,0 +1,21 @@
+{
+    "printWidth": 160,
+    "tabWidth": 2,
+    "useTabs": false,
+    "semi": true,
+    "singleQuote": true,
+    "jsxSingleQuote": false,
+    "trailingComma": "es5",
+    "bracketSpacing": true,
+    "jsxBracketSameLine": true,
+    "endOfLine": "lf",
+    "arrowParens": "always",
+    "overrides": [
+        {
+            "files": ["*.d.ts", "*.types.ts", ".*.js", "*.json", "*.styled.ts"],
+            "options": {
+                "tabWidth": 2
+            }
+        }
+    ]
+}
