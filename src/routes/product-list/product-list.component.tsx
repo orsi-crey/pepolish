@@ -1,5 +1,3 @@
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import {
   Table,
   TableHeader,
@@ -10,53 +8,45 @@ import {
 } from 'react-md';
 import { EditSVGIcon } from '@react-md/material-icons';
 import { useNavigate } from 'react-router-dom';
-
-import { fetchProductList } from '../../store/product/product.action';
-import { selectProductList } from '../../store/product/product.selector';
-import { Polish } from '../../store/product/product.types';
-import { getProductList } from '../../utils/firebase/firebase.utils';
+import { useQueryClient } from 'react-query';
 
 import { ProductListContainer } from './product-list.styles';
+import { getProductListQuery } from '../../utils/firestore/firestore.utils';
+import { DocumentData } from 'firebase/firestore';
 
 const ProductList = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const productList = useSelector(selectProductList);
 
-  useEffect(() => {
-    (async () => {
-      const productListFromDB = await getProductList();
-      dispatch(fetchProductList(productListFromDB));
-    })();
-  }, []);
+  const queryClient = useQueryClient();
+  const productList = getProductListQuery();
 
-  const editProductPage = (product: Polish) => {
+  const editProductPage = (product: DocumentData) => {
     console.log(product.name);
   };
 
-  const showProductPage = (product: Polish) => {
+  const showProductPage = (product: DocumentData) => {
     navigate(`/products/${product.id}`);
   };
 
-  const addPolishRow = (product: Polish) => {
+  const addPolishRow = (product: DocumentData) => {
     return (
       <TableRow key={product.id} onClick={() => showProductPage(product)}>
         <TableCell>{product.brand}</TableCell>
         <TableCell>{product.name}</TableCell>
         <TableCell>{product.color}</TableCell>
         <TableCell>
-          {product.effects?.map((effect) => (
+          {product.effects?.map((effect: string) => (
             <div key={effect}>{effect}</div>
           ))}
         </TableCell>
         <TableCell>
-          {product.multichrome?.map((color) => (
+          {product.multichrome?.map((color: string) => (
             <div key={color}>{color}</div>
           ))}
         </TableCell>
         <TableCell>{product.volume}</TableCell>
         <TableCell>
-          {product.other?.map((item) => (
+          {product.other?.map((item: string) => (
             <div key={item}>{item}</div>
           ))}
         </TableCell>
@@ -72,22 +62,24 @@ const ProductList = () => {
   return (
     <ProductListContainer>
       <div>filter will be here</div>
-      <Table fullWidth>
-        <TableHeader>
-          <TableRow>
-            <TableCell>Brand</TableCell>
-            <TableCell>Name</TableCell>
-            <TableCell>Color</TableCell>
-            <TableCell>Effects</TableCell>
-            <TableCell>Multichrome colors</TableCell>
-            <TableCell>Volume (ml)</TableCell>
-            <TableCell>Other</TableCell>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {productList.map((product: Polish) => addPolishRow(product))}
-        </TableBody>
-      </Table>
+      {productList.isSuccess && (
+        <Table fullWidth>
+          <TableHeader>
+            <TableRow>
+              <TableCell>Brand</TableCell>
+              <TableCell>Name</TableCell>
+              <TableCell>Color</TableCell>
+              <TableCell>Effects</TableCell>
+              <TableCell>Multichrome colors</TableCell>
+              <TableCell>Volume (ml)</TableCell>
+              <TableCell>Other</TableCell>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {productList.data?.map((product) => addPolishRow(product))}
+          </TableBody>
+        </Table>
+      )}
     </ProductListContainer>
   );
 };
