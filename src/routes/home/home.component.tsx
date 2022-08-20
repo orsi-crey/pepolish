@@ -36,6 +36,11 @@ const Home = () => {
               Click to edit profile!
           </Button>
         </div>
+        <div>
+          <Button theme="primary" onClick={() => navigate('/products')}>
+              Click to check polishes!
+          </Button>
+        </div>
       </>;
     case authState.Loading:
       return <div>loading...</div>;

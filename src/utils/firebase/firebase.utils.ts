@@ -89,6 +89,7 @@ const uploadDocFromAuth = async (userAuth: User | null, data: any) => {
   }
 };
 
+// note: obsolete a query miatt
 export const getProductListDoc = async () => {
   const productsSnapshot = await getDocs(collection(db, 'products'));
   const products: Polish[] = [];
@@ -98,6 +99,7 @@ export const getProductListDoc = async () => {
   return products;
 };
 
+// note: obsolete a query miatt
 export const getProductDoc = async (productId: string) => {
   const productReference = doc(db, 'products', productId);
   const productSnapshot = await getDoc(productReference);
