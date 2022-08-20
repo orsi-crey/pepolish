@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut, User } from 'firebase/auth';
-import { getFirestore, doc, getDoc, setDoc, updateDoc, getDocs, collection } from 'firebase/firestore';
+import { getFirestore, doc, getDoc, setDoc, updateDoc, getDocs, collection, QueryDocumentSnapshot } from 'firebase/firestore';
 
 import { Polish } from '../../store/product/product.types';
 
@@ -11,7 +11,7 @@ const firebaseConfig = {
   storageBucket: 'pepolish-7835b.appspot.com',
   messagingSenderId: '711279894772',
   appId: '1:711279894772:web:87893a6cdde75f7c613ea1',
-  measurementId: 'G-ZB8KFHLLMR'
+  measurementId: 'G-ZB8KFHLLMR',
 };
 
 const app = initializeApp(firebaseConfig);
@@ -36,7 +36,7 @@ export const createUserDocFromAuth = async (userAuth: User, additionalInfo = {})
         displayName,
         email,
         createdAt,
-        ...additionalInfo
+        ...additionalInfo,
       });
     } catch (error) {
       alert('error creating user');
@@ -62,7 +62,7 @@ const uploadDocFromAuth = async (userAuth: User | null, data: any) => {
 
   try {
     await updateDoc(userDocRef, {
-      ...data
+      ...data,
     });
   } catch (error) {
     alert('error uploading data');
@@ -73,7 +73,7 @@ const uploadDocFromAuth = async (userAuth: User | null, data: any) => {
 export const getProductListDoc = async () => {
   const productsSnapshot = await getDocs(collection(db, 'products'));
   const products: Polish[] = [];
-  productsSnapshot.forEach((product) => products.push(product.data() as Polish));
+  productsSnapshot.forEach((product: QueryDocumentSnapshot) => products.push({ id: product.id, ...product.data() } as Polish));
   return products;
 };
 
