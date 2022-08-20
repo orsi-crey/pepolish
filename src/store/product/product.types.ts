@@ -12,4 +12,5 @@ export type Polish = {
 
 export enum PRODUCT_ACTION_TYPES {
   FETCH_PRODUCT_LIST = 'FETCH_PRODUCT_LIST',
+  FETCH_PRODUCT = 'FETCH_PRODUCT',
 }

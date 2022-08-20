@@ -1,6 +1,22 @@
 import { initializeApp } from 'firebase/app';
-import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut, User } from 'firebase/auth';
-import { getFirestore, doc, getDoc, setDoc, updateDoc, getDocs, collection, QueryDocumentSnapshot } from 'firebase/firestore';
+import {
+  createUserWithEmailAndPassword,
+  getAuth,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signOut,
+  User,
+} from 'firebase/auth';
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+  getDocs,
+  collection,
+  QueryDocumentSnapshot,
+} from 'firebase/firestore';
 
 import { Polish } from '../../store/product/product.types';
 
@@ -20,7 +36,10 @@ export const auth = getAuth();
 
 export const db = getFirestore();
 
-export const createUserDocFromAuth = async (userAuth: User, additionalInfo = {}) => {
+export const createUserDocFromAuth = async (
+  userAuth: User,
+  additionalInfo = {}
+) => {
   if (!userAuth) return;
 
   const userDocRef = doc(db, 'users', userAuth.uid);
@@ -73,28 +92,46 @@ const uploadDocFromAuth = async (userAuth: User | null, data: any) => {
 export const getProductListDoc = async () => {
   const productsSnapshot = await getDocs(collection(db, 'products'));
   const products: Polish[] = [];
-  productsSnapshot.forEach((product: QueryDocumentSnapshot) => products.push({ id: product.id, ...product.data() } as Polish));
+  productsSnapshot.forEach((product: QueryDocumentSnapshot) =>
+    products.push({ id: product.id, ...product.data() } as Polish)
+  );
   return products;
 };
 
-export const createAuthUserWithEmailAndPassword = async (email: string, password: string) => {
+export const getProductDoc = async (productId: string) => {
+  const productReference = doc(db, 'products', productId);
+  const productSnapshot = await getDoc(productReference);
+  return { id: productSnapshot.id, ...productSnapshot.data() } as Polish;
+};
+
+export const createAuthUserWithEmailAndPassword = async (
+  email: string,
+  password: string
+) => {
   if (!email || !password) return;
 
   return await createUserWithEmailAndPassword(auth, email, password);
 };
 
-export const signInAuthUserWithEmailAndPassword = async (email: string, password: string) => {
+export const signInAuthUserWithEmailAndPassword = async (
+  email: string,
+  password: string
+) => {
   if (!email || !password) return;
 
   return await signInWithEmailAndPassword(auth, email, password);
 };
 
-export const onAuthStateChangedListener = (callback: any) => onAuthStateChanged(auth, callback);
+export const onAuthStateChangedListener = (callback: any) =>
+  onAuthStateChanged(auth, callback);
 
 export const signOutUser = async () => signOut(auth);
 
 export const getAllUserData = async () => getUserDocFromAuth(auth.currentUser);
 
-export const uploadDataToUser = async (data: any) => uploadDocFromAuth(auth.currentUser, data);
+export const uploadDataToUser = async (data: any) =>
+  uploadDocFromAuth(auth.currentUser, data);
 
 export const getProductList = async () => getProductListDoc();
+
+export const getProduct = async (productId: string) => getProductDoc(productId);

@@ -20,8 +20,8 @@ import { ProductListContainer } from './product-list.styles';
 
 const ProductList = () => {
   const dispatch = useDispatch();
-  const productList = useSelector(selectProductList);
   const navigate = useNavigate();
+  const productList = useSelector(selectProductList);
 
   useEffect(() => {
     (async () => {
