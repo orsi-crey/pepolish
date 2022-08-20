@@ -1,59 +1,49 @@
-import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button, Chip, Table, TableBody, TableCell, TableRow } from 'react-md';
+import { useQueryClient } from 'react-query';
 
-import { selectProductList } from '../../store/product/product.selector';
-import { fetchProduct } from '../../store/product/product.action';
-import { getProduct } from '../../utils/firebase/firebase.utils';
+import { Polish } from '../../store/product/product.types';
+import { getProductQuery } from '../../utils/firestore/firestore.utils';
 
 import { ProductContainer } from './product.styles';
-import { Polish } from '../../store/product/product.types';
 
 const Product = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const { productId } = useParams();
-  const productList = useSelector(selectProductList);
-  const [product, setProduct] = useState({} as Polish);
+  
+  const queryClient = useQueryClient();
+  const productQuery = getProductQuery(productId);
 
-  useEffect(() => {
-    (async () => {
-      if (productId && productList.length === 0) {
-        const productFromDB = await getProduct(productId);
-        dispatch(fetchProduct(productFromDB));
-      }
-    })();
-  }, []);
-
-  useEffect(() => {
-    setProduct(productList.find((product: Polish) => product.id === productId));
-  }, [productList]);
+  console.log(productQuery)
+  let product: Polish
+  if (productQuery.isSuccess) {
+    product = productQuery.data[0] as Polish
+  }
 
   return (
     <ProductContainer>
       <Button themeType="contained" onClick={() => navigate('/products')}>Back to product list</Button>
       <Button themeType="contained" onClick={() => navigate(`/products/${productId}/edit`)}>Edit this product</Button>
-      {product && (
+      {productQuery.isSuccess && productQuery.data && (
         <>
           <Table>
             <TableBody>
               <TableRow>
                 <TableCell>Brand:</TableCell>
-                <TableCell>{product.brand}</TableCell>
+                <TableCell>{productQuery.data[0].brand}</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>Name:</TableCell>
-                <TableCell>{product.name}</TableCell>
+                <TableCell>{productQuery.data[0].name}</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>Color:</TableCell>
-                <TableCell>{product.color}</TableCell>
+                <TableCell>{productQuery.data[0].color}</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>Effects:</TableCell>
                 <TableCell>
-                  {product.effects?.map((effect) => {
+                  {productQuery.data[0].effects?.map((effect: string) => {
                     return (
                       <Chip key={effect} theme="outline" noninteractable>
                         {effect}
@@ -65,7 +55,7 @@ const Product = () => {
               <TableRow>
                 <TableCell>Multichrome:</TableCell>
                 <TableCell>
-                  {product.multichrome?.map((color) => {
+                  {productQuery.data[0].multichrome?.map((color: string) => {
                     return (
                       <Chip key={color} theme="outline" noninteractable>
                         {color}
@@ -76,12 +66,12 @@ const Product = () => {
               </TableRow>
               <TableRow>
                 <TableCell>Volume:</TableCell>
-                <TableCell>{`${product.volume} ml`}</TableCell>
+                <TableCell>{`${productQuery.data[0].volume} ml`}</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>Other:</TableCell>
                 <TableCell>
-                  {product.other?.map((item) => {
+                  {productQuery.data[0].other?.map((item: string) => {
                     return (
                       <Chip key={item} theme="outline" noninteractable>
                         {item}
@@ -92,7 +82,7 @@ const Product = () => {
               </TableRow>
             </TableBody>
           </Table>
-          {product.imageUrls?.map((url) => (
+          {productQuery.data[0].imageUrls?.map((url: string) => (
             <img key={url} src={url} />
           ))}
         </>
