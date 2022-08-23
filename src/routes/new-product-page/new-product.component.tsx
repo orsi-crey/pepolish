@@ -6,10 +6,11 @@ import ProductTable from '../../components/product-table/product-table.component
 
 import { ProductContainer } from './new-product.styles';
 import { Polish } from '../../store/product/product.types';
+import NewProductButtons from '../../components/new-product-buttons/new-product-buttons';
+import { useState } from 'react';
+import { DocumentData } from 'firebase/firestore';
 
 const NewProduct = () => {
-  const navigate = useNavigate();
-
   const emptyProduct: Polish = {
     id: uuidv4(),
     brand: '',
@@ -22,16 +23,33 @@ const NewProduct = () => {
     volume: 0,
   };
 
+  const navigate = useNavigate();
+  const [editable, setEditable] = useState(true);
+  const [product, setProduct] = useState(emptyProduct);
+
+  const setEditableFromChild = (editable: boolean) => {
+    setEditable(editable);
+  };
+
+  const setProductFromChild = (product: Polish | DocumentData) => {
+    setProduct(product);
+  };
+
   return (
     <ProductContainer>
       <Button themeType="contained" onClick={() => navigate('/products')}>
         Back to product list
       </Button>
-      <ProductTable product={emptyProduct} editable={true} />
+      <NewProductButtons
+        product={product}
+        editable={true}
+        seteditable={setEditableFromChild}
+      />
+      <ProductTable product={emptyProduct} editable={true} setproduct={setProductFromChild} />
     </ProductContainer>
   );
 };
 
 export default NewProduct;
 
-// új productnál 
+// új productnál

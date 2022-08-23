@@ -16,6 +16,12 @@ export type ProductButtonProps = {
   seteditable: (v: boolean) => void;
 };
 
+export type ProductTableProps = {
+  product: Polish | DocumentData;
+  editable: boolean;
+  setproduct: (v: Polish | DocumentData) => void;
+};
+
 const Product = () => {
   const navigate = useNavigate();
   const { productId } = useParams();

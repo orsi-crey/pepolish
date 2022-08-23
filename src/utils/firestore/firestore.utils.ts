@@ -26,6 +26,13 @@ export const getProductQuery = (productId: string | undefined) => {
   return singleQuery;
 };
 
+export const addNewProduct = () => {
+  const ref = collection(db, 'products');
+  const mutation = useFirestoreCollectionMutation(ref);
+
+  return mutation;
+}
+
 export const updateProduct = (product: Polish | DocumentData) => {
   const coll = collection(db, "products");
   const ref = doc(coll, product.id);

@@ -1,34 +1,30 @@
-import { DocumentData } from 'firebase/firestore';
-import { useEffect, useState } from 'react';
-import { Button, Form, TextField } from 'react-md';
+import { useState } from 'react';
+import { Form, TextField } from 'react-md';
+import { ProductTableProps } from '../../routes/product-page/product.component';
 
-import { Polish } from '../../store/product/product.types';
-import { updateProduct } from '../../utils/firestore/firestore.utils';
 import ChipField from '../chip-field/chip-field.component';
 
-type ProductTableProps = {
-  product: Polish | DocumentData;
-  editable: boolean;
-};
-
-const ProductTable = ({ product, editable }: ProductTableProps) => {
+const ProductTable = ({ product, editable, setproduct }: ProductTableProps) => {
   const [currentProduct, setCurrentProduct] = useState(product);
 
   return (
     <Form>
-      
       <p>Brand:</p>
       <TextField
         id="brand"
         name="Brand"
         disabled={!editable}
         value={currentProduct.brand}
-        onChange={(event) =>
+        onChange={(event) => {
           setCurrentProduct({
             ...currentProduct,
             brand: event.currentTarget.value,
-          })
-        }
+          });
+          setproduct({
+            ...currentProduct,
+            brand: event.currentTarget.value,
+          });
+        }}
       />
       <p>Name:</p>
       <TextField
