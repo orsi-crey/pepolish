@@ -1,5 +1,6 @@
-import { useFirestoreQueryData } from '@react-query-firebase/firestore';
-import { collection, query, limit, where } from 'firebase/firestore';
+import { useFirestoreCollectionMutation, useFirestoreDocumentMutation, useFirestoreQuery, useFirestoreQueryData } from '@react-query-firebase/firestore';
+import { collection, query, limit, where, doc, DocumentData } from 'firebase/firestore';
+import { Polish } from '../../store/product/product.types';
 
 import { db } from '../firebase/firebase.utils';
 
@@ -24,3 +25,11 @@ export const getProductQuery = (productId: string | undefined) => {
 
   return singleQuery;
 };
+
+export const updateProduct = (product: Polish | DocumentData) => {
+  const coll = collection(db, "products");
+  const ref = doc(coll, product.id);
+  const mutation = useFirestoreDocumentMutation(ref);
+
+  return mutation;
+}

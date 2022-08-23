@@ -11,6 +11,7 @@ import SignIn from './routes/sign-in/sign-in.component';
 import SignUp from './routes/sign-up/sign-up.component';
 import ProductList from './routes/product-list/product-list.component';
 import Product from './routes/product-page/product.component';
+import NewProduct from './routes/new-product-page/new-product.component';
 
 const queryClient = new QueryClient();
 
@@ -25,7 +26,7 @@ function App() {
           <Route path="profile" element={<Profile />} />
           <Route path="products">
             <Route index element={<ProductList />} />
-            <Route path="new" element={<div>new page</div>} />
+            <Route path="new" element={<NewProduct />} />
             <Route path=":productId" element={<Product />} />
             <Route
               path=":productId/edit"
