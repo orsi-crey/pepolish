@@ -2,8 +2,6 @@ import { Button } from 'react-md';
 import { ProductButtonProps } from '../../routes/product-page/product.component';
 import { updateProduct } from '../../utils/firestore/firestore.utils';
 
-
-
 const EditProductButtons = ({
   product,
   editable,

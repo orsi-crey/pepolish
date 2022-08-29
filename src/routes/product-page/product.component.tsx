@@ -5,7 +5,7 @@ import ProductTable from '../../components/product-table/product-table.component
 import { getProductQuery } from '../../utils/firestore/firestore.utils';
 
 import { ProductContainer } from './product.styles';
-import { Polish } from '../../store/product/product.types';
+import { initialPolish, Polish } from '../../store/product/product.types';
 import { DocumentData } from 'firebase/firestore';
 import EditProductButtons from '../../components/edit-product-buttons/edit-product-buttons';
 import { useState } from 'react';
@@ -26,12 +26,20 @@ const Product = () => {
   const navigate = useNavigate();
   const { productId } = useParams();
   const [editable, setEditable] = useState(false)
+  const [product, setProduct] = useState({} as Polish | DocumentData);
 
   const productQuery = getProductQuery(productId);
 
+  if (productQuery.data) { setProduct(productQuery.data[0]); }
+
   const setEditableFromChild = (editable: boolean) => {
-  setEditable(editable);
+    setEditable(editable);
   }
+
+  const setProductFromChild = (product: Polish | DocumentData) => {
+    setProduct(product);
+  }
+
 
   return (
     <ProductContainer>
@@ -40,12 +48,13 @@ const Product = () => {
       </Button>
       {productQuery.isSuccess && productQuery.data && (
         <>
-          <EditProductButtons product={productQuery.data[0]} editable={editable} seteditable={setEditableFromChild} />
+          <EditProductButtons product={product} editable={editable} seteditable={setEditableFromChild} />
           <ProductTable
-            product={productQuery.data[0]}
+            product={product}
             editable={editable}
+            setproduct={setProductFromChild}
           ></ProductTable>
-          {productQuery.data[0].imageUrls?.map((url: string) => (
+          {product.imageUrls?.map((url: string) => (
             <img key={url} src={url} />
           ))}
         </>
