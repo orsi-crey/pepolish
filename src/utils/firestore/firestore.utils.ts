@@ -21,9 +21,19 @@ import { db } from '../firebase/firebase.utils';
 export const getProductListQuery = () => {
   const ref = collection(db, 'products');
 
-  const query = useFirestoreQueryData(['products'], ref, {
+  const query = useFirestoreQuery(['products'], ref, {
     subscribe: true,
   });
+console.log("query" , query)
+
+console.log("query data" , query.data)
+
+const snapshot = query.data;
+
+snapshot?.docs.forEach((docSnapshot) => {
+  const data = docSnapshot.data();
+  console.log("----------------", docSnapshot.id, data.name);
+});
 
   return query;
 };
@@ -41,7 +51,7 @@ export const getProductQuery = (productId: string | undefined) => {
   );
 
   const singleQuery = useFirestoreQueryData([productId], ref);
-
+    console.log("singleQuery", singleQuery)
   return singleQuery;
 };
 

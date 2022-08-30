@@ -78,7 +78,7 @@ const ProductList = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {productList.data?.map((product) => addPolishRow(product))}
+            {/* {productList.data?.map((product) => addPolishRow(product))} */}
           </TableBody>
         </Table>
       )}
