@@ -6,6 +6,7 @@ const EditProductButtons = ({
   product,
   editable,
   seteditable,
+  onCancelClicked
 }: ProductButtonProps) => {
   const mutation = updateProduct(product);
 
@@ -38,7 +39,7 @@ const EditProductButtons = ({
           <Button
             themeType="contained"
             onClick={() => {
-              seteditable(false);
+              onCancelClicked();
             }}
           >
             Cancel

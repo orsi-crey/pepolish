@@ -5,7 +5,7 @@ import ProductTable from '../../components/product-table/product-table.component
 import { getProductQuery } from '../../utils/firestore/firestore.utils';
 
 import { ProductContainer } from './product.styles';
-import { initialPolish, Polish } from '../../store/product/product.types';
+import { Polish } from '../../store/product/product.types';
 import { DocumentData } from 'firebase/firestore';
 import EditProductButtons from '../../components/edit-product-buttons/edit-product-buttons';
 import { useState } from 'react';
@@ -14,6 +14,7 @@ export type ProductButtonProps = {
   product: Polish | DocumentData;
   editable: boolean;
   seteditable: (v: boolean) => void;
+  onCancelClicked: () => void;
 };
 
 export type ProductTableProps = {
@@ -30,16 +31,22 @@ const Product = () => {
 
   const productQuery = getProductQuery(productId);
 
-  if (productQuery.data) { setProduct(productQuery.data[0]); }
+  if (productQuery.data && Object.keys(product).length === 0) { setProduct(productQuery.data[0]); }
 
   const setEditableFromChild = (editable: boolean) => {
     setEditable(editable);
+  }
+
+  const cancelClickedFromChild = () => {
+    if (productQuery.data) setProduct(productQuery.data[0]);
+    setEditable(false);
   }
 
   const setProductFromChild = (product: Polish | DocumentData) => {
     setProduct(product);
   }
 
+  console.log("product page")
 
   return (
     <ProductContainer>
@@ -48,7 +55,7 @@ const Product = () => {
       </Button>
       {productQuery.isSuccess && productQuery.data && (
         <>
-          <EditProductButtons product={product} editable={editable} seteditable={setEditableFromChild} />
+          <EditProductButtons product={product} editable={editable} seteditable={setEditableFromChild} onCancelClicked={cancelClickedFromChild}/>
           <ProductTable
             product={product}
             editable={editable}

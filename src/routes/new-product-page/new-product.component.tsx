@@ -32,7 +32,7 @@ const NewProduct = () => {
   };
 
   const setProductFromChild = (product: Polish | DocumentData) => {
-    setProduct(product);
+    setProduct(product as Polish);
   };
 
   return (
@@ -40,11 +40,11 @@ const NewProduct = () => {
       <Button themeType="contained" onClick={() => navigate('/products')}>
         Back to product list
       </Button>
-      <NewProductButtons
+      {/* <NewProductButtons
         product={product}
         editable={true}
         seteditable={setEditableFromChild}
-      />
+      /> */}
       <ProductTable product={emptyProduct} editable={true} setproduct={setProductFromChild} />
     </ProductContainer>
   );
