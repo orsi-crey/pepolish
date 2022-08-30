@@ -5,7 +5,6 @@ import { ProductTableProps } from '../../routes/product-page/product.component';
 import ChipField from '../chip-field/chip-field.component';
 
 const ProductTable = ({ product, editable, setproduct }: ProductTableProps) => {
-  const [currentProduct, setCurrentProduct] = useState(product);
 
   return (
     <Form>
@@ -14,14 +13,14 @@ const ProductTable = ({ product, editable, setproduct }: ProductTableProps) => {
         id="brand"
         name="Brand"
         disabled={!editable}
-        value={currentProduct.brand}
+        value={product.brand}
         onChange={(event) => {
-          setCurrentProduct({
-            ...currentProduct,
+          setproduct({
+            ...product,
             brand: event.currentTarget.value,
           });
           setproduct({
-            ...currentProduct,
+            ...product,
             brand: event.currentTarget.value,
           });
         }}
@@ -31,10 +30,10 @@ const ProductTable = ({ product, editable, setproduct }: ProductTableProps) => {
         id="name"
         name="Name"
         disabled={!editable}
-        value={currentProduct.name}
+        value={product.name}
         onChange={(event) =>
-          setCurrentProduct({
-            ...currentProduct,
+          setproduct({
+            ...product,
             name: event.currentTarget.value,
           })
         }
@@ -44,18 +43,18 @@ const ProductTable = ({ product, editable, setproduct }: ProductTableProps) => {
         id="color"
         name="Color"
         disabled={!editable}
-        value={currentProduct.color}
+        value={product.color}
         onChange={(event) =>
-          setCurrentProduct({
-            ...currentProduct,
+          setproduct({
+            ...product,
             color: event.currentTarget.value,
           })
         }
       />
       <p>Effects:</p>
-      <ChipField chips={currentProduct.effects} disabled={!editable} />
+      <ChipField chips={product.effects} disabled={!editable} />
       <p>Multichrome:</p>
-      <ChipField chips={currentProduct.multichrome} disabled={!editable} />
+      <ChipField chips={product.multichrome} disabled={!editable} />
       <p>Volume:</p>
       <TextField
         id="volume"
@@ -63,16 +62,16 @@ const ProductTable = ({ product, editable, setproduct }: ProductTableProps) => {
         type="number"
         min="0"
         disabled={!editable}
-        value={`${currentProduct.volume}`}
+        value={`${product.volume}`}
         onChange={(event) =>
-          setCurrentProduct({
-            ...currentProduct,
+          setproduct({
+            ...product,
             volume: event.currentTarget.value,
           })
         }
       />
       <p>Other:</p>
-      <ChipField chips={currentProduct.other} disabled={!editable} />
+      <ChipField chips={product.other} disabled={!editable} />
     </Form>
   );
 };

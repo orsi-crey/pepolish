@@ -14,6 +14,7 @@ export type ProductButtonProps = {
   product: Polish | DocumentData;
   editable: boolean;
   seteditable: (v: boolean) => void;
+  onCancelClicked: () => void;
 };
 
 export type ProductTableProps = {
@@ -26,12 +27,26 @@ const Product = () => {
   const navigate = useNavigate();
   const { productId } = useParams();
   const [editable, setEditable] = useState(false)
+  const [product, setProduct] = useState({} as Polish | DocumentData);
 
   const productQuery = getProductQuery(productId);
 
+  if (productQuery.data && Object.keys(product).length === 0) { setProduct(productQuery.data[0]); }
+
   const setEditableFromChild = (editable: boolean) => {
-  setEditable(editable);
+    setEditable(editable);
   }
+
+  const cancelClickedFromChild = () => {
+    if (productQuery.data) setProduct(productQuery.data[0]);
+    setEditable(false);
+  }
+
+  const setProductFromChild = (product: Polish | DocumentData) => {
+    setProduct(product);
+  }
+
+  console.log("product page")
 
   return (
     <ProductContainer>
@@ -40,12 +55,13 @@ const Product = () => {
       </Button>
       {productQuery.isSuccess && productQuery.data && (
         <>
-          <EditProductButtons product={productQuery.data[0]} editable={editable} seteditable={setEditableFromChild} />
+          <EditProductButtons product={product} editable={editable} seteditable={setEditableFromChild} onCancelClicked={cancelClickedFromChild}/>
           <ProductTable
-            product={productQuery.data[0]}
+            product={product}
             editable={editable}
+            setproduct={setProductFromChild}
           ></ProductTable>
-          {productQuery.data[0].imageUrls?.map((url: string) => (
+          {product.imageUrls?.map((url: string) => (
             <img key={url} src={url} />
           ))}
         </>

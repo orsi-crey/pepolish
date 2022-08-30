@@ -2,12 +2,11 @@ import { Button } from 'react-md';
 import { ProductButtonProps } from '../../routes/product-page/product.component';
 import { updateProduct } from '../../utils/firestore/firestore.utils';
 
-
-
 const EditProductButtons = ({
   product,
   editable,
   seteditable,
+  onCancelClicked
 }: ProductButtonProps) => {
   const mutation = updateProduct(product);
 
@@ -40,7 +39,7 @@ const EditProductButtons = ({
           <Button
             themeType="contained"
             onClick={() => {
-              seteditable(false);
+              onCancelClicked();
             }}
           >
             Cancel
