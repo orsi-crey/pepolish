@@ -5,8 +5,6 @@ import { addNewProduct } from '../../utils/firestore/firestore.utils';
 
 const NewProductButtons = ({
   product,
-  editable,
-  seteditable,
 }: ProductButtonProps) => {
   const navigate = useNavigate();
   const mutation = addNewProduct();
@@ -19,7 +17,9 @@ const NewProductButtons = ({
             disabled={mutation.isLoading}
             themeType="contained"
             onClick={() => {
-              console.log(mutation.mutate(product));
+              mutation.mutate(product);
+
+              navigate(`/products/${product.id}`);
             }}
           >
             Save
@@ -29,7 +29,7 @@ const NewProductButtons = ({
         <Button
           themeType="contained"
           onClick={() => {
-            () => navigate('/products');
+            navigate('/products');            
           }}
         >
           Cancel

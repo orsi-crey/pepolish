@@ -1,14 +1,14 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button } from 'react-md';
+import { useState } from 'react';
+import { DocumentData } from 'firebase/firestore';
 
 import ProductTable from '../../components/product-table/product-table.component';
 import { getProductQuery } from '../../utils/firestore/firestore.utils';
+import { Polish } from '../../store/product/product.types';
+import EditProductButtons from '../../components/edit-product-buttons/edit-product-buttons';
 
 import { ProductContainer } from './product.styles';
-import { Polish } from '../../store/product/product.types';
-import { DocumentData } from 'firebase/firestore';
-import EditProductButtons from '../../components/edit-product-buttons/edit-product-buttons';
-import { useState } from 'react';
 
 export type ProductButtonProps = {
   product: Polish | DocumentData;
@@ -26,7 +26,7 @@ export type ProductTableProps = {
 const Product = () => {
   const navigate = useNavigate();
   const { productId } = useParams();
-  const [editable, setEditable] = useState(false)
+  const [editable, setEditable] = useState(false);
   const [product, setProduct] = useState({} as Polish | DocumentData);
 
   const productQuery = getProductQuery(productId);
@@ -35,18 +35,16 @@ const Product = () => {
 
   const setEditableFromChild = (editable: boolean) => {
     setEditable(editable);
-  }
+  };
 
   const cancelClickedFromChild = () => {
     if (productQuery.data) setProduct(productQuery.data[0]);
     setEditable(false);
-  }
+  };
 
   const setProductFromChild = (product: Polish | DocumentData) => {
     setProduct(product);
-  }
-
-  console.log("product page")
+  };
 
   return (
     <ProductContainer>

@@ -8,7 +8,6 @@ import {
 } from 'react-md';
 import { EditSVGIcon } from '@react-md/material-icons';
 import { useNavigate } from 'react-router-dom';
-import { useQueryClient } from 'react-query';
 
 import { ProductListContainer } from './product-list.styles';
 import { getProductListQuery } from '../../utils/firestore/firestore.utils';
@@ -17,8 +16,8 @@ import { DocumentData } from 'firebase/firestore';
 const ProductList = () => {
   const navigate = useNavigate();
 
-  const queryClient = useQueryClient();
   const productList = getProductListQuery();
+  console.log("productList", productList)
 
   const editProductPage = (product: DocumentData) => {
     console.log(product.name);

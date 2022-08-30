@@ -10,15 +10,15 @@ const ChipField = ({ chips, disabled }: ChipFieldProps) => {
     <>
       {disabled
         ? chips.map((effect: string) => (
-            <Chip key={effect} theme="outline" noninteractable>
-              {effect}
-            </Chip>
-          ))
+          <Chip key={effect} theme="outline" noninteractable>
+            {effect}
+          </Chip>
+        ))
         : chips.map((effect: string) => (
-            <Chip key={effect} theme="solid" noninteractable>
-              {effect}
-            </Chip>
-          ))}
+          <Chip key={effect} theme="solid" noninteractable>
+            {effect}
+          </Chip>
+        ))}
     </>
   );
 };
