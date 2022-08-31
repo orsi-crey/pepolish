@@ -16,8 +16,8 @@ import { DocumentData } from 'firebase/firestore';
 const ProductList = () => {
   const navigate = useNavigate();
 
-  const productList = getProductListQuery();
-  console.log("productList", productList)
+  const productListQuery = getProductListQuery();
+  const productList =  productListQuery?.data?.docs
 
   const editProductPage = (product: DocumentData) => {
     console.log(product.name);
@@ -27,9 +27,9 @@ const ProductList = () => {
     navigate(`/products/${product.id}`);
   };
 
-  const addPolishRow = (product: DocumentData) => {
+  const addPolishRow = (id: string, product: DocumentData) => {
     return (
-      <TableRow key={product.id} onClick={() => showProductPage(product)}>
+      <TableRow key={id} onClick={() => showProductPage(product)}>
         <TableCell>{product.brand}</TableCell>
         <TableCell>{product.name}</TableCell>
         <TableCell>{product.color}</TableCell>
@@ -64,7 +64,7 @@ const ProductList = () => {
       <Button themeType="contained" onClick={() => navigate('/products/new')}>
         Add polish to the list
       </Button>
-      {productList.isSuccess && (
+      {productListQuery.isSuccess && (
         <Table fullWidth>
           <TableHeader>
             <TableRow>
@@ -78,7 +78,7 @@ const ProductList = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {/* {productList.data?.map((product) => addPolishRow(product))} */}
+            {productList?.map((product) => addPolishRow(product.id, product.data()))}
           </TableBody>
         </Table>
       )}

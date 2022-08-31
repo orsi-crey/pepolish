@@ -24,16 +24,6 @@ export const getProductListQuery = () => {
   const query = useFirestoreQuery(['products'], ref, {
     subscribe: true,
   });
-console.log("query" , query)
-
-console.log("query data" , query.data)
-
-const snapshot = query.data;
-
-snapshot?.docs.forEach((docSnapshot) => {
-  const data = docSnapshot.data();
-  console.log("----------------", docSnapshot.id, data.name);
-});
 
   return query;
 };
