@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Button } from 'react-md';
 import { useNavigate } from 'react-router-dom';
 import { ProductButtonProps } from '../../routes/product-page/product.component';
@@ -9,32 +10,34 @@ const NewProductButtons = ({
   const navigate = useNavigate();
   const mutation = addNewProduct();
 
+  useEffect(() => {
+    if (mutation.isSuccess) {
+      navigate(`/products/${mutation.data?.id}`);
+    }
+  }, [mutation]);
+
   return (
     <>
       <>
-        <>
-          <Button
-            disabled={mutation.isLoading}
-            themeType="contained"
-            onClick={() => {
-              mutation.mutate(product);
-
-              navigate(`/products/${product.id}`);
-            }}
-          >
-            Save
-          </Button>
-          {mutation.isError && <p>{mutation.error.message}</p>}
-        </>
         <Button
+          disabled={mutation.isLoading}
           themeType="contained"
           onClick={() => {
-            navigate('/products');            
+            mutation.mutate(product);
           }}
         >
-          Cancel
+          Save
         </Button>
+        {mutation.isError && <p>{mutation.error.message}</p>}
       </>
+      <Button
+        themeType="contained"
+        onClick={() => {
+          navigate('/products');
+        }}
+      >
+        Cancel
+      </Button>
     </>
   );
 };

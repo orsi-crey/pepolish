@@ -4,11 +4,12 @@ import { updateProduct } from '../../utils/firestore/firestore.utils';
 
 const EditProductButtons = ({
   product,
+  productId,
   editable,
   seteditable,
   onCancelClicked
 }: ProductButtonProps) => {
-  const mutation = updateProduct(product);
+  const mutation = updateProduct(productId);
 
   return (
     <>

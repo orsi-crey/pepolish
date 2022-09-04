@@ -1,7 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { Button } from 'react-md';
 import { useState } from 'react';
-import { v4 as uuidv4 } from 'uuid';
 import { DocumentData } from 'firebase/firestore';
 
 import ProductTable from '../../components/product-table/product-table.component';
@@ -17,7 +16,7 @@ import { ProductContainer } from './new-product.styles';
 
 const NewProduct = () => {
   const emptyProduct: Polish = {
-    id: uuidv4(),
+    id: '',
     brand: '',
     name: '',
     color: '',
@@ -46,6 +45,7 @@ const NewProduct = () => {
       </Button>
       <NewProductButtons
         product={product}
+        productId={''}
         editable={true}
         seteditable={()=>{}}
         onCancelClicked={cancelClickedFromChild}

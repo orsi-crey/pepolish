@@ -17,19 +17,19 @@ const ProductList = () => {
   const navigate = useNavigate();
 
   const productListQuery = getProductListQuery();
-  const productList =  productListQuery?.data?.docs
+  const productList =  productListQuery?.data?.docs;
 
   const editProductPage = (product: DocumentData) => {
     console.log(product.name);
   };
 
-  const showProductPage = (product: DocumentData) => {
-    navigate(`/products/${product.id}`);
+  const showProductPage = (id: string) => {
+    navigate(`/products/${id}`);
   };
 
   const addPolishRow = (id: string, product: DocumentData) => {
     return (
-      <TableRow key={id} onClick={() => showProductPage(product)}>
+      <TableRow key={id} onClick={() => showProductPage(id)}>
         <TableCell>{product.brand}</TableCell>
         <TableCell>{product.name}</TableCell>
         <TableCell>{product.color}</TableCell>

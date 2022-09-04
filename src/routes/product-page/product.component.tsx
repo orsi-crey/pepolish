@@ -12,6 +12,7 @@ import { ProductContainer } from './product.styles';
 
 export type ProductButtonProps = {
   product: Polish | DocumentData;
+  productId: string | undefined;
   editable: boolean;
   seteditable: (v: boolean) => void;
   onCancelClicked: () => void;
@@ -30,15 +31,17 @@ const Product = () => {
   const [product, setProduct] = useState({} as Polish | DocumentData);
 
   const productQuery = getProductQuery(productId);
+  console.log('productQuery', productQuery);
+  console.log('productQuery data', productQuery.data);
 
-  if (productQuery.data && Object.keys(product).length === 0) { setProduct(productQuery.data[0]); }
+  if (productQuery.data && Object.keys(product).length === 0) { setProduct(productQuery.data); }
 
   const setEditableFromChild = (editable: boolean) => {
     setEditable(editable);
   };
 
   const cancelClickedFromChild = () => {
-    if (productQuery.data) setProduct(productQuery.data[0]);
+    if (productQuery.data) setProduct(productQuery.data);
     setEditable(false);
   };
 
@@ -53,7 +56,7 @@ const Product = () => {
       </Button>
       {productQuery.isSuccess && productQuery.data && (
         <>
-          <EditProductButtons product={product} editable={editable} seteditable={setEditableFromChild} onCancelClicked={cancelClickedFromChild}/>
+          <EditProductButtons product={product} productId={productId} editable={editable} seteditable={setEditableFromChild} onCancelClicked={cancelClickedFromChild}/>
           <ProductTable
             product={product}
             editable={editable}

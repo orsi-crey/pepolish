@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Form, TextField } from 'react-md';
 import { ProductTableProps } from '../../routes/product-page/product.component';
 
