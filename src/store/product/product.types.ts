@@ -10,6 +10,14 @@ export type Polish = {
   volume: number;
 };
 
+export type PolishBottle = {
+  productId: string;
+  userId: string;
+  locationUserId: string;
+  fullPercentage: number;
+  photoUrl: number;
+};
+
 export enum PRODUCT_ACTION_TYPES {
   FETCH_PRODUCT_LIST = 'FETCH_PRODUCT_LIST',
   FETCH_PRODUCT = 'FETCH_PRODUCT',

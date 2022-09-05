@@ -18,10 +18,6 @@ const ProductTable = ({ product, editable, setproduct }: ProductTableProps) => {
             ...product,
             brand: event.currentTarget.value,
           });
-          setproduct({
-            ...product,
-            brand: event.currentTarget.value,
-          });
         }}
       />
       <p>Name:</p>

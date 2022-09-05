@@ -16,7 +16,7 @@ import { DocumentData } from 'firebase/firestore';
 const ProductList = () => {
   const navigate = useNavigate();
 
-  const productListQuery = getListQuery("products");
+  const productListQuery = getListQuery('products');
   const productList =  productListQuery?.data?.docs;
 
   const editProductPage = (product: DocumentData) => {

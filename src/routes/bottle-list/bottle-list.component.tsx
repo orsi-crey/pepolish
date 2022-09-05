@@ -15,7 +15,7 @@ import { DocumentData } from 'firebase/firestore';
 const BottleList = () => {
   const navigate = useNavigate();
 
-  const bottleListQuery = getListQuery("bottles");
+  const bottleListQuery = getListQuery('bottles');
   const bottleList =  bottleListQuery?.data?.docs;
 
   const showBottlePage = (id: string) => {

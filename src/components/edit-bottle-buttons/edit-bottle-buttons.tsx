@@ -1,15 +1,15 @@
 import { Button } from 'react-md';
-import { ProductButtonProps } from '../../routes/product-page/product.component';
+import { BottleButtonProps } from '../../routes/bottle-page/bottle.component';
 import { updateItem } from '../../utils/firestore/firestore.utils';
 
-const EditProductButtons = ({
-  product,
-  productId,
+const EditBottleButtons = ({
+  bottle,
+  bottleId,
   editable,
   seteditable,
   onCancelClicked
-}: ProductButtonProps) => {
-  const mutation = updateItem(productId, 'products');
+}: BottleButtonProps) => {
+  const mutation = updateItem(bottleId, 'bottles');
 
   return (
     <>
@@ -20,7 +20,7 @@ const EditProductButtons = ({
             seteditable(true);
           }}
         >
-          Edit this product
+          Edit this bottle
         </Button>
       ) : (
         <>
@@ -29,7 +29,7 @@ const EditProductButtons = ({
               disabled={mutation.isLoading}
               themeType="contained"
               onClick={() => {
-                mutation.mutate(product);
+                mutation.mutate(bottle);
                 seteditable(false);
               }}
             >
@@ -51,4 +51,4 @@ const EditProductButtons = ({
   );
 };
 
-export default EditProductButtons;
+export default EditBottleButtons;

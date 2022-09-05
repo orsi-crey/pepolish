@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { DocumentData } from 'firebase/firestore';
 
 import ProductTable from '../../components/product-table/product-table.component';
-import { getProductQuery } from '../../utils/firestore/firestore.utils';
+import { getItemQuery } from '../../utils/firestore/firestore.utils';
 import { Polish } from '../../store/product/product.types';
 import EditProductButtons from '../../components/edit-product-buttons/edit-product-buttons';
 
@@ -30,7 +30,7 @@ const Product = () => {
   const [editable, setEditable] = useState(false);
   const [product, setProduct] = useState({} as Polish | DocumentData);
 
-  const productQuery = getProductQuery(productId);
+  const productQuery = getItemQuery(productId, 'products');
   console.log('productQuery', productQuery);
   console.log('productQuery data', productQuery.data);
 

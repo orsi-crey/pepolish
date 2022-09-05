@@ -11,20 +11,20 @@ import {
 
 import { db } from '../firebase/firebase.utils';
 
-export const getListQuery = (coll: string) => {
-  const ref = collection(db, coll);
+export const getListQuery = (collName: string) => {
+  const ref = collection(db, collName);
 
-  const query = useFirestoreQuery([coll], ref, {
+  const query = useFirestoreQuery([collName], ref, {
     subscribe: true,
   });
 
   return query;
 };
 
-export const getProductQuery = (productId: string | undefined) => {
-  const collectionRef = collection(db, 'products');
+export const getItemQuery = (productId: string | undefined, collName: string) => {
+  const collectionRef = collection(db, collName);
   const ref = doc(collectionRef, productId);
-  const query = useFirestoreDocumentData(['products', productId], ref);
+  const query = useFirestoreDocumentData([collName, productId], ref);
 
   return query;
 };
@@ -36,8 +36,8 @@ export const addNewProduct = () => {
   return mutation;
 };
 
-export const updateProduct = (id: string | undefined) => {
-  const coll = collection(db, 'products');
+export const updateItem = (id: string | undefined, collName: string) => {
+  const coll = collection(db, collName);
   const ref = doc(coll, id);
   const mutation = useFirestoreDocumentMutation(ref);
 
