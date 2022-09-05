@@ -11,10 +11,10 @@ import {
 
 import { db } from '../firebase/firebase.utils';
 
-export const getProductListQuery = () => {
-  const ref = collection(db, 'products');
+export const getListQuery = (coll: string) => {
+  const ref = collection(db, coll);
 
-  const query = useFirestoreQuery(['products'], ref, {
+  const query = useFirestoreQuery([coll], ref, {
     subscribe: true,
   });
 

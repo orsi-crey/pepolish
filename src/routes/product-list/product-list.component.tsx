@@ -10,13 +10,13 @@ import { EditSVGIcon } from '@react-md/material-icons';
 import { useNavigate } from 'react-router-dom';
 
 import { ProductListContainer } from './product-list.styles';
-import { getProductListQuery } from '../../utils/firestore/firestore.utils';
+import { getListQuery } from '../../utils/firestore/firestore.utils';
 import { DocumentData } from 'firebase/firestore';
 
 const ProductList = () => {
   const navigate = useNavigate();
 
-  const productListQuery = getProductListQuery();
+  const productListQuery = getListQuery("products");
   const productList =  productListQuery?.data?.docs;
 
   const editProductPage = (product: DocumentData) => {

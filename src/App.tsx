@@ -12,6 +12,7 @@ import SignUp from './routes/sign-up/sign-up.component';
 import ProductList from './routes/product-list/product-list.component';
 import Product from './routes/product-page/product.component';
 import NewProduct from './routes/new-product-page/new-product.component';
+import BottleList from './routes/bottle-list/bottle-list.component';
 
 const queryClient = new QueryClient();
 
@@ -28,10 +29,11 @@ function App() {
             <Route index element={<ProductList />} />
             <Route path="new" element={<NewProduct />} />
             <Route path=":productId" element={<Product />} />
-            <Route
-              path=":productId/edit"
-              element={<div>edit product page</div>}
-            />
+          </Route>
+          <Route path="bottles">
+            <Route index element={<BottleList />} />
+            {/* <Route path="new" element={<NewBottle />} />
+            <Route path=":bottleId" element={<Bottle />} /> */}
           </Route>
         </Route>
       </Routes>
