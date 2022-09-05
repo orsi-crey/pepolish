@@ -3,10 +3,17 @@ import { ProductTableProps } from '../../routes/product-page/product.component';
 
 import ChipField from '../chip-field/chip-field.component';
 
-const ProductTable = ({ product, editable, setproduct }: ProductTableProps) => {
+const ProductTable = ({ productId, product, editable, setproduct }: ProductTableProps) => {
 
   return (
     <Form>
+      <p>Product Id:</p>
+      <TextField
+        id="productId"
+        name="Product Id"
+        disabled={true}
+        value={productId}
+      />
       <p>Brand:</p>
       <TextField
         id="brand"

@@ -19,6 +19,7 @@ export type BottleButtonProps = {
 };
 
 export type BottleTableProps = {
+  bottleId: string | undefined;
   bottle: PolishBottle | DocumentData;
   editable: boolean;
   setbottle: (v: PolishBottle | DocumentData) => void;
@@ -58,6 +59,7 @@ const Bottle = () => {
         <>
           <EditBottleButtons bottle={bottle} bottleId={bottleId} editable={editable} seteditable={setEditableFromChild} onCancelClicked={cancelClickedFromChild} />
           <BottleTable
+            bottleId={bottleId}
             bottle={bottle}
             editable={editable}
             setbottle={setBottleFromChild}

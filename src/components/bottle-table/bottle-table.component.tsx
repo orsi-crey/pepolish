@@ -1,10 +1,17 @@
 import { Form, TextField } from 'react-md';
 import { BottleTableProps } from '../../routes/bottle-page/bottle.component';
 
-const BottleTable = ({ bottle, editable, setbottle }: BottleTableProps) => {
+const BottleTable = ({ bottleId, bottle, editable, setbottle }: BottleTableProps) => {
 
   return (
     <Form>
+      <p>Bottle Id:</p>
+      <TextField
+        id="bottleId"
+        name="Bottle Id"
+        disabled={true}
+        value={bottleId}
+      />
       <p>Product Id:</p>
       <TextField
         id="productId"

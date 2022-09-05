@@ -20,6 +20,7 @@ export type ProductButtonProps = {
 
 export type ProductTableProps = {
   product: Polish | DocumentData;
+  productId: string | undefined;
   editable: boolean;
   setproduct: (v: Polish | DocumentData) => void;
 };
@@ -58,6 +59,7 @@ const Product = () => {
         <>
           <EditProductButtons product={product} productId={productId} editable={editable} seteditable={setEditableFromChild} onCancelClicked={cancelClickedFromChild}/>
           <ProductTable
+            productId={productId}
             product={product}
             editable={editable}
             setproduct={setProductFromChild}
