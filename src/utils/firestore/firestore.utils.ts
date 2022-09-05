@@ -29,8 +29,8 @@ export const getItemQuery = (productId: string | undefined, collName: string) =>
   return query;
 };
 
-export const addNewProduct = () => {
-  const ref = collection(db, 'products');
+export const addNewItem = (collName: string) => {
+  const ref = collection(db, collName);
   const mutation = useFirestoreCollectionMutation(ref);
 
   return mutation;

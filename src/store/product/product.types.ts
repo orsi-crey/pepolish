@@ -15,7 +15,7 @@ export type PolishBottle = {
   userId: string;
   locationUserId: string;
   fullPercentage: number;
-  photoUrl: number;
+  photoUrl: string;
 };
 
 export enum PRODUCT_ACTION_TYPES {

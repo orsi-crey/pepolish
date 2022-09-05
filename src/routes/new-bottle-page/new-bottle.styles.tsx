@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const ProductContainer = styled.div`
+export const BottleContainer = styled.div`
   width: 60%;
   margin: auto;
   margin-top: 25px;

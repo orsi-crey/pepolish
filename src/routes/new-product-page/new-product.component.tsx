@@ -9,11 +9,6 @@ import NewProductButtons from '../../components/new-product-buttons/new-product-
 
 import { ProductContainer } from './new-product.styles';
 
-// szoval van egy új product, ami először empty
-// save: add doc, redirect to new polish page
-// cancel: return to list
-// editable true
-
 const NewProduct = () => {
   const emptyProduct: Polish = {
     id: '',

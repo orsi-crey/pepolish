@@ -1,18 +1,18 @@
 import { useEffect } from 'react';
 import { Button } from 'react-md';
 import { useNavigate } from 'react-router-dom';
-import { ProductButtonProps } from '../../routes/product-page/product.component';
+import { BottleButtonProps } from '../../routes/bottle-page/bottle.component';
 import { addNewItem } from '../../utils/firestore/firestore.utils';
 
-const NewProductButtons = ({
-  product,
-}: ProductButtonProps) => {
+const NewBottleButtons = ({
+  bottle,
+}: BottleButtonProps) => {
   const navigate = useNavigate();
-  const mutation = addNewItem('products');
+  const mutation = addNewItem('bottles');
 
   useEffect(() => {
     if (mutation.isSuccess) {
-      navigate(`/products/${mutation.data?.id}`);
+      navigate(`/bottles/${mutation.data?.id}`);
     }
   }, [mutation]);
 
@@ -23,7 +23,7 @@ const NewProductButtons = ({
           disabled={mutation.isLoading}
           themeType="contained"
           onClick={() => {
-            mutation.mutate(product);
+            mutation.mutate(bottle);
           }}
         >
           Save
@@ -33,7 +33,7 @@ const NewProductButtons = ({
       <Button
         themeType="contained"
         onClick={() => {
-          navigate('/products');
+          navigate('/bottles');
         }}
       >
         Cancel
@@ -42,4 +42,4 @@ const NewProductButtons = ({
   );
 };
 
-export default NewProductButtons;
+export default NewBottleButtons;

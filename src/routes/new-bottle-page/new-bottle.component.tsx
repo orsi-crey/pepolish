@@ -3,58 +3,49 @@ import { Button } from 'react-md';
 import { useState } from 'react';
 import { DocumentData } from 'firebase/firestore';
 
-import ProductTable from '../../components/product-table/product-table.component';
-import { Polish } from '../../store/product/product.types';
-import NewProductButtons from '../../components/new-product-buttons/new-product-buttons';
+import BottleTable from '../../components/bottle-table/bottle-table.component';
+import { PolishBottle } from '../../store/product/product.types';
+import NewBottleButtons from '../../components/new-bottle-buttons/new-bottle-buttons';
 
-import { ProductContainer } from './new-bottle.styles';
+import { BottleContainer } from './new-bottle.styles';
 
-// szoval van egy új product, ami először empty
-// save: add doc, redirect to new polish page
-// cancel: return to list
-// editable true
-
-const NewProduct = () => {
-  const emptyProduct: Polish = {
-    id: '',
-    brand: '',
-    name: '',
-    color: '',
-    effects: [],
-    multichrome: [],
-    imageUrls: [],
-    other: [],
-    volume: 0,
+const NewBottle = () => {
+  const emptyBottle: PolishBottle = {
+    productId: '',
+    userId: '',
+    locationUserId: '',
+    fullPercentage: 0,
+    photoUrl: '',
   };
 
   const navigate = useNavigate();
-  const [product, setProduct] = useState(emptyProduct);
+  const [bottle, setBottle] = useState(emptyBottle);
 
-  const setProductFromChild = (product: Polish | DocumentData) => {
-    setProduct(product as Polish);
+  const setBottleFromChild = (bottle: PolishBottle | DocumentData) => {
+    setBottle(bottle as PolishBottle);
   };
 
   const cancelClickedFromChild = () => {
-    navigate('/products');
+    navigate('/bottles');
   };
 
   return (
-    <ProductContainer>
-      <Button themeType="contained" onClick={() => navigate('/products')}>
-        Back to product list
+    <BottleContainer>
+      <Button themeType="contained" onClick={() => navigate('/bottles')}>
+        Back to bottle list
       </Button>
-      <NewProductButtons
-        product={product}
-        productId={''}
+      <NewBottleButtons
+        bottle={bottle}
+        bottleId={''}
         editable={true}
         seteditable={()=>{}}
         onCancelClicked={cancelClickedFromChild}
       />
-      <ProductTable product={product} editable={true} setproduct={setProductFromChild} />
-    </ProductContainer>
+      <BottleTable bottle={bottle} editable={true} setbottle={setBottleFromChild} />
+    </BottleContainer>
   );
 };
 
-export default NewProduct;
+export default NewBottle;
 
-// új productnál
+// új bottlenál

@@ -14,6 +14,7 @@ import Product from './routes/product-page/product.component';
 import NewProduct from './routes/new-product-page/new-product.component';
 import BottleList from './routes/bottle-list/bottle-list.component';
 import Bottle from './routes/bottle-page/bottle.component';
+import NewBottle from './routes/new-bottle-page/new-bottle.component';
 
 const queryClient = new QueryClient();
 
@@ -33,7 +34,7 @@ function App() {
           </Route>
           <Route path="bottles">
             <Route index element={<BottleList />} />
-            {/* <Route path="new" element={<NewBottle />} /> */}
+            <Route path="new" element={<NewBottle />} />
             <Route path=":bottleId" element={<Bottle />} />
           </Route>
         </Route>
