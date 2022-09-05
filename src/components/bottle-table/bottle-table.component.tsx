@@ -1,7 +1,11 @@
 import { Form, TextField } from 'react-md';
 import { BottleTableProps } from '../../routes/bottle-page/bottle.component';
+import { getItemQuery } from '../../utils/firestore/firestore.utils';
 
 const BottleTable = ({ bottleId, bottle, editable, setbottle }: BottleTableProps) => {
+  const productQuery = getItemQuery(bottle.productId, 'products');
+  const userQuery = getItemQuery(bottle.userId, 'users');
+  const locationQuery = getItemQuery(bottle.locationUserId, 'users');
 
   return (
     <Form>
@@ -13,6 +17,7 @@ const BottleTable = ({ bottleId, bottle, editable, setbottle }: BottleTableProps
         value={bottleId}
       />
       <p>Product Id:</p>
+      {productQuery.isSuccess && productQuery.data && <p>{`${productQuery.data?.brand}: ${productQuery.data?.name}`}</p>}
       <TextField
         id="productId"
         name="Product Id"
@@ -26,6 +31,7 @@ const BottleTable = ({ bottleId, bottle, editable, setbottle }: BottleTableProps
         }}
       />
       <p>User Id:</p>
+      {userQuery.isSuccess && userQuery.data && <p>{userQuery.data?.displayName}</p>}
       <TextField
         id="userId"
         name="User Id"
@@ -39,6 +45,7 @@ const BottleTable = ({ bottleId, bottle, editable, setbottle }: BottleTableProps
         }
       />
       <p>Location User Id:</p>
+      {locationQuery.isSuccess && userQuery.data && <p>{locationQuery.data?.displayName}</p>}
       <TextField
         id="locationUserId"
         name="Location User Id"
