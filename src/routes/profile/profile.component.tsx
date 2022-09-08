@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Button, TextField } from 'react-md';
 
 import { authState, initialUserdata, UserContext } from '../../contexts/user.context';
@@ -9,6 +9,7 @@ import { ProfileContainer } from './profile.styles';
 
 const Profile = () => {
   const { isLoggedIn, username, userdata, setUserdata } = useContext(UserContext);
+  const [edited, setEdited] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -21,6 +22,7 @@ const Profile = () => {
 
   const userdataSaveHandler = () => {
     uploadDataToUser({ userdata: userdata });
+    setEdited(false);
   };
 
   return (
@@ -36,24 +38,34 @@ const Profile = () => {
             label="Name"
             name="name"
             value={userdata.name}
-            onChange={(event) => setUserdata({ ...userdata, name: event.currentTarget.value })}
+            onChange={(event) => {
+              setEdited(true);
+              setUserdata({ ...userdata, name: event.currentTarget.value })
+            }}
           />
           <TextField
             id="city"
             label="City"
             name="city"
             value={userdata.city}
-            onChange={(event) => setUserdata({ ...userdata, city: event.currentTarget.value })}
+            onChange={(event) =>  {
+              setEdited(true);
+              setUserdata({ ...userdata, city: event.currentTarget.value })
+            }}
           />
           <TextField
-            id="phone"
-            label="Phone"
-            name="phone"
-            value={userdata.phone}
-            onChange={(event) => setUserdata({ ...userdata, phone: event.currentTarget.value })}
+            id="profilePic"
+            label="profilePic"
+            name="profilePic"
+            value={userdata.profilePic}
+            onChange={(event) =>  {
+              setEdited(true);
+              setUserdata({ ...userdata, profilePic: event.currentTarget.value })
+            }}
           />
+          <img src={userdata.profilePic} />
           <div>
-            <Button theme="primary" themeType="contained" onClick={userdataSaveHandler}>
+            <Button theme="primary" themeType="contained" disabled={!edited} onClick={userdataSaveHandler}>
               Save data
             </Button>
           </div>

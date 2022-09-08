@@ -22,7 +22,7 @@ const Navigation = () => {
     case authState.SignedIn:
       return <>
         <div><Link to='/'>Home</Link></div>
-        <div><Link to='/profile'>Profile</Link></div>
+        <div><Link to='/my-profile'>Profile</Link></div>
         <div><Link to='/' onClick={signOutHandler}>Log out</Link></div>
       </>;
     case authState.Loading:

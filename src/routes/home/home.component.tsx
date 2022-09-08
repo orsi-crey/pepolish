@@ -14,7 +14,7 @@ const Home = () => {
     navigate('/sign-in');
   }
   function handleProfileClick() {
-    navigate('/profile');
+    navigate('/my-profile');
   }
 
   const homeLinks = () => {
