@@ -1,10 +1,10 @@
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Button } from 'react-md';
 import { useState } from 'react';
 import { DocumentData } from 'firebase/firestore';
 
 import ProductTable from '../../components/product-table/product-table.component';
-import { getItemQuery, getItemsByWhereQuery } from '../../utils/firestore/firestore.utils';
+import { getItemQuery, getItemsByWhereQuery, getListSubsetQuery } from '../../utils/firestore/firestore.utils';
 import { Polish } from '../../store/product/product.types';
 import EditProductButtons from '../../components/edit-product-buttons/edit-product-buttons';
 
@@ -35,11 +35,20 @@ const Product = () => {
   if (productQuery.data && Object.keys(product).length === 0) { setProduct(productQuery.data); }
 
   const bottlesQuery = getItemsByWhereQuery(productId, 'productId', 'bottles');
-  console.log('bottlesQuery', bottlesQuery);
-  const userId = bottlesQuery?.isSuccess ? bottlesQuery?.data?.docs[0].data().userId : '-';
+  const userIds: string[] = ['-'];
+  bottlesQuery?.data?.docs.forEach(item => {
+    userIds.push(item.data().userId);
+  });
 
-  const userQuery = getItemQuery(userId, 'users', bottlesQuery.isSuccess);
-  console.log('userQuery', userQuery.data?.displayName);
+  const userQuery = getListSubsetQuery(userIds, 'users', bottlesQuery.isSuccess);
+
+  const owningUsers = () => {
+    return userQuery.data?.docs.map((item: any) => {
+      return <div key={item.id}>
+        • <Link to={`/users/${item.id}`}>{item.data().displayName}</Link>
+      </div>;
+    });
+  };
 
   const setEditableFromChild = (editable: boolean) => {
     setEditable(editable);
@@ -71,6 +80,12 @@ const Product = () => {
           {product.imageUrls?.map((url: string) => (
             <img key={url} src={url} />
           ))}
+        </>
+      )}
+      {productQuery.isSuccess && userQuery.isSuccess && userQuery.data?.docs?.length > 0 && (
+        <>
+          <p>List of users who own this polish:</p>
+          {owningUsers()}
         </>
       )}
     </ProductContainer>
