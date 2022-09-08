@@ -4,10 +4,10 @@ import { Button, TextField } from 'react-md';
 import { authState, initialUserdata, UserContext } from '../../contexts/user.context';
 import { getAllUserData, uploadDataToUser } from '../../utils/firebase/firebase.utils';
 
-import { ProfileContainer } from './profile.styles';
+import { MyProfileContainer } from './profile.styles';
 
 
-const Profile = () => {
+const MyProfile = () => {
   const { isLoggedIn, username, userdata, setUserdata } = useContext(UserContext);
   const [edited, setEdited] = useState(false);
 
@@ -26,7 +26,7 @@ const Profile = () => {
   };
 
   return (
-    <ProfileContainer>
+    <MyProfileContainer>
       {isLoggedIn === authState.SignedIn ?
         <>
           <div>
@@ -75,8 +75,8 @@ const Profile = () => {
           <div>Hi! You're not logged in!</div>
         </>
       }
-    </ProfileContainer>
+    </MyProfileContainer>
   );
 };
 
-export default Profile;
+export default MyProfile;

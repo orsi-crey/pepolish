@@ -16,6 +16,7 @@ import BottleList from './routes/bottle-list/bottle-list.component';
 import Bottle from './routes/bottle-page/bottle.component';
 import NewBottle from './routes/new-bottle-page/new-bottle.component';
 import UserList from './routes/user-list/user-list.component';
+import UserProfile from './routes/user-profile/user-profile.component';
 
 const queryClient = new QueryClient();
 
@@ -30,7 +31,7 @@ function App() {
           <Route path="my-profile" element={<Profile />} />
           <Route path="users"> 
             <Route index element={<UserList />} />
-            {/* <Route path=":userId" element={<UserProfile />} /> */}
+            <Route path=":userId" element={<UserProfile />} />
           </Route>
           <Route path="products">
             <Route index element={<ProductList />} />

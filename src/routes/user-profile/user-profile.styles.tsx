@@ -1,7 +1,7 @@
 import { TextField } from 'react-md';
 import styled from 'styled-components';
 
-export const MyProfileContainer = styled.div`
+export const UserProfileContainer = styled.div`
   width: 60%;
   margin: auto;
   margin-top: 25px;
@@ -10,10 +10,9 @@ export const MyProfileContainer = styled.div`
   padding: 20px;
   background-color: white;
 
-  div {
-    text-align: center;
+  img {
     padding: 10px;
-    width: 60%;
+    width: 150px;
     margin: auto;
   }
 `;
