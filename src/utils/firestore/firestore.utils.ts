@@ -7,6 +7,8 @@ import {
 import {
   collection,
   doc,
+  query,
+  where,
 } from 'firebase/firestore';
 
 import { db } from '../firebase/firebase.utils';
@@ -21,12 +23,24 @@ export const getListQuery = (collName: string) => {
   return query;
 };
 
-export const getItemQuery = (productId: string | undefined, collName: string) => {
+export const getItemQuery = (productId: string | undefined, collName: string, isQueryEnabled = true) => {
   const collectionRef = collection(db, collName);
   const ref = doc(collectionRef, productId);
-  const query = useFirestoreDocumentData([collName, productId], ref);
+  const query = useFirestoreDocumentData([collName, productId], ref, {}, { enabled: isQueryEnabled });
 
   return query;
+};
+
+export const getItemsByWhereQuery = (id: string | undefined, field: string, collName: string) => {
+  const ref = query(
+    collection(db, collName),
+    where(field, '==', id)
+  );
+
+  const whereQuery = useFirestoreQuery([id], ref);
+
+  return whereQuery;
+
 };
 
 export const addNewItem = (collName: string) => {
