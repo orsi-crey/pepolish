@@ -22,7 +22,7 @@ const UserList = () => {
   };
 
   const addUserRow = (id: string, user: DocumentData) => {
-    console.log(user)
+    console.log(user);
     return (
       <TableRow key={id} onClick={() => showUserPage(id)}>
         <TableCell>{<img src={user.userdata?.profilePic} />}</TableCell>

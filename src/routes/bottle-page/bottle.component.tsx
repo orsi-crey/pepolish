@@ -32,8 +32,8 @@ const Bottle = () => {
   const [bottle, setBottle] = useState({} as PolishBottle | DocumentData);
 
   const bottleQuery = getItemQuery(bottleId, 'bottles');
-  console.log('bottleQuery', bottleQuery);
-  console.log('bottleQuery data', bottleQuery.data);
+  // console.log('bottleQuery', bottleQuery);
+  // console.log('bottleQuery data', bottleQuery.data);
 
   if (bottleQuery.data && Object.keys(bottle).length === 0) { setBottle(bottleQuery.data); }
 

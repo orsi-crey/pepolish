@@ -40,7 +40,7 @@ const MyProfile = () => {
             value={userdata.name}
             onChange={(event) => {
               setEdited(true);
-              setUserdata({ ...userdata, name: event.currentTarget.value })
+              setUserdata({ ...userdata, name: event.currentTarget.value });
             }}
           />
           <TextField
@@ -50,7 +50,7 @@ const MyProfile = () => {
             value={userdata.city}
             onChange={(event) =>  {
               setEdited(true);
-              setUserdata({ ...userdata, city: event.currentTarget.value })
+              setUserdata({ ...userdata, city: event.currentTarget.value });
             }}
           />
           <TextField
@@ -60,7 +60,7 @@ const MyProfile = () => {
             value={userdata.profilePic}
             onChange={(event) =>  {
               setEdited(true);
-              setUserdata({ ...userdata, profilePic: event.currentTarget.value })
+              setUserdata({ ...userdata, profilePic: event.currentTarget.value });
             }}
           />
           <img src={userdata.profilePic} />

@@ -10,14 +10,14 @@ const UserProfile = () => {
   const navigate = useNavigate();
   const userQuery = getItemQuery(userId, 'users');
 
-  const bottleQuery = getItemsByWhereQuery(userId, "userId", "bottles");
+  const bottleQuery = getItemsByWhereQuery(userId, 'userId', 'bottles');
 
   const productsList: string[] = ['-'];
   bottleQuery.data?.docs.forEach(element => {
-    productsList.push(element.data().productId)
+    productsList.push(element.data().productId);
   });
 
-  const productsQuery = getListSubsetQuery(productsList, "products", bottleQuery.isSuccess);
+  const productsQuery = getListSubsetQuery(productsList, 'products', bottleQuery.isSuccess);
 
   const productsMap = new Map<string, string>();
   productsQuery.data?.docs?.forEach(item => {
@@ -26,14 +26,14 @@ const UserProfile = () => {
 
   const ownedProducts = () => {
     if (bottleQuery.isSuccess && bottleQuery.data?.docs.length === 0) {
-      return <div>No polishes!</div>
+      return <div>No polishes!</div>;
     }
     return bottleQuery.data?.docs.map((item: any) => {
       return <div key={item.id}>
         • <Link to={`/bottles/${item.id}`}>{productsMap.get(item.data().productId)}</Link>
-      </div>
-    })
-  }
+      </div>;
+    });
+  };
 
   return (
     <UserProfileContainer>
