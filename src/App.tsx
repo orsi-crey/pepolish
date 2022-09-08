@@ -15,6 +15,7 @@ import NewProduct from './routes/new-product-page/new-product.component';
 import BottleList from './routes/bottle-list/bottle-list.component';
 import Bottle from './routes/bottle-page/bottle.component';
 import NewBottle from './routes/new-bottle-page/new-bottle.component';
+import UserList from './routes/user-list/user-list.component';
 
 const queryClient = new QueryClient();
 
@@ -27,6 +28,10 @@ function App() {
           <Route path="sign-in" element={<SignIn />} />
           <Route path="sign-up" element={<SignUp />} />
           <Route path="my-profile" element={<Profile />} />
+          <Route path="users"> 
+            <Route index element={<UserList />} />
+            {/* <Route path=":userId" element={<UserProfile />} /> */}
+          </Route>
           <Route path="products">
             <Route index element={<ProductList />} />
             <Route path="new" element={<NewProduct />} />

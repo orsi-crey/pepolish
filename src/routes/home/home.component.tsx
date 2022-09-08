@@ -13,9 +13,6 @@ const Home = () => {
   function handleLoginClick() {
     navigate('/sign-in');
   }
-  function handleProfileClick() {
-    navigate('/my-profile');
-  }
 
   const homeLinks = () => {
     switch (isLoggedIn) {
@@ -32,8 +29,8 @@ const Home = () => {
       return <>
         <div>Hi {username}!</div>
         <div>
-          <Button theme="primary" onClick={handleProfileClick}>
-              Click to edit profile!
+          <Button theme="primary" onClick={() => navigate('/users')}>
+              Click to check users!
           </Button>
         </div>
         <div>
