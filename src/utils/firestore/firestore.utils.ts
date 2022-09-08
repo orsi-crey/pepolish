@@ -7,6 +7,7 @@ import {
 import {
   collection,
   doc,
+  documentId,
   query,
   where,
 } from 'firebase/firestore';
@@ -40,7 +41,17 @@ export const getItemsByWhereQuery = (id: string | undefined, field: string, coll
   const whereQuery = useFirestoreQuery([id], ref);
 
   return whereQuery;
+};
 
+export const getListSubsetQuery = (ids: string[] | undefined, collName: string, isQueryEnabled = true) => {
+  const ref = query(
+    collection(db, collName),
+    where(documentId(), 'in', ids)
+  );
+
+  const whereQuery = useFirestoreQuery([ids], ref, {}, { enabled: isQueryEnabled });
+
+  return whereQuery;
 };
 
 export const addNewItem = (collName: string) => {
