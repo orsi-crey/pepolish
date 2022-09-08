@@ -1,9 +1,6 @@
-import { useContext, useEffect } from 'react';
 import { Button, TextField } from 'react-md';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { authState, initialUserdata, UserContext } from '../../contexts/user.context';
-import { getAllUserData, uploadDataToUser } from '../../utils/firebase/firebase.utils';
 import { getItemQuery } from '../../utils/firestore/firestore.utils';
 
 import { UserProfileContainer } from './user-profile.styles';
