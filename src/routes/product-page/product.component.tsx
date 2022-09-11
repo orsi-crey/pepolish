@@ -1,24 +1,16 @@
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Button } from 'react-md';
 import { useState } from 'react';
-import { DocumentData, DocumentReference, FirestoreError, WithFieldValue } from 'firebase/firestore';
+import { DocumentData } from 'firebase/firestore';
 
 import ProductTable from '../../components/product-table/product-table.component';
-import { getItemQuery, getItemsByWhereQuery, getListSubsetQuery, updateItem } from '../../utils/firestore/firestore.utils';
+import { getItemQuery, getItemsByWhereQuery, getListSubsetQuery, mutationResult, updateItem } from '../../utils/firestore/firestore.utils';
 import { Polish } from '../../store/product/product.types';
 import EditProductButtons from '../../components/edit-product-buttons/edit-product-buttons';
 
 import { ProductContainer } from './product.styles';
-import { UseMutationResult } from 'react-query';
-
-type mutationResult =
-  UseMutationResult<void, FirestoreError, WithFieldValue<DocumentData>, unknown> |
-  UseMutationResult<DocumentReference<DocumentData>, FirestoreError, WithFieldValue<DocumentData>, unknown>;
-
 
 export type ProductButtonProps = {
-  product: Polish | DocumentData;
-  productId: string | undefined;
   editable: boolean;
   seteditable: (v: boolean) => void;
   onSaveClicked: () => void;
@@ -86,8 +78,6 @@ const Product = () => {
       {productQuery && productQuery.isSuccess && productQuery.data && (
         <>
           <EditProductButtons
-            product={product}
-            productId={productId}
             editable={editable}
             seteditable={setEditableFromChild}
             onSaveClicked={saveClickedFromChild}

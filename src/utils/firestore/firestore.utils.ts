@@ -7,10 +7,15 @@ import {
 import {
   collection,
   doc,
+  DocumentData,
   documentId,
+  DocumentReference,
+  FirestoreError,
   query,
   where,
+  WithFieldValue,
 } from 'firebase/firestore';
+import { UseMutationResult } from 'react-query';
 
 import { db } from '../firebase/firebase.utils';
 
@@ -74,3 +79,7 @@ export const updateItem = (id: string | undefined, collName: string) => {
 
   return mutation;
 };
+
+export type mutationResult =
+  UseMutationResult<void, FirestoreError, WithFieldValue<DocumentData>, unknown> |
+  UseMutationResult<DocumentReference<DocumentData>, FirestoreError, WithFieldValue<DocumentData>, unknown>;

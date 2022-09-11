@@ -1,15 +1,13 @@
 import { Button } from 'react-md';
 import { BottleButtonProps } from '../../routes/bottle-page/bottle.component';
-import { updateItem } from '../../utils/firestore/firestore.utils';
 
 const EditBottleButtons = ({
-  bottle,
-  bottleId,
   editable,
   seteditable,
-  onCancelClicked
+  onSaveClicked,
+  onCancelClicked,
+  mutation,
 }: BottleButtonProps) => {
-  const mutation = updateItem(bottleId, 'bottles');
 
   return (
     <>
@@ -24,24 +22,19 @@ const EditBottleButtons = ({
         </Button>
       ) : (
         <>
-          {/* <>
+          {<>
             <Button
-              disabled={mutation.isLoading}
+              disabled={mutation && mutation.isLoading}
               themeType="contained"
-              onClick={() => {
-                mutation.mutate(bottle);
-                seteditable(false);
-              }}
+              onClick={() => { onSaveClicked(); }}
             >
               Save
             </Button>
-            {mutation.isError && <p>{mutation.error.message}</p>}
-          </> */}
+            {mutation && mutation.isError && <p>{mutation.error.message}</p>}
+          </>}
           <Button
             themeType="contained"
-            onClick={() => {
-              onCancelClicked();
-            }}
+            onClick={() => { onCancelClicked(); }}
           >
             Cancel
           </Button>

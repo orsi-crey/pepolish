@@ -52,8 +52,6 @@ const NewProduct = () => {
         Back to product list
       </Button>
       <NewProductButtons
-        product={product}
-        productId={''}
         editable={true}
         seteditable={()=>{}}
         onSaveClicked={saveClickedFromChild}

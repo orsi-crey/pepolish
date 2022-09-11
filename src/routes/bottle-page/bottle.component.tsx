@@ -4,18 +4,18 @@ import { useState } from 'react';
 import { DocumentData } from 'firebase/firestore';
 
 import BottleTable from '../../components/bottle-table/bottle-table.component';
-import { getItemQuery } from '../../utils/firestore/firestore.utils';
+import { getItemQuery, mutationResult, updateItem } from '../../utils/firestore/firestore.utils';
 import { PolishBottle } from '../../store/product/product.types';
 import EditBottleButtons from '../../components/edit-bottle-buttons/edit-bottle-buttons';
 
 import { BottleContainer } from './bottle.styles';
 
 export type BottleButtonProps = {
-  bottle: PolishBottle | DocumentData;
-  bottleId: string | undefined;
   editable: boolean;
   seteditable: (v: boolean) => void;
+  onSaveClicked: () => void;
   onCancelClicked: () => void;
+  mutation: mutationResult | undefined;
 };
 
 export type BottleTableProps = {
@@ -32,13 +32,18 @@ const Bottle = () => {
   const [bottle, setBottle] = useState({} as PolishBottle | DocumentData);
 
   const bottleQuery = getItemQuery(bottleId, 'bottles');
-  // console.log('bottleQuery', bottleQuery);
-  // console.log('bottleQuery data', bottleQuery.data);
 
   if (bottleQuery && bottleQuery.data && Object.keys(bottle).length === 0) { setBottle(bottleQuery.data); }
 
+  const mutation = updateItem(bottleId, 'bottles');
+
   const setEditableFromChild = (editable: boolean) => {
     setEditable(editable);
+  };
+  
+  const saveClickedFromChild = () => {
+    mutation && mutation.mutate(bottle);
+    setEditable(false);
   };
 
   const cancelClickedFromChild = () => {
@@ -57,7 +62,13 @@ const Bottle = () => {
       </Button>
       {bottleQuery && bottleQuery.isSuccess && bottleQuery.data && (
         <>
-          <EditBottleButtons bottle={bottle} bottleId={bottleId} editable={editable} seteditable={setEditableFromChild} onCancelClicked={cancelClickedFromChild} />
+          <EditBottleButtons
+            editable={editable}
+            seteditable={setEditableFromChild}
+            onSaveClicked={saveClickedFromChild}
+            onCancelClicked={cancelClickedFromChild}
+            mutation={mutation}
+          />
           <BottleTable
             bottleId={bottleId}
             bottle={bottle}
