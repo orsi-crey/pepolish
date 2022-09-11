@@ -62,6 +62,37 @@ export const getListSubsetQuery = (ids: string[] | undefined, collName: string, 
   return whereQuery;
 };
 
+export const getListFilteredFieldsQuery = (collName: string, field: string, isQueryEnabled = true) => {
+  const ref = collection(db, collName);
+
+  const query = useFirestoreQuery([collName], ref, {
+    subscribe: true
+  }, {
+    enabled: isQueryEnabled,
+    select(snapshot) {
+      return snapshot.docs.map((docSnapshot) => docSnapshot.data()[field])
+    }
+  });
+
+  return query;
+};
+
+export const getItemsByWhereFilteredFieldsQuery = (id: string | undefined, field: string, collName: string, isQueryEnabled = true) => {
+  const ref = query(
+    collection(db, collName),
+    where(field, '==', id)
+  );
+
+  const whereQuery = useFirestoreQuery([id], ref, {}, {
+    enabled: isQueryEnabled,
+    select(snapshot) {
+      return snapshot.docs.map((docSnapshot) => docSnapshot.data().name)
+    }
+  });
+
+  return whereQuery;
+};
+
 export const addNewItem = (collName: string) => {
   const ref = collection(db, collName);
   const mutation = useFirestoreCollectionMutation(ref);
