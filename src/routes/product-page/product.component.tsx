@@ -1,21 +1,29 @@
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Button } from 'react-md';
 import { useState } from 'react';
-import { DocumentData } from 'firebase/firestore';
+import { DocumentData, DocumentReference, FirestoreError, WithFieldValue } from 'firebase/firestore';
 
 import ProductTable from '../../components/product-table/product-table.component';
-import { getItemQuery, getItemsByWhereQuery, getListSubsetQuery } from '../../utils/firestore/firestore.utils';
+import { getItemQuery, getItemsByWhereQuery, getListSubsetQuery, updateItem } from '../../utils/firestore/firestore.utils';
 import { Polish } from '../../store/product/product.types';
 import EditProductButtons from '../../components/edit-product-buttons/edit-product-buttons';
 
 import { ProductContainer } from './product.styles';
+import { UseMutationResult } from 'react-query';
+
+type mutationResult =
+  UseMutationResult<void, FirestoreError, WithFieldValue<DocumentData>, unknown> |
+  UseMutationResult<DocumentReference<DocumentData>, FirestoreError, WithFieldValue<DocumentData>, unknown>;
+
 
 export type ProductButtonProps = {
   product: Polish | DocumentData;
   productId: string | undefined;
   editable: boolean;
   seteditable: (v: boolean) => void;
+  onSaveClicked: () => void;
   onCancelClicked: () => void;
+  mutation: mutationResult | undefined;
 };
 
 export type ProductTableProps = {
@@ -42,6 +50,8 @@ const Product = () => {
 
   const userQuery = getListSubsetQuery(userIds, 'users', bottlesQuery.isSuccess);
 
+  const mutation = updateItem(productId, 'products');
+
   const owningUsers = () => {
     return userQuery.data?.docs.map((item: any) => {
       return <div key={item.id}>
@@ -52,6 +62,11 @@ const Product = () => {
 
   const setEditableFromChild = (editable: boolean) => {
     setEditable(editable);
+  };
+
+  const saveClickedFromChild = () => {
+    mutation && mutation.mutate(product);
+    setEditable(false);
   };
 
   const cancelClickedFromChild = () => {
@@ -70,7 +85,14 @@ const Product = () => {
       </Button>
       {productQuery && productQuery.isSuccess && productQuery.data && (
         <>
-          <EditProductButtons product={product} productId={productId} editable={editable} seteditable={setEditableFromChild} onCancelClicked={cancelClickedFromChild} />
+          <EditProductButtons
+            product={product}
+            productId={productId}
+            editable={editable}
+            seteditable={setEditableFromChild}
+            onSaveClicked={saveClickedFromChild}
+            onCancelClicked={cancelClickedFromChild}
+            mutation={mutation} />
           <ProductTable
             productId={productId}
             product={product}
@@ -81,14 +103,17 @@ const Product = () => {
             <img key={url} src={url} />
           ))}
         </>
-      )}
-      {productQuery && productQuery.isSuccess && userQuery.isSuccess && userQuery.data?.docs?.length > 0 && (
-        <>
-          <p>List of users who own this polish:</p>
-          {owningUsers()}
-        </>
-      )}
-    </ProductContainer>
+      )
+      }
+      {
+        productQuery && productQuery.isSuccess && userQuery.isSuccess && userQuery.data?.docs?.length > 0 && (
+          <>
+            <p>List of users who own this polish:</p>
+            {owningUsers()}
+          </>
+        )
+      }
+    </ProductContainer >
   );
 };
 

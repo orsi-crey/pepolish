@@ -1,15 +1,13 @@
 import { Button } from 'react-md';
 import { ProductButtonProps } from '../../routes/product-page/product.component';
-import { updateItem } from '../../utils/firestore/firestore.utils';
 
 const EditProductButtons = ({
-  product,
-  productId,
   editable,
   seteditable,
-  onCancelClicked
+  onSaveClicked,
+  onCancelClicked,
+  mutation
 }: ProductButtonProps) => {
-  const mutation = updateItem(productId, 'products');
 
   return (
     <>
@@ -26,22 +24,17 @@ const EditProductButtons = ({
         <>
           <>
             <Button
-              disabled={mutation.isLoading}
+              disabled={mutation && mutation.isLoading}
               themeType="contained"
-              onClick={() => {
-                mutation.mutate(product);
-                seteditable(false);
-              }}
+              onClick={() => { onSaveClicked(); }}
             >
               Save
             </Button>
-            {mutation.isError && <p>{mutation.error.message}</p>}
+            {mutation && mutation.isError && <p>{mutation.error.message}</p>}
           </>
           <Button
             themeType="contained"
-            onClick={() => {
-              onCancelClicked();
-            }}
+            onClick={() => { onCancelClicked(); }}
           >
             Cancel
           </Button>

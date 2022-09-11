@@ -65,6 +65,9 @@ export const addNewItem = (collName: string) => {
 };
 
 export const updateItem = (id: string | undefined, collName: string) => {
+  if (id === '' || id === null) {
+    return;
+  }
   const coll = collection(db, collName);
   const ref = doc(coll, id);
   const mutation = useFirestoreDocumentMutation(ref);

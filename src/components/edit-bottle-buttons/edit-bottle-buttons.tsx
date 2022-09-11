@@ -24,7 +24,7 @@ const EditBottleButtons = ({
         </Button>
       ) : (
         <>
-          <>
+          {/* <>
             <Button
               disabled={mutation.isLoading}
               themeType="contained"
@@ -36,7 +36,7 @@ const EditBottleButtons = ({
               Save
             </Button>
             {mutation.isError && <p>{mutation.error.message}</p>}
-          </>
+          </> */}
           <Button
             themeType="contained"
             onClick={() => {

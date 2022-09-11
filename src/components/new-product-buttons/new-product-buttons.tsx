@@ -1,40 +1,26 @@
-import { useEffect } from 'react';
 import { Button } from 'react-md';
-import { useNavigate } from 'react-router-dom';
 import { ProductButtonProps } from '../../routes/product-page/product.component';
-import { addNewItem } from '../../utils/firestore/firestore.utils';
 
 const NewProductButtons = ({
-  product,
+  onSaveClicked,
+  onCancelClicked,
+  mutation
 }: ProductButtonProps) => {
-  const navigate = useNavigate();
-  const mutation = addNewItem('products');
-
-  useEffect(() => {
-    if (mutation.isSuccess) {
-      navigate(`/products/${mutation.data?.id}`);
-    }
-  }, [mutation]);
-
   return (
     <>
       <>
         <Button
-          disabled={mutation.isLoading}
+          disabled={mutation && mutation.isLoading}
           themeType="contained"
-          onClick={() => {
-            mutation.mutate(product);
-          }}
+          onClick={() => { onSaveClicked(); }}
         >
           Save
         </Button>
-        {mutation.isError && <p>{mutation.error.message}</p>}
+        {mutation && mutation.isError && <p>{mutation.error.message}</p>}
       </>
       <Button
         themeType="contained"
-        onClick={() => {
-          navigate('/products');
-        }}
+        onClick={() => { onCancelClicked(); }}
       >
         Cancel
       </Button>
