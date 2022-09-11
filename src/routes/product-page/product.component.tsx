@@ -58,6 +58,8 @@ const Product = () => {
 
   const saveClickedFromChild = () => {
     mutation && mutation.mutate(product);
+    // it seemed like refetch does nothing?
+    productQuery?.remove();
     setEditable(false);
   };
 

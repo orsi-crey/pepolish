@@ -43,6 +43,8 @@ const Bottle = () => {
   
   const saveClickedFromChild = () => {
     mutation && mutation.mutate(bottle);
+    // it seemed like refetch does nothing?
+    bottleQuery?.remove();
     setEditable(false);
   };
 
