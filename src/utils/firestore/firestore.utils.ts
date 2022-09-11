@@ -25,6 +25,9 @@ export const getListQuery = (collName: string) => {
 };
 
 export const getItemQuery = (productId: string | undefined, collName: string, isQueryEnabled = true) => {
+  if (productId === '' || productId === null) {
+    return;
+  }
   const collectionRef = collection(db, collName);
   const ref = doc(collectionRef, productId);
   const query = useFirestoreDocumentData([collName, productId], ref, {}, { enabled: isQueryEnabled });

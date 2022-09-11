@@ -35,14 +35,14 @@ const Bottle = () => {
   // console.log('bottleQuery', bottleQuery);
   // console.log('bottleQuery data', bottleQuery.data);
 
-  if (bottleQuery.data && Object.keys(bottle).length === 0) { setBottle(bottleQuery.data); }
+  if (bottleQuery && bottleQuery.data && Object.keys(bottle).length === 0) { setBottle(bottleQuery.data); }
 
   const setEditableFromChild = (editable: boolean) => {
     setEditable(editable);
   };
 
   const cancelClickedFromChild = () => {
-    if (bottleQuery.data) setBottle(bottleQuery.data);
+    if (bottleQuery && bottleQuery.data) setBottle(bottleQuery.data);
     setEditable(false);
   };
 
@@ -55,7 +55,7 @@ const Bottle = () => {
       <Button themeType="contained" onClick={() => navigate('/bottles')}>
         Back to bottle list
       </Button>
-      {bottleQuery.isSuccess && bottleQuery.data && (
+      {bottleQuery && bottleQuery.isSuccess && bottleQuery.data && (
         <>
           <EditBottleButtons bottle={bottle} bottleId={bottleId} editable={editable} seteditable={setEditableFromChild} onCancelClicked={cancelClickedFromChild} />
           <BottleTable

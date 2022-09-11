@@ -32,7 +32,7 @@ const Product = () => {
   const [product, setProduct] = useState({} as Polish | DocumentData);
 
   const productQuery = getItemQuery(productId, 'products');
-  if (productQuery.data && Object.keys(product).length === 0) { setProduct(productQuery.data); }
+  if (productQuery && productQuery.data && Object.keys(product).length === 0) { setProduct(productQuery.data); }
 
   const bottlesQuery = getItemsByWhereQuery(productId, 'productId', 'bottles');
   const userIds: string[] = ['-'];
@@ -55,7 +55,7 @@ const Product = () => {
   };
 
   const cancelClickedFromChild = () => {
-    if (productQuery.data) setProduct(productQuery.data);
+    if (productQuery && productQuery.data) setProduct(productQuery.data);
     setEditable(false);
   };
 
@@ -68,7 +68,7 @@ const Product = () => {
       <Button themeType="contained" onClick={() => navigate('/products')}>
         Back to product list
       </Button>
-      {productQuery.isSuccess && productQuery.data && (
+      {productQuery && productQuery.isSuccess && productQuery.data && (
         <>
           <EditProductButtons product={product} productId={productId} editable={editable} seteditable={setEditableFromChild} onCancelClicked={cancelClickedFromChild} />
           <ProductTable
@@ -82,7 +82,7 @@ const Product = () => {
           ))}
         </>
       )}
-      {productQuery.isSuccess && userQuery.isSuccess && userQuery.data?.docs?.length > 0 && (
+      {productQuery && productQuery.isSuccess && userQuery.isSuccess && userQuery.data?.docs?.length > 0 && (
         <>
           <p>List of users who own this polish:</p>
           {owningUsers()}

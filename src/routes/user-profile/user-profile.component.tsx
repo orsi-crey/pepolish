@@ -40,7 +40,7 @@ const UserProfile = () => {
       <Button themeType="contained" onClick={() => navigate('/users')}>
         Back to user list
       </Button>
-      {userQuery.isSuccess && userQuery.data && (
+      {userQuery && userQuery.isSuccess && userQuery.data && (
         <>
           <div><img src={userQuery.data?.userdata?.profilePic} /></div>
           <p>User Id:</p>

@@ -17,7 +17,7 @@ const BottleTable = ({ bottleId, bottle, editable, setbottle }: BottleTableProps
         value={bottleId}
       />
       <p>Product Id:</p>
-      {productQuery.isSuccess && productQuery.data && <p>{`${productQuery.data?.brand}: ${productQuery.data?.name}`}</p>}
+      {productQuery && productQuery.isSuccess && productQuery.data && <p>{`${productQuery.data?.brand}: ${productQuery.data?.name}`}</p>}
       <TextField
         id="productId"
         name="Product Id"
@@ -31,7 +31,7 @@ const BottleTable = ({ bottleId, bottle, editable, setbottle }: BottleTableProps
         }}
       />
       <p>User Id:</p>
-      {userQuery.isSuccess && userQuery.data && <p>{userQuery.data?.displayName}</p>}
+      {userQuery && userQuery.isSuccess && userQuery.data && <p>{userQuery.data?.displayName}</p>}
       <TextField
         id="userId"
         name="User Id"
@@ -45,7 +45,7 @@ const BottleTable = ({ bottleId, bottle, editable, setbottle }: BottleTableProps
         }
       />
       <p>Location User Id:</p>
-      {locationQuery.isSuccess && userQuery.data && <p>{locationQuery.data?.displayName}</p>}
+      {locationQuery && userQuery && locationQuery.isSuccess && userQuery.data && <p>{locationQuery.data?.displayName}</p>}
       <TextField
         id="locationUserId"
         name="Location User Id"
