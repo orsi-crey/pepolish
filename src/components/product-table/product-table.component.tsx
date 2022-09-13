@@ -4,6 +4,17 @@ import { ProductTableProps } from '../../routes/product-page/product.component';
 import ChipField from '../chip-field/chip-field.component';
 
 const ProductTable = ({ productId, product, editable, setproduct }: ProductTableProps) => {
+  const setEffectChipsFromChild = (chips: string[]) => {
+    setproduct({ ...product, effects: chips });
+  };
+
+  const setMultichromeChipsFromChild = (chips: string[]) => {
+    setproduct({ ...product, multichrome: chips });
+  };
+
+  const setOtherChipsFromChild = (chips: string[]) => {
+    setproduct({ ...product, other: chips });
+  };
 
   return (
     <Form>
@@ -54,9 +65,9 @@ const ProductTable = ({ productId, product, editable, setproduct }: ProductTable
         }
       />
       <p>Effects:</p>
-      <ChipField chips={product.effects} disabled={!editable} />
+      <ChipField chips={product.effects} disabled={!editable} setchip={setEffectChipsFromChild} />
       <p>Multichrome:</p>
-      <ChipField chips={product.multichrome} disabled={!editable} />
+      <ChipField chips={product.multichrome} disabled={!editable} setchip={setMultichromeChipsFromChild} />
       <p>Volume:</p>
       <TextField
         id="volume"
@@ -73,7 +84,7 @@ const ProductTable = ({ productId, product, editable, setproduct }: ProductTable
         }
       />
       <p>Other:</p>
-      <ChipField chips={product.other} disabled={!editable} />
+      <ChipField chips={product.other} disabled={!editable} setchip={setOtherChipsFromChild} />
     </Form>
   );
 };
