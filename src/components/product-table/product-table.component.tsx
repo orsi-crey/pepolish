@@ -25,7 +25,7 @@ const ProductTable = ({ productId, product, editable, setproduct }: ProductTable
         disabled={true}
         value={productId}
       />
-      <p>Brand:</p>
+      <p>Brand: (required)</p>
       <TextField
         id="brand"
         name="Brand"
@@ -38,7 +38,7 @@ const ProductTable = ({ productId, product, editable, setproduct }: ProductTable
           });
         }}
       />
-      <p>Name:</p>
+      <p>Name: (required)</p>
       <TextField
         id="name"
         name="Name"
@@ -51,7 +51,7 @@ const ProductTable = ({ productId, product, editable, setproduct }: ProductTable
           })
         }
       />
-      <p>Color:</p>
+      <p>Color: (required)</p>
       <TextField
         id="color"
         name="Color"

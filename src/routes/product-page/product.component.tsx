@@ -44,6 +44,14 @@ const Product = () => {
 
   const mutation = updateItem(productId, 'products');
 
+  const productMissingData = () => {
+    if (product.brand.length > 0
+      && product.name.length > 0
+      && product.color.length > 0)
+      return false;
+    else return true;
+  };
+
   const owningUsers = () => {
     return userQuery.data?.docs.map((item: any) => {
       return <div key={item.id}>
@@ -57,10 +65,14 @@ const Product = () => {
   };
 
   const saveClickedFromChild = () => {
-    mutation && mutation.mutate(product);
-    // it seemed like refetch does nothing?
-    productQuery?.remove();
-    setEditable(false);
+    if (productMissingData())
+      alert('Please fill all required fields before saving!');
+    else {
+      mutation && mutation.mutate(product);
+      // it seemed like refetch does nothing?
+      productQuery?.remove();
+      setEditable(false);
+    }
   };
 
   const cancelClickedFromChild = () => {

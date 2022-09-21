@@ -4,12 +4,12 @@ import { getItemQuery, getItemsByWhereFilteredFieldsQuery, getListFilteredFields
 
 
 const getBrands = () => {
-  return getListFilteredFieldsQuery("products", "brand");
-}
+  return getListFilteredFieldsQuery('products', 'brand');
+};
 
 const getNames = (brand: string) => {
-  return getItemsByWhereFilteredFieldsQuery(brand, "brand", "products")
-}
+  return getItemsByWhereFilteredFieldsQuery(brand, 'brand', 'products');
+};
 
 const BottleTable = ({ bottleId, bottle, editable, setbottle }: BottleTableProps) => {
   const productQuery = getItemQuery(bottle.productId, 'products');
@@ -18,31 +18,31 @@ const BottleTable = ({ bottleId, bottle, editable, setbottle }: BottleTableProps
 
   const getBrandAndName  = () => {
     if (productQuery && productQuery.isSuccess && productQuery.data) {
-      return `${productQuery.data?.brand} - ${productQuery.data?.name}`
+      return `${productQuery.data?.brand} - ${productQuery.data?.name}`;
     } else {
-      return "";
+      return '';
     }
-  }
+  };
 
   const getUserName  = () => {
     if (userQuery && userQuery.isSuccess && userQuery.data ) {
       return userQuery.data?.displayName;
     } else {
-      return "";
+      return '';
     }
-  }
+  };
 
   const getLocationUserName  = () => {
     if (locationQuery && locationQuery.isSuccess && locationQuery.data ) {
-      return locationQuery.data?.displayName
+      return locationQuery.data?.displayName;
     } else {
-      return "";
+      return '';
     }
-  }
+  };
 
   return (
     <Form>
-      <p>Product:</p>
+      <p>Product: (required)</p>
       <TextField
         id="productId"
         name="Product Id"
@@ -55,7 +55,7 @@ const BottleTable = ({ bottleId, bottle, editable, setbottle }: BottleTableProps
           });
         }}
       />
-      <p>User:</p>
+      <p>User: (required)</p>
       <TextField
         id="userId"
         name="User Id"
@@ -68,7 +68,7 @@ const BottleTable = ({ bottleId, bottle, editable, setbottle }: BottleTableProps
           })
         }
       />
-      <p>Location User:</p>
+      <p>Location User: (required)</p>
       <TextField
         id="locationUserId"
         name="Location User Id"

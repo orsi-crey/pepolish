@@ -23,12 +23,23 @@ const NewBottle = () => {
   const mutation = addNewItem('bottles');
   const [bottle, setBottle] = useState(emptyBottle);
 
+  const bottleMissingData = () => {
+    if (bottle.productId.length > 0
+      && bottle.userId.length > 0
+      && bottle.locationUserId.length > 0)
+      return false;
+    else return true;
+  };
+
   const setBottleFromChild = (bottle: PolishBottle | DocumentData) => {
     setBottle(bottle as PolishBottle);
   };
-  
+
   const saveClickedFromChild = () => {
-    mutation && mutation.mutate(bottle);
+    if (bottleMissingData())
+      alert('Please fill all required fields before saving!');
+    else
+      mutation && mutation.mutate(bottle);
   };
 
   const cancelClickedFromChild = () => {
@@ -48,7 +59,7 @@ const NewBottle = () => {
       </Button>
       <NewBottleButtons
         editable={true}
-        seteditable={()=>{}}
+        seteditable={() => { }}
         onSaveClicked={saveClickedFromChild}
         onCancelClicked={cancelClickedFromChild}
         mutation={mutation}

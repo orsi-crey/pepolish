@@ -8,7 +8,7 @@ type ChipFieldProps = {
 };
 
 const ChipField = ({ chips, disabled, setchip }: ChipFieldProps) => {
-  const [newChip, setNewChip] = useState("");
+  const [newChip, setNewChip] = useState('');
 
   return chips && (
     <>
@@ -22,7 +22,7 @@ const ChipField = ({ chips, disabled, setchip }: ChipFieldProps) => {
         <>
           {chips.map((effect: string) => (
             <Chip key={effect} theme="solid" onClick={() => {
-              setchip(chips.filter((chip) => chip !== effect))
+              setchip(chips.filter((chip) => chip !== effect));
             }}>
               {effect}
             </Chip>
@@ -32,12 +32,12 @@ const ChipField = ({ chips, disabled, setchip }: ChipFieldProps) => {
             name="Chip"
             value={newChip}
             onChange={(event) => {
-              setNewChip(event.currentTarget.value)
+              setNewChip(event.currentTarget.value);
             }}
           />
           <Button themeType="outline" onClick={() => {
-            setchip([...chips, newChip])
-            setNewChip("");
+            setchip([...chips, newChip]);
+            setNewChip('');
           }}>
             Add
           </Button>

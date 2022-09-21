@@ -28,18 +28,29 @@ const NewProduct = () => {
 
   const mutation = addNewItem('products');
 
+  const productMissingData = () => {
+    if (product.brand.length > 0
+      && product.name.length > 0
+      && product.color.length > 0)
+      return false;
+    else return true;
+  };
+
   const setProductFromChild = (product: Polish | DocumentData) => {
     setProduct(product as Polish);
   };
 
   const saveClickedFromChild = () => {
-    mutation.mutate(product);
+    if (productMissingData())
+      alert('Please fill all required fields before saving!');
+    else
+      mutation.mutate(product);
   };
 
   const cancelClickedFromChild = () => {
     navigate('/products');
   };
-  
+
   useEffect(() => {
     if (mutation.isSuccess) {
       navigate(`/products/${mutation.data?.id}`);
@@ -53,7 +64,7 @@ const NewProduct = () => {
       </Button>
       <NewProductButtons
         editable={true}
-        seteditable={()=>{}}
+        seteditable={() => { }}
         onSaveClicked={saveClickedFromChild}
         onCancelClicked={cancelClickedFromChild}
         mutation={mutation}

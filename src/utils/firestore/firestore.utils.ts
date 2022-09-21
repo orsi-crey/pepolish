@@ -70,7 +70,7 @@ export const getListFilteredFieldsQuery = (collName: string, field: string, isQu
   }, {
     enabled: isQueryEnabled,
     select(snapshot) {
-      return snapshot.docs.map((docSnapshot) => docSnapshot.data()[field])
+      return snapshot.docs.map((docSnapshot) => docSnapshot.data()[field]);
     }
   });
 
@@ -86,7 +86,7 @@ export const getItemsByWhereFilteredFieldsQuery = (id: string | undefined, field
   const whereQuery = useFirestoreQuery([id], ref, {}, {
     enabled: isQueryEnabled,
     select(snapshot) {
-      return snapshot.docs.map((docSnapshot) => docSnapshot.data().name)
+      return snapshot.docs.map((docSnapshot) => docSnapshot.data().name);
     }
   });
 
@@ -114,3 +114,4 @@ export const updateItem = (id: string | undefined, collName: string) => {
 export type mutationResult =
   UseMutationResult<void, FirestoreError, WithFieldValue<DocumentData>, unknown> |
   UseMutationResult<DocumentReference<DocumentData>, FirestoreError, WithFieldValue<DocumentData>, unknown>;
+  

@@ -37,15 +37,27 @@ const Bottle = () => {
 
   const mutation = updateItem(bottleId, 'bottles');
 
+  const bottleMissingData = () => {
+    if (bottle.productId.length > 0
+      && bottle.userId.length > 0
+      && bottle.locationUserId.length > 0)
+      return false;
+    else return true;
+  };
+
   const setEditableFromChild = (editable: boolean) => {
     setEditable(editable);
   };
-  
+
   const saveClickedFromChild = () => {
-    mutation && mutation.mutate(bottle);
-    // it seemed like refetch does nothing?
-    bottleQuery?.remove();
-    setEditable(false);
+    if (bottleMissingData())
+      alert('Please fill all required fields before saving!');
+    else {
+      mutation && mutation.mutate(bottle);
+      // it seemed like refetch does nothing?
+      bottleQuery?.remove();
+      setEditable(false);
+    }
   };
 
   const cancelClickedFromChild = () => {
