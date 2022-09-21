@@ -16,20 +16,50 @@ const BottleList = () => {
   const navigate = useNavigate();
 
   const bottleListQuery = getListQuery('bottles');
-  const bottleList =  bottleListQuery?.data?.docs;
+  const bottleList = bottleListQuery?.data?.docs;
+
+  type indexableData = {
+    [key: string]: DocumentData;
+  }
+
+  const productListQuery = getListQuery('products');
+  const productList: indexableData = {};
+  productListQuery?.data?.docs.forEach((doc) => {
+    Object.defineProperty(productList, doc.id, { value: doc.data() });
+  });
+
+  const userListQuery = getListQuery('users');
+  const userList: indexableData = {};
+  userListQuery?.data?.docs.forEach((doc) => {
+    Object.defineProperty(userList, doc.id, { value: doc.data() });
+  });
 
   const showBottlePage = (id: string) => {
     navigate(`/bottles/${id}`);
   };
 
+  const getName = (productId: string) => {
+    if (productId) {
+      return `${productList[productId].brand} - ${productList[productId].name}`;
+    }
+    return '';
+  };
+
+  const getUser = (userId: string) => {
+    if (userId) {
+      return userList[userId].displayName;
+    }
+    return '';
+  };
+
   const addPolishRow = (id: string, bottle: DocumentData) => {
     return (
       <TableRow key={id} onClick={() => showBottlePage(id)}>
-        <TableCell>{bottle.productId}</TableCell>
-        <TableCell>{bottle.userId}</TableCell>
-        <TableCell>{bottle.locationUserId}</TableCell>
-        <TableCell>{bottle.fullPercentage}</TableCell>
-        <TableCell>{bottle.photoUrl}</TableCell>
+        <TableCell>{getName(bottle.productId)}</TableCell>
+        <TableCell>{getUser(bottle.userId)}</TableCell>
+        <TableCell>{getUser(bottle.locationUserId)}</TableCell>
+        <TableCell>{bottle.fullPercentage} %</TableCell>
+        <TableCell>{<img src={bottle.photoUrl} />}</TableCell>
       </TableRow>
     );
   };
@@ -47,7 +77,6 @@ const BottleList = () => {
               <TableCell>productId</TableCell>
               <TableCell>userId</TableCell>
               <TableCell>locationUserId</TableCell>
-              <TableCell>Effects</TableCell>
               <TableCell>fullPercentage</TableCell>
               <TableCell>photoUrl</TableCell>
             </TableRow>

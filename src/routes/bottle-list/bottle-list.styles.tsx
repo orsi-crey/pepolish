@@ -8,4 +8,8 @@ export const BottleListContainer = styled.div`
   border-radius: 15px;
   padding: 20px;
   background-color: white;
+  
+  img {
+    height: 30px;
+  }
 `;
