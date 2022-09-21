@@ -6,7 +6,6 @@ import {
   TableBody,
   Button,
 } from 'react-md';
-import { EditSVGIcon } from '@react-md/material-icons';
 import { useNavigate } from 'react-router-dom';
 
 import { ProductListContainer } from './product-list.styles';
@@ -48,11 +47,6 @@ const ProductList = () => {
           {product.other?.map((item: string) => (
             <div key={item}>{item}</div>
           ))}
-        </TableCell>
-        <TableCell>
-          <Button onClick={() => editProductPage(product)}>
-            <EditSVGIcon />
-          </Button>
         </TableCell>
       </TableRow>
     );
