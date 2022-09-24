@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Form, Select, TextField } from 'react-md';
 import { BottleTableProps } from '../../routes/bottle-page/bottle.component';
 import {
@@ -23,7 +23,7 @@ const BottleTable = ({
   const [brand, setBrand] = useState('');
   const productQuery = getItemQuery(bottle.productId, 'products', !newBottle);
   const userQuery = getItemQuery(bottle.userId, 'users', !newBottle);
-  const locationQuery = getItemQuery(
+  const locationUserQuery = getItemQuery(
     bottle.locationUserId,
     'users',
     !newBottle
@@ -62,8 +62,8 @@ const BottleTable = ({
   };
 
   const getLocationUserName = () => {
-    if (locationQuery && locationQuery.isSuccess && locationQuery.data) {
-      return locationQuery.data?.displayName;
+    if (locationUserQuery && locationUserQuery.isSuccess && locationUserQuery.data) {
+      return locationUserQuery.data?.displayName;
     } else {
       return '';
     }
@@ -97,14 +97,26 @@ const BottleTable = ({
     }
   };
 
+  useEffect(() => {
+    if (userQuery.isSuccess && userQuery.data) {
+      setselecteduser(userQuery.data?.displayName);
+    }
+  }, [userQuery.isSuccess]);
+
+  useEffect(() => {
+    if (locationUserQuery.isSuccess && locationUserQuery.data) {
+      setselectedlocationuser(locationUserQuery.data?.displayName);
+    }
+  }, [locationUserQuery.isSuccess]);
+
   return (
     <Form>
       <p>Product:</p>
-      {!editable ? (
+      {(!editable || !newBottle) ? (
         <TextField
           id="productId"
           name="Product Id"
-          disabled={!editable}
+          disabled={!editable || !newBottle}
           value={`${getBrand()} - ${getName()}`}
         />
       ) : (

@@ -17,12 +17,12 @@ const BottleList = () => {
 
   const bottleListQuery = getListQuery('bottles');
   const bottleList = bottleListQuery?.data?.docs;
-
   type indexableData = {
     [key: string]: DocumentData;
-  }
+  };
 
   const productListQuery = getListQuery('products');
+ 
   const productList: indexableData = {};
   productListQuery?.data?.docs.forEach((doc) => {
     Object.defineProperty(productList, doc.id, { value: doc.data() });
@@ -39,14 +39,14 @@ const BottleList = () => {
   };
 
   const getName = (productId: string) => {
-    if (productId) {
+    if (productId && productList[productId]) {
       return `${productList[productId].brand} - ${productList[productId].name}`;
     }
     return '';
   };
 
   const getUser = (userId: string) => {
-    if (userId) {
+    if (userId && userList[userId]) {
       return userList[userId].displayName;
     }
     return '';
@@ -82,7 +82,9 @@ const BottleList = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {bottleList?.map((bottle) => addPolishRow(bottle.id, bottle.data()))}
+            {bottleList?.map((bottle) =>
+              addPolishRow(bottle.id, bottle.data())
+            )}
           </TableBody>
         </Table>
       )}

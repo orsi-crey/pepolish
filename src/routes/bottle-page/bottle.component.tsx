@@ -1,11 +1,13 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button } from 'react-md';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DocumentData } from 'firebase/firestore';
 
 import BottleTable from '../../components/bottle-table/bottle-table.component';
 import {
   getItemQuery,
+  getItemsByWhereQuery,
+  getProductIDWhereQuery,
   mutationResult,
   updateItem,
 } from '../../utils/firestore/firestore.utils';
@@ -50,8 +52,16 @@ const Bottle = () => {
     brand: '',
     name: '',
   });
-  const [user, setUser] = useState('');
-  const [locationUser, setLocationUser] = useState('');
+  const [selectedUser, setSelectedUser] = useState('');
+  const [selectedLocationUser, setSelectedLocationUser] = useState('');
+
+  const getProductIDQuery = getProductIDWhereQuery(
+    selectedProduct.brand,
+    selectedProduct.name,
+    selectedProduct.brand.length > 0 && selectedProduct.name.length > 0
+  );
+  const getUserName = getItemsByWhereQuery(selectedUser, 'displayName', 'users', selectedUser.length>0);
+  const getLocationUserName = getItemsByWhereQuery(selectedLocationUser, 'displayName', 'users', selectedLocationUser.length>0);
 
   const bottleQuery = getItemQuery(bottleId, 'bottles');
 
@@ -70,13 +80,22 @@ const Bottle = () => {
       return false;
     else return true;
   };
-
+ 
   const setEditableFromChild = (editable: boolean) => {
     setEditable(editable);
   };
 
-  const setProductDataFromChild = (data: ProductData) => {
+  const setProductFromChild = (data: ProductData) => {
     setSelectedProduct(data);
+  };
+
+  const setUsernameFromChild = (name: string) => {    
+    setSelectedUser(name);
+  };
+
+  const setLocationUsernameFromChild = (name: string) => {
+    setSelectedLocationUser('');
+    setSelectedLocationUser(name);
   };
 
   const saveClickedFromChild = () => {
@@ -97,7 +116,28 @@ const Bottle = () => {
 
   const setBottleFromChild = (bottle: PolishBottle | DocumentData) => {
     setBottle(bottle);
-  };
+  };  
+
+  useEffect(() => {
+    if (getProductIDQuery.isSuccess && getProductIDQuery.data?.docs) {
+      const productId = getProductIDQuery.data?.docs[0].id;
+      setBottle({ ...bottle, productId });
+    }
+  }, [getProductIDQuery.dataUpdatedAt]);
+
+  useEffect(() => {
+    if (getUserName.isSuccess && getUserName.data?.docs) {
+      const userId = getUserName.data?.docs[0].id;
+      setBottle({ ...bottle, userId });
+    }
+  }, [getUserName.dataUpdatedAt]);
+
+  useEffect(() => {
+    if (getLocationUserName.isSuccess && getLocationUserName.data?.docs) {
+      const locationUserId = getLocationUserName.data?.docs[0].id;
+      setBottle({ ...bottle, locationUserId });
+    }
+  }, [getLocationUserName.dataUpdatedAt]);
 
   return (
     <BottleContainer>
@@ -117,13 +157,13 @@ const Bottle = () => {
             bottleId={bottleId}
             bottle={bottle}
             selectedProduct={selectedProduct}
-            selectedUser={user}
-            selectedLocationUser={locationUser}
+            selectedUser={selectedUser}
+            selectedLocationUser={selectedLocationUser}
             editable={editable}
             setbottle={setBottleFromChild}
-            setselectedproduct={setProductDataFromChild}
-            setselecteduser={() => {}}
-            setselectedlocationuser={() => {}}
+            setselectedproduct={setProductFromChild}
+            setselecteduser={setUsernameFromChild}
+            setselectedlocationuser={setLocationUsernameFromChild}
             newBottle={false}
           ></BottleTable>
           <img key={bottle.photoUrl} src={bottle.photoUrl} />
