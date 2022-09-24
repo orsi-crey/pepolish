@@ -163,8 +163,10 @@ const BottleTable = ({
             }
             rightChildren={<ArrowDropDownSVGIcon />}
           />
-          <Button onClick={() => setIsVisible(true)}>
-            Can't find polish in list? Add new:
+          <Button 
+          themeType='outline'
+          onClick={() => setIsVisible(true)}>
+            Can't find polish in list? Add new!
           </Button>
           <ProductModal
             isVisible={isVisible}

@@ -1,4 +1,7 @@
-@use "react-md" as *;
+@use "react-md" as * with (
+  $rmd-theme-primary: #5C8E35,
+  $rmd-theme-secondary: #8fbe6b
+);
 
 @include react-md-utils;
 

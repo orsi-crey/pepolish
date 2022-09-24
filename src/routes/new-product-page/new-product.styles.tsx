@@ -9,3 +9,7 @@ export const ProductContainer = styled.div`
   padding: 20px;
   background-color: white;
 `;
+
+export const PaddedDiv = styled.div`
+    padding: 5px;
+`;

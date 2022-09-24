@@ -8,7 +8,6 @@ const EditBottleButtons = ({
   onCancelClicked,
   mutation,
 }: BottleButtonProps) => {
-
   return (
     <>
       {!editable ? (
@@ -22,19 +21,27 @@ const EditBottleButtons = ({
         </Button>
       ) : (
         <>
-          {<>
-            <Button
-              disabled={mutation && mutation.isLoading}
-              themeType="contained"
-              onClick={() => { onSaveClicked(); }}
-            >
-              Save
-            </Button>
-            {mutation && mutation.isError && <p>{mutation.error.message}</p>}
-          </>}
+          {
+            <>
+              <Button
+                disabled={mutation && mutation.isLoading}
+                theme="secondary"
+                themeType="contained"
+                onClick={() => {
+                  onSaveClicked();
+                }}
+              >
+                Save
+              </Button>
+              {mutation && mutation.isError && <p>{mutation.error.message}</p>}
+            </>
+          }
           <Button
-            themeType="contained"
-            onClick={() => { onCancelClicked(); }}
+            theme="error"
+            themeType="outline"
+            onClick={() => {
+              onCancelClicked();
+            }}
           >
             Cancel
           </Button>
