@@ -4,12 +4,12 @@ import React from 'react';
 import reportWebVitals from './reportWebVitals';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
-import { Provider } from 'react-redux'; 
+import { Provider } from 'react-redux';
 
 import App from './App';
 import { UserProvider } from './contexts/user.context';
 import { store } from './store/store';
-
+import { Configuration } from 'react-md';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -17,11 +17,13 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <BrowserRouter>
-        <UserProvider>
-          <App />
-        </UserProvider>
-      </BrowserRouter>
+      <Configuration>
+        <BrowserRouter>
+          <UserProvider>
+            <App />
+          </UserProvider>
+        </BrowserRouter>
+      </Configuration>
     </Provider>
   </React.StrictMode>
 );

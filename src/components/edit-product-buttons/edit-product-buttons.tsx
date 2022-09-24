@@ -8,7 +8,6 @@ const EditProductButtons = ({
   onCancelClicked,
   mutation
 }: ProductButtonProps) => {
-
   return (
     <>
       {!editable ? (

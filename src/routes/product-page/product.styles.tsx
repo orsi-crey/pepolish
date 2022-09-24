@@ -1,3 +1,4 @@
+import { MediaContainer } from 'react-md';
 import styled from 'styled-components';
 
 export const ProductContainer = styled.div`
@@ -8,4 +9,12 @@ export const ProductContainer = styled.div`
   border-radius: 15px;
   padding: 20px;
   background-color: white;
+`;
+
+export const PaddedDiv = styled.div`
+    padding: 5px;
+`;
+
+export const PaddedMediaContainer = styled(MediaContainer)`
+  padding: 15px;
 `;

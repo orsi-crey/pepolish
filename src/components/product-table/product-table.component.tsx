@@ -5,7 +5,7 @@ import { sortAndUniqList } from '../../utils/helperFunctions';
 
 import ChipField from '../chip-field/chip-field.component';
 
-const ProductTable = ({ productId, product, editable, setproduct }: ProductTableProps) => {
+const ProductTable = ({ product, editable, setproduct }: ProductTableProps) => {
   const allBrandsQuery = getListFilteredFieldsQuery('products', 'brand');
 
   const sortedBrands = () => {
@@ -31,13 +31,6 @@ const ProductTable = ({ productId, product, editable, setproduct }: ProductTable
 
   return (
     <Form>
-      <p>Product Id:</p>
-      <TextField
-        id="productId"
-        name="Product Id"
-        disabled={true}
-        value={productId}
-      />
       <p>Brand: (required)</p>
       <AutoComplete
         id="brand"
@@ -85,9 +78,17 @@ const ProductTable = ({ productId, product, editable, setproduct }: ProductTable
         }
       />
       <p>Effects:</p>
-      <ChipField chips={product.effects} disabled={!editable} setchip={setEffectChipsFromChild} />
+      <ChipField
+        chips={product.effects}
+        disabled={!editable}
+        setchip={setEffectChipsFromChild}
+      />
       <p>Multichrome:</p>
-      <ChipField chips={product.multichrome} disabled={!editable} setchip={setMultichromeChipsFromChild} />
+      <ChipField
+        chips={product.multichrome}
+        disabled={!editable}
+        setchip={setMultichromeChipsFromChild}
+      />
       <p>Volume:</p>
       <TextField
         id="volume"
@@ -104,7 +105,27 @@ const ProductTable = ({ productId, product, editable, setproduct }: ProductTable
         }
       />
       <p>Other:</p>
-      <ChipField chips={product.other} disabled={!editable} setchip={setOtherChipsFromChild} />
+      <ChipField
+        chips={product.other}
+        disabled={!editable}
+        setchip={setOtherChipsFromChild}
+      />
+      {editable && (
+        <>
+          <p>Photo URL:</p>
+          <TextField
+            id="imageUrl"
+            name="Image Url"
+            value={product.imageUrl}
+            onChange={(event) =>
+              setproduct({
+                ...product,
+                imageUrl: event.currentTarget.value,
+              })
+            }
+          />
+        </>
+      )}
     </Form>
   );
 };

@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from 'react-router-dom';
-import { Button } from 'react-md';
+import { ArrowBackSVGIcon, Button, TextIconSpacing } from 'react-md';
 import { useEffect, useState } from 'react';
 import { DocumentData } from 'firebase/firestore';
 
@@ -14,7 +14,7 @@ import {
 import { PolishBottle } from '../../store/product/product.types';
 import EditBottleButtons from '../../components/edit-bottle-buttons/edit-bottle-buttons';
 
-import { BottleContainer } from './bottle.styles';
+import { BottleContainer, PaddedDiv } from './bottle.styles';
 
 export type BottleButtonProps = {
   editable: boolean;
@@ -141,18 +141,24 @@ const Bottle = () => {
 
   return (
     <BottleContainer>
-      <Button themeType="contained" onClick={() => navigate('/bottles')}>
-        Back to bottle list
-      </Button>
+      <PaddedDiv>
+        <Button themeType="contained" onClick={() => navigate('/products')}>
+          <TextIconSpacing icon={<ArrowBackSVGIcon />}>
+            Back to product list
+          </TextIconSpacing>
+        </Button>
+      </PaddedDiv>
       {bottleQuery && bottleQuery.isSuccess && bottleQuery.data && (
         <>
-          <EditBottleButtons
-            editable={editable}
-            seteditable={setEditableFromChild}
-            onSaveClicked={saveClickedFromChild}
-            onCancelClicked={cancelClickedFromChild}
-            mutation={mutation}
-          />
+          <PaddedDiv>
+            <EditBottleButtons
+              editable={editable}
+              seteditable={setEditableFromChild}
+              onSaveClicked={saveClickedFromChild}
+              onCancelClicked={cancelClickedFromChild}
+              mutation={mutation}
+            />
+          </PaddedDiv>
           <BottleTable
             bottleId={bottleId}
             bottle={bottle}

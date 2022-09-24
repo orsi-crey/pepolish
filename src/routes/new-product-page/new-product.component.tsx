@@ -18,7 +18,7 @@ const NewProduct = () => {
     color: '',
     effects: [],
     multichrome: [],
-    imageUrls: [],
+    imageUrl: '',
     other: [],
     volume: 0,
   };

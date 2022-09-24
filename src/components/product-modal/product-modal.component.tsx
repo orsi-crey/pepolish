@@ -58,7 +58,7 @@ const ProductModal = ({
     color: '',
     effects: [],
     multichrome: [],
-    imageUrls: [],
+    imageUrl: '',
     other: [],
     volume: 0,
   };

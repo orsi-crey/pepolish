@@ -5,7 +5,7 @@ export type Polish = {
   color: string;
   effects: string[];
   multichrome: string[];
-  imageUrls: string[];
+  imageUrl: string;
   other: string[];
   volume: number;
 };
