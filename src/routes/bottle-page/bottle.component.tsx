@@ -25,10 +25,14 @@ export type BottleButtonProps = {
 export type BottleTableProps = {
   bottleId: string | undefined;
   bottle: PolishBottle | DocumentData;
-  selected: ProductData;
+  selectedProduct: ProductData;
+  selectedUser: string;
+  selectedLocationUser: string;
   editable: boolean;
   setbottle: (v: PolishBottle | DocumentData) => void;
   setselectedproduct: (v: ProductData) => void;
+  setselecteduser: (v: string) => void;
+  setselectedlocationuser: (v: string) => void;
   newBottle: boolean;
 };
 
@@ -42,10 +46,12 @@ const Bottle = () => {
   const { bottleId } = useParams();
   const [editable, setEditable] = useState(false);
   const [bottle, setBottle] = useState({} as PolishBottle | DocumentData);
-  const [selectedData, setSelectedData] = useState({
+  const [selectedProduct, setSelectedProduct] = useState({
     brand: '',
     name: '',
   });
+  const [user, setUser] = useState('');
+  const [locationUser, setLocationUser] = useState('');
 
   const bottleQuery = getItemQuery(bottleId, 'bottles');
 
@@ -70,7 +76,7 @@ const Bottle = () => {
   };
 
   const setProductDataFromChild = (data: ProductData) => {
-    setSelectedData(data);
+    setSelectedProduct(data);
   };
 
   const saveClickedFromChild = () => {
@@ -110,10 +116,14 @@ const Bottle = () => {
           <BottleTable
             bottleId={bottleId}
             bottle={bottle}
-            selected={selectedData}
+            selectedProduct={selectedProduct}
+            selectedUser={user}
+            selectedLocationUser={locationUser}
             editable={editable}
             setbottle={setBottleFromChild}
             setselectedproduct={setProductDataFromChild}
+            setselecteduser={() => {}}
+            setselectedlocationuser={() => {}}
             newBottle={false}
           ></BottleTable>
           <img key={bottle.photoUrl} src={bottle.photoUrl} />

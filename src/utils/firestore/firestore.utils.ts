@@ -52,11 +52,17 @@ export const getItemQuery = (
 export const getItemsByWhereQuery = (
   id: string | undefined,
   field: string,
-  collName: string
+  collName: string,
+  isQueryEnabled = true
 ) => {
   const ref = query(collection(db, collName), where(field, '==', id));
 
-  const whereQuery = useFirestoreQuery([id], ref);
+  const whereQuery = useFirestoreQuery(
+    [id],
+    ref,
+    {},
+    { enabled: isQueryEnabled }
+  );
 
   return whereQuery;
 };
