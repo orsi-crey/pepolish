@@ -16,48 +16,45 @@ const Home = () => {
 
   const homeLinks = () => {
     switch (isLoggedIn) {
-    case authState.LoggedOut:
-      return <>
-        <div>Hi!</div>
-        <div>
-          <Button theme="primary" themeType="contained" onClick={handleLoginClick}>
-              Click to log in
-          </Button>
-        </div>
-      </>;
-    case authState.SignedIn:
-      return <>
-        <div>Hi {username}!</div>
-        <div>
-          <Button theme="primary" onClick={() => navigate('/users')}>
-              Click to check users!
-          </Button>
-        </div>
-        <div>
-          <Button theme="primary" onClick={() => navigate('/products')}>
-              Click to check polishes!
-          </Button>
-        </div>
-        <div>
-          <Button theme="primary" onClick={() => navigate('/bottles')}>
-              Click to check polish bottles!
-          </Button>
-        </div>
-      </>;
-    case authState.Loading:
-      return <div>loading...</div>;
-    default:
-      return;
+      // case authState.LoggedOut:
+      //   return <>
+      //     <div>Hi!</div>
+      //     <div>
+      //       <Button theme="primary" themeType="contained" onClick={handleLoginClick}>
+      //           Click to log in
+      //       </Button>
+      //     </div>
+      //   </>;
+      case authState.LoggedOut:
+      case authState.SignedIn:
+        return (
+          <>
+            <div>Hi {username}!</div>
+            <div>
+              <Button theme="primary" onClick={() => navigate('/users')}>
+                Click to check users!
+              </Button>
+            </div>
+            <div>
+              <Button theme="primary" onClick={() => navigate('/products')}>
+                Click to check polishes!
+              </Button>
+            </div>
+            <div>
+              <Button theme="primary" onClick={() => navigate('/bottles')}>
+                Click to check polish bottles!
+              </Button>
+            </div>
+          </>
+        );
+      case authState.Loading:
+        return <div>loading...</div>;
+      default:
+        return;
     }
   };
 
-
-  return (
-    <HomeContainer>
-      { homeLinks() }
-    </HomeContainer>
-
-  );
+  return <HomeContainer>{homeLinks()}</HomeContainer>;
 };
 
 export default Home;
