@@ -4,7 +4,11 @@ import { useState } from 'react';
 import { DocumentData } from 'firebase/firestore';
 
 import BottleTable from '../../components/bottle-table/bottle-table.component';
-import { getItemQuery, mutationResult, updateItem } from '../../utils/firestore/firestore.utils';
+import {
+  getItemQuery,
+  mutationResult,
+  updateItem,
+} from '../../utils/firestore/firestore.utils';
 import { PolishBottle } from '../../store/product/product.types';
 import EditBottleButtons from '../../components/edit-bottle-buttons/edit-bottle-buttons';
 
@@ -21,8 +25,16 @@ export type BottleButtonProps = {
 export type BottleTableProps = {
   bottleId: string | undefined;
   bottle: PolishBottle | DocumentData;
+  selected: ProductData;
   editable: boolean;
   setbottle: (v: PolishBottle | DocumentData) => void;
+  setselectedproduct: (v: ProductData) => void;
+  newBottle: boolean;
+};
+
+export type ProductData = {
+  brand: string;
+  name: string;
 };
 
 const Bottle = () => {
@@ -30,23 +42,35 @@ const Bottle = () => {
   const { bottleId } = useParams();
   const [editable, setEditable] = useState(false);
   const [bottle, setBottle] = useState({} as PolishBottle | DocumentData);
+  const [selectedData, setSelectedData] = useState({
+    brand: '',
+    name: '',
+  });
 
   const bottleQuery = getItemQuery(bottleId, 'bottles');
 
-  if (bottleQuery && bottleQuery.data && Object.keys(bottle).length === 0) { setBottle(bottleQuery.data); }
+  if (bottleQuery && bottleQuery.data && Object.keys(bottle).length === 0) {
+    setBottle(bottleQuery.data);
+  }
 
   const mutation = updateItem(bottleId, 'bottles');
 
   const bottleMissingData = () => {
-    if (bottle.productId.length > 0
-      && bottle.userId.length > 0
-      && bottle.locationUserId.length > 0)
+    if (
+      bottle.productId.length > 0 &&
+      bottle.userId.length > 0 &&
+      bottle.locationUserId.length > 0
+    )
       return false;
     else return true;
   };
 
   const setEditableFromChild = (editable: boolean) => {
     setEditable(editable);
+  };
+
+  const setProductDataFromChild = (data: ProductData) => {
+    setSelectedData(data);
   };
 
   const saveClickedFromChild = () => {
@@ -86,8 +110,11 @@ const Bottle = () => {
           <BottleTable
             bottleId={bottleId}
             bottle={bottle}
+            selected={selectedData}
             editable={editable}
             setbottle={setBottleFromChild}
+            setselectedproduct={setProductDataFromChild}
+            newBottle={false}
           ></BottleTable>
           <img key={bottle.photoUrl} src={bottle.photoUrl} />
         </>

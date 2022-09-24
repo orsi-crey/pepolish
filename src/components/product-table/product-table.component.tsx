@@ -1,18 +1,17 @@
 import { AutoComplete, Form, TextField } from 'react-md';
 import { ProductTableProps } from '../../routes/product-page/product.component';
 import { getListFilteredFieldsQuery } from '../../utils/firestore/firestore.utils';
+import { sortAndUniqList } from '../../utils/helperFunctions';
 
 import ChipField from '../chip-field/chip-field.component';
 
 const ProductTable = ({ productId, product, editable, setproduct }: ProductTableProps) => {
   const allBrandsQuery = getListFilteredFieldsQuery('products', 'brand');
 
-  const sortBrands = () => {
+  const sortedBrands = () => {
     if (allBrandsQuery && allBrandsQuery.isSuccess && allBrandsQuery.data) {
       const allBrands = allBrandsQuery.data;
-      return allBrands.sort().filter((item, pos, ary) => {
-        return !pos || item != ary[pos - 1];
-      });
+      return sortAndUniqList(allBrands);
     } else {
       return [];
     }
@@ -45,7 +44,7 @@ const ProductTable = ({ productId, product, editable, setproduct }: ProductTable
         name="Brand"
         disabled={!editable}
         value={product.brand}
-        data={sortBrands()}
+        data={sortedBrands()}
         onAutoComplete={(event) => {
           setproduct({
             ...product,

@@ -29,66 +29,119 @@ export const getListQuery = (collName: string) => {
   return query;
 };
 
-export const getItemQuery = (productId: string | undefined, collName: string, isQueryEnabled = true) => {
-  if (productId === '' || productId === null) {
-    return;
-  }
+export const getItemQuery = (
+  productId: string | undefined,
+  collName: string,
+  isQueryEnabled = true
+) => {
+  // if (productId === '' || productId === null || productId === undefined) {
+  //   return UseQueryResult;
+  // }
   const collectionRef = collection(db, collName);
   const ref = doc(collectionRef, productId);
-  const query = useFirestoreDocumentData([collName, productId], ref, {}, { enabled: isQueryEnabled });
+  const query = useFirestoreDocumentData(
+    [collName, productId],
+    ref,
+    {},
+    { enabled: isQueryEnabled }
+  );
 
   return query;
 };
 
-export const getItemsByWhereQuery = (id: string | undefined, field: string, collName: string) => {
-  const ref = query(
-    collection(db, collName),
-    where(field, '==', id)
-  );
+export const getItemsByWhereQuery = (
+  id: string | undefined,
+  field: string,
+  collName: string
+) => {
+  const ref = query(collection(db, collName), where(field, '==', id));
 
   const whereQuery = useFirestoreQuery([id], ref);
 
   return whereQuery;
 };
 
-export const getListSubsetQuery = (ids: string[] | undefined, collName: string, isQueryEnabled = true) => {
-  const ref = query(
-    collection(db, collName),
-    where(documentId(), 'in', ids)
-  );
+export const getListSubsetQuery = (
+  ids: string[] | undefined,
+  collName: string,
+  isQueryEnabled = true
+) => {
+  const ref = query(collection(db, collName), where(documentId(), 'in', ids));
 
-  const whereQuery = useFirestoreQuery([ids], ref, {}, { enabled: isQueryEnabled });
+  const whereQuery = useFirestoreQuery(
+    [ids],
+    ref,
+    {},
+    { enabled: isQueryEnabled }
+  );
 
   return whereQuery;
 };
 
-export const getListFilteredFieldsQuery = (collName: string, field: string, isQueryEnabled = true) => {
+export const getListFilteredFieldsQuery = (
+  collName: string,
+  field: string,
+  isQueryEnabled = true
+) => {
   const ref = collection(db, collName);
 
-  const query = useFirestoreQuery([collName], ref, {
-    subscribe: true
-  }, {
-    enabled: isQueryEnabled,
-    select(snapshot) {
-      return snapshot.docs.map((docSnapshot) => docSnapshot.data()[field]);
+  const query = useFirestoreQuery(
+    [collName],
+    ref,
+    {
+      subscribe: true,
+    },
+    {
+      enabled: isQueryEnabled,
+      select(snapshot) {
+        return snapshot.docs.map((docSnapshot) => docSnapshot.data()[field]);
+      },
     }
-  });
+  );
 
   return query;
 };
 
-export const getItemsByWhereFilteredFieldsQuery = (id: string | undefined, field: string, collName: string, isQueryEnabled = true) => {
-  const ref = query(
-    collection(db, collName),
-    where(field, '==', id)
+export const getItemsByWhereFilteredFieldsQuery = (
+  id: string | undefined,
+  field: string,
+  collName: string,
+  isQueryEnabled = true
+) => {
+  const ref = query(collection(db, collName), where(field, '==', id));
+
+  const whereQuery = useFirestoreQuery(
+    [id],
+    ref,
+    {},
+    {
+      enabled: isQueryEnabled,
+      select(snapshot) {
+        return snapshot.docs.map((docSnapshot) => docSnapshot.data().name);
+      },
+    }
   );
 
-  const whereQuery = useFirestoreQuery([id], ref, {}, {
-    enabled: isQueryEnabled,
-    select(snapshot) {
-      return snapshot.docs.map((docSnapshot) => docSnapshot.data().name);
-    }
-  });
+  return whereQuery;
+};
+
+export const getProductIDWhereQuery = (
+  brand: string,
+  name: string,
+  isQueryEnabled: boolean
+) => {
+  const ref = query(
+    collection(db, 'products'),
+    where('brand', '==', brand),
+    where('name', '==', name)
+  );
+
+  const whereQuery = useFirestoreQuery(
+    [`${brand}${name}`],
+    ref,
+    {},
+    { enabled: isQueryEnabled }
+  );
 
   return whereQuery;
 };
@@ -112,6 +165,15 @@ export const updateItem = (id: string | undefined, collName: string) => {
 };
 
 export type mutationResult =
-  UseMutationResult<void, FirestoreError, WithFieldValue<DocumentData>, unknown> |
-  UseMutationResult<DocumentReference<DocumentData>, FirestoreError, WithFieldValue<DocumentData>, unknown>;
-  
+  | UseMutationResult<
+      void,
+      FirestoreError,
+      WithFieldValue<DocumentData>,
+      unknown
+    >
+  | UseMutationResult<
+      DocumentReference<DocumentData>,
+      FirestoreError,
+      WithFieldValue<DocumentData>,
+      unknown
+    >;

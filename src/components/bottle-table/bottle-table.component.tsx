@@ -1,79 +1,136 @@
-import { Form, TextField } from 'react-md';
+import { useState } from 'react';
+import { Form, Select, TextField } from 'react-md';
 import { BottleTableProps } from '../../routes/bottle-page/bottle.component';
-import { getItemQuery, getItemsByWhereFilteredFieldsQuery, getListFilteredFieldsQuery } from '../../utils/firestore/firestore.utils';
+import {
+  getItemQuery,
+  getItemsByWhereFilteredFieldsQuery,
+  getListFilteredFieldsQuery,
+} from '../../utils/firestore/firestore.utils';
+import { sortAndUniqList } from '../../utils/helperFunctions';
 
+const BottleTable = ({
+  bottle,
+  selected,
+  editable,
+  setbottle,
+  setselectedproduct,
+  newBottle
+}: BottleTableProps) => {
+  const [brand, setBrand] = useState('');
+  const productQuery = getItemQuery(bottle.productId, 'products', !newBottle);
+  const userQuery = getItemQuery(bottle.userId, 'users', !newBottle);
+  const locationQuery = getItemQuery(bottle.locationUserId, 'users', !newBottle);
+  const allBrandsQuery = getListFilteredFieldsQuery('products', 'brand');
 
-const getBrands = () => {
-  return getListFilteredFieldsQuery('products', 'brand');
-};
+  const allNamesQuery = getItemsByWhereFilteredFieldsQuery(
+    brand,
+    'brand',
+    'products',
+    brand.length > 0
+  );
 
-const getNames = (brand: string) => {
-  return getItemsByWhereFilteredFieldsQuery(brand, 'brand', 'products');
-};
-
-const BottleTable = ({ bottleId, bottle, editable, setbottle }: BottleTableProps) => {
-  const productQuery = getItemQuery(bottle.productId, 'products');
-  const userQuery = getItemQuery(bottle.userId, 'users');
-  const locationQuery = getItemQuery(bottle.locationUserId, 'users');
-
-  const getBrandAndName  = () => {
+  const getBrand = () => {
     if (productQuery && productQuery.isSuccess && productQuery.data) {
-      return `${productQuery.data?.brand} - ${productQuery.data?.name}`;
+      return productQuery.data?.brand;
     } else {
       return '';
     }
   };
 
-  const getUserName  = () => {
-    if (userQuery && userQuery.isSuccess && userQuery.data ) {
-      return userQuery.data?.displayName;
+  const getName = () => {
+    if (productQuery && productQuery.isSuccess && productQuery.data) {
+      return productQuery.data?.name;
     } else {
       return '';
     }
   };
 
-  const getLocationUserName  = () => {
-    if (locationQuery && locationQuery.isSuccess && locationQuery.data ) {
-      return locationQuery.data?.displayName;
+  // const getUserName = () => {
+  //   if (userQuery && userQuery.isSuccess && userQuery.data) {
+  //     return userQuery.data?.displayName;
+  //   } else {
+  //     return '';
+  //   }
+  // };
+
+  // const getLocationUserName = () => {
+  //   if (locationQuery && locationQuery.isSuccess && locationQuery.data) {
+  //     return locationQuery.data?.displayName;
+  //   } else {
+  //     return '';
+  //   }
+  // };
+
+  const sortedBrands = () => {
+    if (allBrandsQuery && allBrandsQuery.isSuccess && allBrandsQuery.data) {
+      return sortAndUniqList(allBrandsQuery.data);
     } else {
-      return '';
+      return [];
+    }
+  };
+
+  const sortedNames = () => {
+    if (allNamesQuery && allNamesQuery.isSuccess && allNamesQuery.data) {
+      return sortAndUniqList(allNamesQuery.data);
+    } else {
+      return [];
     }
   };
 
   return (
     <Form>
       <p>Product: (required)</p>
-      <TextField
-        id="productId"
-        name="Product Id"
-        disabled={!editable}
-        value={getBrandAndName()}
-        onChange={(event) => {
-          setbottle({
-            ...bottle,
-            productId: event.currentTarget.value,
-          });
-        }}
-      />
+      {!editable ? (
+        <TextField
+          id="productId"
+          name="Product Id"
+          disabled={!editable}
+          value={`${getBrand()} - ${getName()}`}
+        />
+      ) : (
+        <>
+          <Select
+            id="brand"
+            name="Brand"
+            value={brand}
+            options={sortedBrands()}
+            onChange={(item) => setBrand(item)}
+          />
+          <Select
+            id="name"
+            name="Name"
+            value={selected.name}
+            disabled={brand.length === 0}
+            options={sortedNames()}
+            onChange={(item) =>
+              setselectedproduct({
+                ...selected,
+                brand: brand,
+                name: item,
+              })
+            }
+          />
+        </>
+      )}
       <p>User: (required)</p>
       <TextField
         id="userId"
         name="User Id"
         disabled={!editable}
-        value={getUserName()}
-        onChange={(event) =>
+        value={bottle.userId}
+        onChange={(event) => {
           setbottle({
             ...bottle,
             userId: event.currentTarget.value,
-          })
-        }
+          });
+        }}
       />
       <p>Location User: (required)</p>
       <TextField
         id="locationUserId"
         name="Location User Id"
         disabled={!editable}
-        value={getLocationUserName()}
+        // value={getLocationUserName()}
         onChange={(event) =>
           setbottle({
             ...bottle,
