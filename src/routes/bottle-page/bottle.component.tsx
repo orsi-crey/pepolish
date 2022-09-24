@@ -1,5 +1,15 @@
 import { useNavigate, useParams } from 'react-router-dom';
-import { ArrowBackSVGIcon, Button, TextIconSpacing } from 'react-md';
+import {
+  ArrowBackSVGIcon,
+  Button,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  Grid,
+  GridCell,
+  TextIconSpacing,
+} from 'react-md';
 import { useEffect, useState } from 'react';
 import { DocumentData } from 'firebase/firestore';
 
@@ -14,7 +24,7 @@ import {
 import { PolishBottle } from '../../store/product/product.types';
 import EditBottleButtons from '../../components/edit-bottle-buttons/edit-bottle-buttons';
 
-import { BottleContainer, PaddedDiv } from './bottle.styles';
+import { BottleContainer, PaddedDiv, PaddedMediaContainer } from './bottle.styles';
 
 export type BottleButtonProps = {
   editable: boolean;
@@ -54,14 +64,25 @@ const Bottle = () => {
   });
   const [selectedUser, setSelectedUser] = useState('');
   const [selectedLocationUser, setSelectedLocationUser] = useState('');
+  const [showImageFull, setShowImageFull] = useState(false);
 
   const getProductIDQuery = getProductIDWhereQuery(
     selectedProduct.brand,
     selectedProduct.name,
     selectedProduct.brand.length > 0 && selectedProduct.name.length > 0
   );
-  const getUserName = getItemsByWhereQuery(selectedUser, 'displayName', 'users', selectedUser.length>0);
-  const getLocationUserName = getItemsByWhereQuery(selectedLocationUser, 'displayName', 'users', selectedLocationUser.length>0);
+  const getUserName = getItemsByWhereQuery(
+    selectedUser,
+    'displayName',
+    'users',
+    selectedUser.length > 0
+  );
+  const getLocationUserName = getItemsByWhereQuery(
+    selectedLocationUser,
+    'displayName',
+    'users',
+    selectedLocationUser.length > 0
+  );
 
   const bottleQuery = getItemQuery(bottleId, 'bottles');
 
@@ -80,7 +101,7 @@ const Bottle = () => {
       return false;
     else return true;
   };
- 
+
   const setEditableFromChild = (editable: boolean) => {
     setEditable(editable);
   };
@@ -89,7 +110,7 @@ const Bottle = () => {
     setSelectedProduct(data);
   };
 
-  const setUsernameFromChild = (name: string) => {    
+  const setUsernameFromChild = (name: string) => {
     setSelectedUser(name);
   };
 
@@ -116,7 +137,7 @@ const Bottle = () => {
 
   const setBottleFromChild = (bottle: PolishBottle | DocumentData) => {
     setBottle(bottle);
-  };  
+  };
 
   useEffect(() => {
     if (getProductIDQuery.isSuccess && getProductIDQuery.data?.docs) {
@@ -159,20 +180,55 @@ const Bottle = () => {
               mutation={mutation}
             />
           </PaddedDiv>
-          <BottleTable
-            bottleId={bottleId}
-            bottle={bottle}
-            selectedProduct={selectedProduct}
-            selectedUser={selectedUser}
-            selectedLocationUser={selectedLocationUser}
-            editable={editable}
-            setbottle={setBottleFromChild}
-            setselectedproduct={setProductFromChild}
-            setselecteduser={setUsernameFromChild}
-            setselectedlocationuser={setLocationUsernameFromChild}
-            newBottle={false}
-          ></BottleTable>
-          <img key={bottle.photoUrl} src={bottle.photoUrl} />
+          <Grid>
+            <GridCell colSpan={7}>
+              <BottleTable
+                bottleId={bottleId}
+                bottle={bottle}
+                selectedProduct={selectedProduct}
+                selectedUser={selectedUser}
+                selectedLocationUser={selectedLocationUser}
+                editable={editable}
+                setbottle={setBottleFromChild}
+                setselectedproduct={setProductFromChild}
+                setselecteduser={setUsernameFromChild}
+                setselectedlocationuser={setLocationUsernameFromChild}
+                newBottle={false}
+              ></BottleTable>
+            </GridCell>
+            <GridCell colSpan={5}>
+            <PaddedMediaContainer>
+                {bottle.photoUrl ? (
+                  <>
+                    <img
+                      onClick={() => setShowImageFull(true)}
+                      src={bottle.photoUrl}
+                    />
+                    <Dialog
+                      id={`${bottleId}-img`}
+                      visible={showImageFull}
+                      onRequestClose={() => setShowImageFull(false)}
+                      aria-labelledby="dialog-title"
+                    >
+                      <DialogHeader>
+                        <DialogTitle id="dialog-title">
+                          {`Photo`}
+                        </DialogTitle>
+                      </DialogHeader>
+                      <DialogContent>
+                        <img
+                          onClick={() => setShowImageFull(false)}
+                          src={bottle.photoUrl}
+                        />
+                      </DialogContent>
+                    </Dialog>
+                  </>
+                ) : (
+                  'No photo'
+                )}
+              </PaddedMediaContainer>
+            </GridCell>
+          </Grid>
         </>
       )}
     </BottleContainer>

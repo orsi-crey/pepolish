@@ -23,25 +23,10 @@ const ProductList = () => {
   };
 
   const addPolishRow = (id: string, product: DocumentData) => {
-    console.log(product.imageUrl);
     return (
       <TableRow key={id} onClick={() => showProductPage(id)}>
-        <TableCell style={{ width: '50px' }}>
-          <div
-            style={{
-              width: '50px',
-              height: '50px',
-              overflow: 'hidden',
-            }}
-          >
-            <img
-              src={product.imageUrl}
-              style={{
-                width: '100px',
-                objectPosition: '-50px',
-              }}
-            />
-          </div>
+        <TableCell>
+          {product.imageUrl && <img src={product.imageUrl} />}
         </TableCell>
         <TableCell onClick={() => showProductPage(id)}>
           {product.brand}

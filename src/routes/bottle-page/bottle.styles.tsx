@@ -1,3 +1,4 @@
+import { MediaContainer } from 'react-md';
 import styled from 'styled-components';
 
 export const BottleContainer = styled.div`
@@ -12,4 +13,8 @@ export const BottleContainer = styled.div`
 
 export const PaddedDiv = styled.div`
   padding: 5px;
+`;
+
+export const PaddedMediaContainer = styled(MediaContainer)`
+  padding: 15px;
 `;

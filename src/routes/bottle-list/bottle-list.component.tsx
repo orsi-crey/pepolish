@@ -22,7 +22,7 @@ const BottleList = () => {
   };
 
   const productListQuery = getListQuery('products');
- 
+
   const productList: indexableData = {};
   productListQuery?.data?.docs.forEach((doc) => {
     Object.defineProperty(productList, doc.id, { value: doc.data() });
@@ -55,11 +55,13 @@ const BottleList = () => {
   const addPolishRow = (id: string, bottle: DocumentData) => {
     return (
       <TableRow key={id} onClick={() => showBottlePage(id)}>
+        <TableCell>
+          {bottle.photoUrl && <img src={bottle.photoUrl} />}
+        </TableCell>
         <TableCell>{getName(bottle.productId)}</TableCell>
         <TableCell>{getUser(bottle.userId)}</TableCell>
         <TableCell>{getUser(bottle.locationUserId)}</TableCell>
         <TableCell>{bottle.fullPercentage} %</TableCell>
-        <TableCell>{<img src={bottle.photoUrl} />}</TableCell>
       </TableRow>
     );
   };
@@ -74,11 +76,11 @@ const BottleList = () => {
         <Table fullWidth>
           <TableHeader>
             <TableRow>
+              <TableCell style={{ width: '50px' }} />
               <TableCell>productId</TableCell>
               <TableCell>userId</TableCell>
               <TableCell>locationUserId</TableCell>
               <TableCell>fullPercentage</TableCell>
-              <TableCell>photoUrl</TableCell>
             </TableRow>
           </TableHeader>
           <TableBody>

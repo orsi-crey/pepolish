@@ -8,4 +8,11 @@ export const ProductListContainer = styled.div`
   border-radius: 15px;
   padding: 20px;
   background-color: white;
+  
+  img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    display: flex;
+  }
 `;

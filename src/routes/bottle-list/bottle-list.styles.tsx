@@ -10,6 +10,9 @@ export const BottleListContainer = styled.div`
   background-color: white;
   
   img {
-    height: 30px;
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    display: flex;
   }
 `;
