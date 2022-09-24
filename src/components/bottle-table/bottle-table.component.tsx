@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Form, Select, TextField } from 'react-md';
+import { Button, Form, Select, TextField } from 'react-md';
 import { BottleTableProps } from '../../routes/bottle-page/bottle.component';
 import {
   getItemQuery,
@@ -7,6 +7,8 @@ import {
   getListFilteredFieldsQuery,
 } from '../../utils/firestore/firestore.utils';
 import { sortAndUniqList } from '../../utils/helperFunctions';
+import { ArrowDropDownSVGIcon } from '@react-md/material-icons';
+import ProductModal from '../product-modal/product-modal.component';
 
 const BottleTable = ({
   bottle,
@@ -21,6 +23,7 @@ const BottleTable = ({
   newBottle,
 }: BottleTableProps) => {
   const [brand, setBrand] = useState('');
+  const [isVisible, setIsVisible] = useState(false);
   const productQuery = getItemQuery(bottle.productId, 'products', !newBottle);
   const userQuery = getItemQuery(bottle.userId, 'users', !newBottle);
   const locationUserQuery = getItemQuery(
@@ -143,6 +146,7 @@ const BottleTable = ({
             value={brand}
             options={sortedBrands()}
             onChange={(item) => setBrand(item)}
+            rightChildren={<ArrowDropDownSVGIcon />}
           />
           <Select
             id="name"
@@ -157,6 +161,22 @@ const BottleTable = ({
                 name: item,
               })
             }
+            rightChildren={<ArrowDropDownSVGIcon />}
+          />
+          <Button onClick={() => setIsVisible(true)}>
+            Can't find polish in list? Add new:
+          </Button>
+          <ProductModal
+            isVisible={isVisible}
+            setProductFromModal={(brand, name) => {
+              setBrand(brand);
+              setselectedproduct({
+                ...selectedProduct,
+                brand: brand,
+                name: name,
+              });
+            }}
+            closeModal={() => setIsVisible(false)}
           />
         </>
       )}
@@ -177,6 +197,7 @@ const BottleTable = ({
             value={selectedUser}
             options={sortedUserNames()}
             onChange={(item) => setselecteduser(item)}
+            rightChildren={<ArrowDropDownSVGIcon />}
           />
         </>
       )}
@@ -197,6 +218,7 @@ const BottleTable = ({
             value={selectedLocationUser}
             options={sortedUserNames()}
             onChange={(item) => setselectedlocationuser(item)}
+            rightChildren={<ArrowDropDownSVGIcon />}
           />
         </>
       )}
