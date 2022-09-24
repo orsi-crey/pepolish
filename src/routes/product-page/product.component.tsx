@@ -2,6 +2,10 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import {
   ArrowBackSVGIcon,
   Button,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
   Divider,
   Grid,
   GridCell,
@@ -22,7 +26,11 @@ import {
 import { Polish } from '../../store/product/product.types';
 import EditProductButtons from '../../components/edit-product-buttons/edit-product-buttons';
 
-import { PaddedDiv, PaddedMediaContainer, ProductContainer } from './product.styles';
+import {
+  PaddedDiv,
+  PaddedMediaContainer,
+  ProductContainer,
+} from './product.styles';
 
 export type ProductButtonProps = {
   editable: boolean;
@@ -44,6 +52,7 @@ const Product = () => {
   const { productId } = useParams();
   const [editable, setEditable] = useState(false);
   const [product, setProduct] = useState({} as Polish | DocumentData);
+  const [showImageFull, setShowImageFull] = useState(false);
 
   const productQuery = getItemQuery(productId, 'products');
   if (productQuery && productQuery.data && Object.keys(product).length === 0) {
@@ -139,7 +148,34 @@ const Product = () => {
             </GridCell>
             <GridCell colSpan={5}>
               <PaddedMediaContainer>
-                {product.imageUrl ? <img src={product.imageUrl} /> : 'No photo'}
+                {product.imageUrl ? (
+                  <>
+                    <img
+                      onClick={() => setShowImageFull(true)}
+                      src={product.imageUrl}
+                    />
+                    <Dialog
+                      id={`${productId}-img`}
+                      visible={showImageFull}
+                      onRequestClose={() => setShowImageFull(false)}
+                      aria-labelledby="dialog-title"
+                    >
+                      <DialogHeader>
+                        <DialogTitle id="dialog-title">
+                          {`${product.brand} - ${product.name}`}
+                        </DialogTitle>
+                      </DialogHeader>
+                      <DialogContent>
+                        <img
+                          onClick={() => setShowImageFull(false)}
+                          src={product.imageUrl}
+                        />
+                      </DialogContent>
+                    </Dialog>
+                  </>
+                ) : (
+                  'No photo'
+                )}
               </PaddedMediaContainer>
               <Divider />
               {productQuery &&

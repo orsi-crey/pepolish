@@ -16,16 +16,36 @@ const ProductList = () => {
   const navigate = useNavigate();
 
   const productListQuery = getListQuery('products');
-  const productList =  productListQuery?.data?.docs;
+  const productList = productListQuery?.data?.docs;
 
   const showProductPage = (id: string) => {
     navigate(`/products/${id}`);
   };
 
   const addPolishRow = (id: string, product: DocumentData) => {
+    console.log(product.imageUrl);
     return (
       <TableRow key={id} onClick={() => showProductPage(id)}>
-        <TableCell>{product.brand}</TableCell>
+        <TableCell style={{ width: '50px' }}>
+          <div
+            style={{
+              width: '50px',
+              height: '50px',
+              overflow: 'hidden',
+            }}
+          >
+            <img
+              src={product.imageUrl}
+              style={{
+                width: '100px',
+                objectPosition: '-50px',
+              }}
+            />
+          </div>
+        </TableCell>
+        <TableCell onClick={() => showProductPage(id)}>
+          {product.brand}
+        </TableCell>
         <TableCell>{product.name}</TableCell>
         <TableCell>{product.color}</TableCell>
         <TableCell>
@@ -33,12 +53,6 @@ const ProductList = () => {
             <div key={effect}>{effect}</div>
           ))}
         </TableCell>
-        <TableCell>
-          {product.multichrome?.map((color: string) => (
-            <div key={color}>{color}</div>
-          ))}
-        </TableCell>
-        <TableCell>{product.volume}</TableCell>
         <TableCell>
           {product.other?.map((item: string) => (
             <div key={item}>{item}</div>
@@ -58,17 +72,18 @@ const ProductList = () => {
         <Table fullWidth>
           <TableHeader>
             <TableRow>
+              <TableCell style={{ width: '50px' }} />
               <TableCell>Brand</TableCell>
               <TableCell>Name</TableCell>
               <TableCell>Color</TableCell>
               <TableCell>Effects</TableCell>
-              <TableCell>Multichrome colors</TableCell>
-              <TableCell>Volume (ml)</TableCell>
               <TableCell>Other</TableCell>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {productList?.map((product) => addPolishRow(product.id, product.data()))}
+            {productList?.map((product) =>
+              addPolishRow(product.id, product.data())
+            )}
           </TableBody>
         </Table>
       )}
