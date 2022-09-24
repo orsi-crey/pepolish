@@ -18,10 +18,6 @@ const ProductList = () => {
   const productListQuery = getListQuery('products');
   const productList =  productListQuery?.data?.docs;
 
-  const editProductPage = (product: DocumentData) => {
-    console.log(product.name);
-  };
-
   const showProductPage = (id: string) => {
     navigate(`/products/${id}`);
   };
