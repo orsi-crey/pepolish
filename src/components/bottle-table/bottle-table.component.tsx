@@ -62,7 +62,11 @@ const BottleTable = ({
   };
 
   const getLocationUserName = () => {
-    if (locationUserQuery && locationUserQuery.isSuccess && locationUserQuery.data) {
+    if (
+      locationUserQuery &&
+      locationUserQuery.isSuccess &&
+      locationUserQuery.data
+    ) {
       return locationUserQuery.data?.displayName;
     } else {
       return '';
@@ -98,6 +102,17 @@ const BottleTable = ({
   };
 
   useEffect(() => {
+    if (productQuery.isSuccess && productQuery.data) {
+      setselectedproduct({
+        ...selectedProduct,
+        brand: productQuery.data?.brand,
+        name: productQuery.data?.name,
+      });
+      setBrand(productQuery.data?.brand);
+    }
+  }, [productQuery.isSuccess]);
+
+  useEffect(() => {
     if (userQuery.isSuccess && userQuery.data) {
       setselecteduser(userQuery.data?.displayName);
     }
@@ -112,11 +127,11 @@ const BottleTable = ({
   return (
     <Form>
       <p>Product:</p>
-      {(!editable || !newBottle) ? (
+      {!editable ? (
         <TextField
           id="productId"
           name="Product Id"
-          disabled={!editable || !newBottle}
+          disabled={!editable}
           value={`${getBrand()} - ${getName()}`}
         />
       ) : (
