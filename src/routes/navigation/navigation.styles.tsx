@@ -8,7 +8,15 @@ export const NavigationContainer = styled.div`
   padding-bottom: 20px;
   background-color: white;
 
-  h2, div {
+  h2 {
     text-align: center;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+
+  .flex-container {
+    display: flex;
+    justify-content: space-around;
+    padding-bottom: 20px;
   }
 `;

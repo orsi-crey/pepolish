@@ -20,11 +20,11 @@ const Navigation = () => {
     case authState.LoggedOut:
       return <div><Link to='/sign-in'>Sign in</Link></div>;
     case authState.SignedIn:
-      return <>
-        <div><Link to='/'>Home</Link></div>
-        <div><Link to='/my-profile'>Profile</Link></div>
-        <div><Link to='/' onClick={signOutHandler}>Log out</Link></div>
-      </>;
+      return <div className='flex-container'>
+        <Link to='/'>🏠 Home</Link>
+        <Link to='/my-profile'>📝 My Profile</Link>
+        <Link to='/' onClick={signOutHandler}>👋 Log out</Link>
+      </div>;
     case authState.Loading:
       return <div>loading...</div>;
     default:
@@ -36,6 +36,11 @@ const Navigation = () => {
     <div>
       <NavigationContainer>
         <h2>🐸 pepolish 💅</h2>
+        <div className='flex-container'>
+          <Link to='/users'>🧑‍🤝‍🧑 Users</Link>
+          <Link to='/products'>💅 Products</Link>
+          <Link to='/bottles'>🏺 Bottles</Link>
+        </div>
         {navLinks()}
       </NavigationContainer>
       <Outlet />
