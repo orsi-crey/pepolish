@@ -6,13 +6,15 @@ import { onAuthStateChangedListener, getUserDocFromAuth } from '../utils/firebas
 type userData = {
   name: string,
   city: string,
-  profilePic: string
+  profilePic: string,
+  favorites: string[]
 }
 
 export const initialUserdata = {
   name: '',
   city: '',
-  profilePic: ''
+  profilePic: '',
+  favorites: ['']
 };
 
 export enum authState {

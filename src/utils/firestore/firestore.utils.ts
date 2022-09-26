@@ -17,7 +17,7 @@ import {
 } from 'firebase/firestore';
 import { UseMutationResult } from 'react-query';
 
-import { db } from '../firebase/firebase.utils';
+import { auth, db } from '../firebase/firebase.utils';
 
 export const getListQuery = (collName: string) => {
   const ref = collection(db, collName);

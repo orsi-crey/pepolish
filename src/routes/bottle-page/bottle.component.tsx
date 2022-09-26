@@ -197,7 +197,7 @@ const Bottle = () => {
               ></BottleTable>
             </GridCell>
             <GridCell colSpan={5}>
-            <PaddedMediaContainer>
+              <PaddedMediaContainer>
                 {bottle.photoUrl ? (
                   <>
                     <img
@@ -212,7 +212,7 @@ const Bottle = () => {
                     >
                       <DialogHeader>
                         <DialogTitle id="dialog-title">
-                          {`Photo`}
+                          {'Photo'}
                         </DialogTitle>
                       </DialogHeader>
                       <DialogContent>

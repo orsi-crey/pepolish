@@ -12,7 +12,7 @@ import {
   MediaContainer,
   TextIconSpacing,
 } from 'react-md';
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { DocumentData } from 'firebase/firestore';
 
 import ProductTable from '../../components/product-table/product-table.component';
@@ -31,6 +31,15 @@ import {
   PaddedMediaContainer,
   ProductContainer,
 } from './product.styles';
+import {
+  UserContext,
+  initialUserdata,
+  authState,
+} from '../../contexts/user.context';
+import {
+  getAllUserData,
+  uploadDataToUser,
+} from '../../utils/firebase/firebase.utils';
 
 export type ProductButtonProps = {
   editable: boolean;
@@ -50,6 +59,8 @@ export type ProductTableProps = {
 const Product = () => {
   const navigate = useNavigate();
   const { productId } = useParams();
+  const { isLoggedIn, userdata, setUserdata } = useContext(UserContext);
+  const [isFavorite, setIsFavorite] = useState(false);
   const [editable, setEditable] = useState(false);
   const [product, setProduct] = useState({} as Polish | DocumentData);
   const [showImageFull, setShowImageFull] = useState(false);
@@ -72,6 +83,32 @@ const Product = () => {
   );
 
   const mutation = updateItem(productId, 'products');
+
+  useEffect(() => {
+    (async () => {
+      const data = await getAllUserData();
+      if (data?.userdata) {
+        setUserdata({ ...initialUserdata, ...data?.userdata });
+      }
+      setIsFavorite(
+        data?.userdata?.favorites?.includes(productId ? productId : '')
+      );
+    })();
+  }, [isLoggedIn, userdata.favorites]);
+
+  const toggleFavorite = () => {
+    const favorites = userdata?.favorites;
+    const index = favorites.indexOf(productId ? productId : '');
+    if (isFavorite && index !== -1) {
+      setUserdata({ ...userdata, favorites: favorites.splice(index, 1) });
+    }
+    if (!isFavorite && index === -1 && productId) {
+      favorites.push(productId);
+      setUserdata({ ...userdata, favorites: favorites });
+    }
+    uploadDataToUser({ userdata: userdata });
+    setIsFavorite(!isFavorite);
+  };
 
   const productMissingData = () => {
     if (
@@ -125,6 +162,15 @@ const Product = () => {
             Back to product list
           </TextIconSpacing>
         </Button>
+        {isLoggedIn === authState.SignedIn && (
+          <Button
+            buttonType="icon"
+            themeType="contained"
+            onClick={toggleFavorite}
+          >
+            {isFavorite ? '💔' : '❤️'}
+          </Button>
+        )}
       </PaddedDiv>
       {productQuery && productQuery.isSuccess && productQuery.data && (
         <>

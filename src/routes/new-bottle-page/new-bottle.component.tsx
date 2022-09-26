@@ -111,9 +111,9 @@ const NewBottle = () => {
     <BottleContainer>
       
       <PaddedDiv>
-      <Button themeType="contained" onClick={() => navigate('/bottles')}>
+        <Button themeType="contained" onClick={() => navigate('/bottles')}>
         Back to bottle list
-      </Button>
+        </Button>
       </PaddedDiv>
       <PaddedDiv><NewBottleButtons
         editable={true}

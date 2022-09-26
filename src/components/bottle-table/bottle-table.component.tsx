@@ -164,8 +164,8 @@ const BottleTable = ({
             rightChildren={<ArrowDropDownSVGIcon />}
           />
           <Button 
-          themeType='outline'
-          onClick={() => setIsVisible(true)}>
+            themeType='outline'
+            onClick={() => setIsVisible(true)}>
             Can't find polish in list? Add new!
           </Button>
           <ProductModal

@@ -7,6 +7,7 @@ export const NavigationContainer = styled.div`
   border-radius: 15px;
   padding-bottom: 20px;
   background-color: white;
+  text-align: center;
 
   h2 {
     text-align: center;
