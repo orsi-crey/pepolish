@@ -1,39 +1,68 @@
 import { Button } from '@react-md/button';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { MediaContainer } from 'react-md';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
-import { authState, UserContext } from '../../contexts/user.context';
+import {
+  authState,
+  initialUserdata,
+  UserContext,
+} from '../../contexts/user.context';
+import { getAllUserData } from '../../utils/firebase/firebase.utils';
 import { HomeContainer } from './home.styles';
 
 const Home = () => {
   const navigate = useNavigate();
-
-  const { isLoggedIn, username } = useContext(UserContext);
+  const { isLoggedIn, username, userdata, setUserdata } =
+    useContext(UserContext);
 
   function handleLoginClick() {
     navigate('/sign-in');
   }
 
+  useEffect(() => {
+    (async () => {
+      const data = await getAllUserData();
+      if (data?.userdata) {
+        setUserdata({ ...initialUserdata, ...data?.userdata });
+      }
+    })();
+  }, [isLoggedIn]);
+
   const homeLinks = () => {
     switch (isLoggedIn) {
-    // case authState.LoggedOut:
-    //   return <>
-    //     <div>Hi!</div>
-    //     <div>
-    //       <Button theme="primary" themeType="contained" onClick={handleLoginClick}>
-    //           Click to log in
-    //       </Button>
-    //     </div>
-    //   </>;
     case authState.LoggedOut:
+      return (
+        <>
+          <div>Hi!</div>
+          <div>
+            <div>
+              <Button
+                theme="primary"
+                themeType="contained"
+                onClick={handleLoginClick}
+              >
+                  Click to log in
+              </Button>
+            </div>
+            <MediaContainer>
+              <img src="pepolish.png"></img>
+            </MediaContainer>
+          </div>
+        </>
+      );
     case authState.SignedIn:
       return (
         <div>
           <div>Hi {username}!</div>
-          <MediaContainer>
-            <img src="pepolish.png"></img>
-          </MediaContainer>
+          <div>Your favorite polishes: </div>
+          {userdata.favorites.map((item) => {
+            return (
+              <div key={item}>
+                <Link to={`/products/${item}`}>{item}</Link>
+              </div>
+            );
+          })}
         </div>
       );
     case authState.Loading:
