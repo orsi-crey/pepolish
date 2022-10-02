@@ -3,9 +3,9 @@ import { Button } from 'react-md';
 import { useEffect, useState } from 'react';
 import { DocumentData } from 'firebase/firestore';
 
-import BottleTable from '../../components/bottle-table/bottle-table.component';
+import BottleTable from '../../components/bottle-table.component';
 import { PolishBottle } from '../../store/product/product.types';
-import NewBottleButtons from '../../components/new-bottle-buttons/new-bottle-buttons';
+import NewBottleButtons from '../../components/new-bottle-buttons';
 
 import { BottleContainer, PaddedDiv } from './new-bottle.styles';
 import {

@@ -16,7 +16,7 @@ import {
 } from '../../utils/firestore/firestore.utils';
 import { sortAndUniqList } from '../../utils/helperFunctions';
 
-import ChipField from '../chip-field/chip-field.component';
+import ChipField from '../chip-field.component';
 import { StyledDialog } from './product-modal.styles';
 
 const ProductModal = ({

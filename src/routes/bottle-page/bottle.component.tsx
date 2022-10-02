@@ -13,7 +13,7 @@ import {
 import { useEffect, useState } from 'react';
 import { DocumentData } from 'firebase/firestore';
 
-import BottleTable from '../../components/bottle-table/bottle-table.component';
+import BottleTable from '../../components/bottle-table.component';
 import {
   getItemQuery,
   getItemsByWhereQuery,
@@ -22,7 +22,7 @@ import {
   updateItem,
 } from '../../utils/firestore/firestore.utils';
 import { PolishBottle } from '../../store/product/product.types';
-import EditBottleButtons from '../../components/edit-bottle-buttons/edit-bottle-buttons';
+import EditBottleButtons from '../../components/edit-bottle-buttons';
 
 import { BottleContainer, PaddedDiv, PaddedMediaContainer } from './bottle.styles';
 

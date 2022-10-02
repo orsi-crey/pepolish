@@ -1,9 +1,9 @@
 import { AutoComplete, Form, TextField } from 'react-md';
-import { ProductTableProps } from '../../routes/product-page/product.component';
-import { getListFilteredFieldsQuery } from '../../utils/firestore/firestore.utils';
-import { sortAndUniqList } from '../../utils/helperFunctions';
+import { ProductTableProps } from '../routes/product-page/product.component';
+import { getListFilteredFieldsQuery } from '../utils/firestore/firestore.utils';
+import { sortAndUniqList } from '../utils/helperFunctions';
 
-import ChipField from '../chip-field/chip-field.component';
+import ChipField from './chip-field.component';
 
 const ProductTable = ({ product, editable, setproduct }: ProductTableProps) => {
   const allBrandsQuery = getListFilteredFieldsQuery('products', 'brand');

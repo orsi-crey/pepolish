@@ -15,7 +15,7 @@ import {
 import { useContext, useEffect, useState } from 'react';
 import { DocumentData } from 'firebase/firestore';
 
-import ProductTable from '../../components/product-table/product-table.component';
+import ProductTable from '../../components/product-table.component';
 import {
   getItemQuery,
   getItemsByWhereQuery,
@@ -24,7 +24,7 @@ import {
   updateItem,
 } from '../../utils/firestore/firestore.utils';
 import { Polish } from '../../store/product/product.types';
-import EditProductButtons from '../../components/edit-product-buttons/edit-product-buttons';
+import EditProductButtons from '../../components/edit-product-buttons';
 
 import {
   PaddedDiv,

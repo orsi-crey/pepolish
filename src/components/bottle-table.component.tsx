@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
 import { Button, Form, Select, TextField } from 'react-md';
-import { BottleTableProps } from '../../routes/bottle-page/bottle.component';
+import { BottleTableProps } from '../routes/bottle-page/bottle.component';
 import {
   getItemQuery,
   getItemsByWhereFilteredFieldsQuery,
   getListFilteredFieldsQuery,
-} from '../../utils/firestore/firestore.utils';
-import { sortAndUniqList } from '../../utils/helperFunctions';
+} from '../utils/firestore/firestore.utils';
+import { sortAndUniqList } from '../utils/helperFunctions';
 import { ArrowDropDownSVGIcon } from '@react-md/material-icons';
-import ProductModal from '../product-modal/product-modal.component';
+import ProductModal from './product-modal/product-modal.component';
 
 const BottleTable = ({
   bottle,

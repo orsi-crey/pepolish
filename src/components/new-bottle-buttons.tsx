@@ -1,11 +1,11 @@
 import { Button } from 'react-md';
-import { ProductButtonProps } from '../../routes/product-page/product.component';
+import { BottleButtonProps } from '../routes/bottle-page/bottle.component';
 
-const NewProductButtons = ({
+const NewBottleButtons = ({
   onSaveClicked,
   onCancelClicked,
   mutation,
-}: ProductButtonProps) => {
+}: BottleButtonProps) => {
   return (
     <>
       <>
@@ -34,4 +34,4 @@ const NewProductButtons = ({
   );
 };
 
-export default NewProductButtons;
+export default NewBottleButtons;
