@@ -1,21 +1,19 @@
-import {
-  Table,
-  TableHeader,
-  TableRow,
-  TableCell,
-  TableBody,
-} from 'react-md';
+import { Table, TableHeader, TableRow, TableCell, TableBody } from 'react-md';
 import { useNavigate } from 'react-router-dom';
 
 import { UserListContainer } from './user-list.styles';
 import { getListQuery } from '../../utils/firestore/firestore.utils';
-import { DocumentData } from 'firebase/firestore';
+import { DocumentData, QueryDocumentSnapshot } from 'firebase/firestore';
+import { useState } from 'react';
 
 const UserList = () => {
   const navigate = useNavigate();
+  const [users, setUsers] = useState([] as QueryDocumentSnapshot<DocumentData>[]);
 
   const userListQuery = getListQuery('users');
-  const userList =  userListQuery?.data?.docs;
+  if (userListQuery.isSuccess && users.length === 0) {
+    setUsers(userListQuery?.data?.docs);
+  }
 
   const showUserPage = (id: string) => {
     navigate(`/users/${id}`);
@@ -33,7 +31,7 @@ const UserList = () => {
 
   return (
     <UserListContainer>
-      <div>filter will be here</div>
+      {/* <div>filter will be here</div> */}
       {userListQuery.isSuccess && (
         <Table fullWidth>
           <TableHeader>
@@ -43,9 +41,7 @@ const UserList = () => {
               <TableCell>City</TableCell>
             </TableRow>
           </TableHeader>
-          <TableBody>
-            {userList?.map((user) => addUserRow(user.id, user.data()))}
-          </TableBody>
+          <TableBody>{users.map((user) => addUserRow(user.id, user.data()))}</TableBody>
         </Table>
       )}
     </UserListContainer>

@@ -1,5 +1,6 @@
 import { useContext, useState } from 'react';
-import { Button, TextField } from 'react-md';
+import { Button, MediaContainer, TextField } from 'react-md';
+import { Link } from 'react-router-dom';
 
 import { authState, UserContext } from '../../contexts/user.context';
 import { uploadDataToUser } from '../../utils/firebase/firebase.utils';
@@ -53,7 +54,11 @@ const MyProfile = () => {
               setUserdata({ ...userdata, profilePic: event.currentTarget.value });
             }}
           />
-          <img src={userdata.profilePic} />
+          <div>
+            <MediaContainer>
+              <img src={userdata.profilePic} />
+            </MediaContainer>
+          </div>
           <div>
             <Button theme="primary" themeType="contained" disabled={!edited} onClick={userdataSaveHandler}>
               Save data
@@ -63,6 +68,9 @@ const MyProfile = () => {
       ) : (
         <>
           <div>Hi! You're not logged in!</div>
+          <div>
+            <Link to="/sign-in">Cick here to sign in</Link>
+          </div>
         </>
       )}
     </MyProfileContainer>

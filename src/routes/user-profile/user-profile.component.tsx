@@ -1,39 +1,50 @@
+import { DocumentData, QueryDocumentSnapshot } from 'firebase/firestore';
+import { useState } from 'react';
 import { Button, TextField } from 'react-md';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
-import { getItemQuery, getItemsByWhereQuery, getListSubsetQuery } from '../../utils/firestore/firestore.utils';
+import { getItemQuery, getItemsByWhereQuery, getListQuery, getListSubsetQuery } from '../../utils/firestore/firestore.utils';
 
 import { UserProfileContainer } from './user-profile.styles';
 
 const UserProfile = () => {
   const { userId } = useParams();
   const navigate = useNavigate();
-  const userQuery = getItemQuery(userId, 'users');
+  const [user, setUser] = useState({} as DocumentData);
+  const [products, setProducts] = useState([] as QueryDocumentSnapshot<DocumentData>[]);
 
-  const bottleQuery = getItemsByWhereQuery(userId, 'userId', 'bottles');
+  const userQuery = getListQuery('users');
+  const productsQuery = getListQuery('products');
+  const bottlesQuery = getListQuery('bottles');
 
-  const productsList: string[] = ['-'];
-  bottleQuery.data?.docs.forEach(element => {
-    productsList.push(element.data().productId);
-  });
+  // get all relevant info and save in state
+  if (userQuery && userQuery.data && Object.keys(user).length === 0) {
+    const userToSet = userQuery.data.docs.find((doc) => doc.id === userId);
+    if (userToSet) setUser(userToSet.data());
+  }
 
-  const productsQuery = getListSubsetQuery(productsList, 'products', bottleQuery.isSuccess);
-
-  const productsMap = new Map<string, string>();
-  productsQuery.data?.docs?.forEach(item => {
-    productsMap.set(item.id, `${item.data().brand} - ${item.data().name}`);
-  });
+  const productIds: string[] = [];
+  if (bottlesQuery && bottlesQuery.data && productIds.length === 0) {
+    const relevantProducts = bottlesQuery.data.docs.filter((doc) => doc.data().userId === userId);
+    relevantProducts.forEach((doc) => {
+      productIds.push(doc.data().productId);
+    });
+  }
+  if (productsQuery?.data?.docs && products.length === 0 && productIds.length > 0) {
+    setProducts(productsQuery?.data?.docs?.filter((doc) => productIds.includes(doc.id)));
+  }
 
   const ownedProducts = () => {
-    if (bottleQuery.isSuccess && bottleQuery.data?.docs.length === 0) {
-      return <div>No polishes!</div>;
+    if (products.length === 0) {
+      return <div>No polishes yet!</div>;
     }
-    return bottleQuery.data?.docs.map((item: any) => {
-      return <div key={item.id}>
-        • <Link to={`/bottles/${item.id}`}>{productsMap.get(item.data().productId)}</Link>
-      </div>;
-    });
+    return products.map((item) => (
+      <div key={item.id}>
+        • <Link to={`/bottles/${item.id}`}>{`${item.data().brand} - ${item.data().name}`}</Link>
+      </div>
+    ));
   };
+  console.log(user);
 
   return (
     <UserProfileContainer>
@@ -42,29 +53,14 @@ const UserProfile = () => {
       </Button>
       {userQuery && userQuery.isSuccess && userQuery.data && (
         <>
-          <div><img src={userQuery.data?.userdata?.profilePic} /></div>
-          <p>User Id:</p>
-          <TextField
-            id="userId"
-            name="User Id"
-            disabled={true}
-            value={userId}
-          />
+          <div>
+            <img src={user?.profilePic} />
+          </div>
           <p>Name:</p>
-          <TextField
-            id="displayName"
-            name="Display name"
-            disabled={true}
-            value={userQuery.data?.displayName}
-          />
+          <TextField id="displayName" name="Display name" disabled={true} value={user?.displayName} />
           <p>City:</p>
-          <TextField
-            id="city"
-            name="City"
-            disabled={true}
-            value={userQuery.data?.userdata?.city}
-          />
-          <p>Polishes owned by {userQuery.data?.displayName}:</p>
+          <TextField id="city" name="City" disabled={true} value={user?.city} />
+          <p>Polishes owned by {user?.displayName}:</p>
           {ownedProducts()}
         </>
       )}
