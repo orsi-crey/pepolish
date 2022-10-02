@@ -12,14 +12,10 @@ import {
   TextIconSpacing,
 } from 'react-md';
 import { useContext, useEffect, useState } from 'react';
-import { DocumentData } from 'firebase/firestore';
+import { DocumentData, QueryDocumentSnapshot } from 'firebase/firestore';
 
 import ProductTable from '../../components/product-table.component';
-import {
-  getListQuery,
-  mutationResult,
-  updateItem,
-} from '../../utils/firestore/firestore.utils';
+import { getListQuery, mutationResult, updateItem } from '../../utils/firestore/firestore.utils';
 import { Polish } from '../../store/product/product.types';
 import EditProductButtons from '../../components/edit-product-buttons';
 
@@ -50,14 +46,19 @@ const Product = () => {
   const [editable, setEditable] = useState(false);
   const [product, setProduct] = useState({} as Polish | DocumentData);
   const [showImageFull, setShowImageFull] = useState(false);
+  const [users, setUsers] = useState([] as QueryDocumentSnapshot<DocumentData>[]);
 
   const productsQuery = getListQuery('products');
+  const bottlesQuery = getListQuery('bottles');
+  const userQuery = getListQuery('users');
+  const mutation = updateItem(productId, 'products');
+
+  // get all relevant info and save in state
   if (productsQuery && productsQuery.data && Object.keys(product).length === 0) {
     const productToSet = productsQuery.data.docs.find((doc) => doc.id === productId);
     if (productToSet) setProduct(productToSet.data());
   }
 
-  const bottlesQuery = getListQuery('bottles');
   const userIds: string[] = [];
   if (bottlesQuery && bottlesQuery.data && userIds.length === 0) {
     const relevantBottles = bottlesQuery.data.docs.filter((doc) => doc.data().productId === productId);
@@ -65,11 +66,9 @@ const Product = () => {
       userIds.push(doc.data().userId);
     });
   }
-
-  const userQuery = getListQuery('users');
-  const users = userQuery?.data?.docs?.filter((doc) => userIds.includes(doc.id));
-
-  const mutation = updateItem(productId, 'products');
+  if (userQuery?.data?.docs && users.length === 0) {
+    setUsers(userQuery?.data?.docs?.filter((doc) => userIds.includes(doc.id)));
+  }
 
   useEffect(() => {
     setIsFavorite(userdata?.favorites?.includes(productId ? productId : ''));
@@ -94,6 +93,8 @@ const Product = () => {
     else return true;
   };
 
+  // checks who has a bottle of the current polish
+  // todo: remove duplicates if a user has more than one bottle
   const owningUsers = () => {
     return users?.map((item: DocumentData) => {
       return (
@@ -141,15 +142,17 @@ const Product = () => {
       </PaddedDiv>
       {productsQuery && productsQuery.isSuccess && productsQuery.data && (
         <>
-          <PaddedDiv>
-            <EditProductButtons
-              editable={editable}
-              seteditable={setEditableFromChild}
-              onSaveClicked={saveClickedFromChild}
-              onCancelClicked={cancelClickedFromChild}
-              mutation={mutation}
-            />
-          </PaddedDiv>
+          {isLoggedIn === authState.SignedIn && (
+            <PaddedDiv>
+              <EditProductButtons
+                editable={editable}
+                seteditable={setEditableFromChild}
+                onSaveClicked={saveClickedFromChild}
+                onCancelClicked={cancelClickedFromChild}
+                mutation={mutation}
+              />
+            </PaddedDiv>
+          )}
           <Grid>
             <GridCell colSpan={7}>
               <ProductTable productId={productId} product={product} editable={editable} setproduct={setProductFromChild} />
@@ -178,9 +181,9 @@ const Product = () => {
                 )}
               </PaddedMediaContainer>
               <Divider />
-              {productsQuery && productsQuery.isSuccess && userQuery.isSuccess && userQuery.data?.docs?.length > 0 && (
+              {users.length > 0 && (
                 <>
-                  <p>List of users who own this polish:</p>
+                  <p>Users who own this polish:</p>
                   {owningUsers()}
                 </>
               )}
