@@ -1,24 +1,14 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { Button, TextField } from 'react-md';
 
-import { authState, initialUserdata, UserContext } from '../../contexts/user.context';
-import { getAllUserData, uploadDataToUser } from '../../utils/firebase/firebase.utils';
+import { authState, UserContext } from '../../contexts/user.context';
+import { uploadDataToUser } from '../../utils/firebase/firebase.utils';
 
 import { MyProfileContainer } from './profile.styles';
-
 
 const MyProfile = () => {
   const { isLoggedIn, username, userdata, setUserdata } = useContext(UserContext);
   const [edited, setEdited] = useState(false);
-
-  useEffect(() => {
-    (async () => {
-      const data = await getAllUserData();
-      if (data?.userdata) {
-        setUserdata({ initialUserdata, ...data?.userdata });
-      }
-    })();
-  }, [isLoggedIn]);
 
   const userdataSaveHandler = () => {
     uploadDataToUser({ userdata: userdata });
@@ -27,7 +17,7 @@ const MyProfile = () => {
 
   return (
     <MyProfileContainer>
-      {isLoggedIn === authState.SignedIn ?
+      {isLoggedIn === authState.SignedIn ? (
         <>
           <div>
             <h2>Hi {username}!</h2>
@@ -48,7 +38,7 @@ const MyProfile = () => {
             label="City"
             name="city"
             value={userdata.city}
-            onChange={(event) =>  {
+            onChange={(event) => {
               setEdited(true);
               setUserdata({ ...userdata, city: event.currentTarget.value });
             }}
@@ -58,7 +48,7 @@ const MyProfile = () => {
             label="profilePic"
             name="profilePic"
             value={userdata.profilePic}
-            onChange={(event) =>  {
+            onChange={(event) => {
               setEdited(true);
               setUserdata({ ...userdata, profilePic: event.currentTarget.value });
             }}
@@ -70,11 +60,11 @@ const MyProfile = () => {
             </Button>
           </div>
         </>
-        :
+      ) : (
         <>
           <div>Hi! You're not logged in!</div>
         </>
-      }
+      )}
     </MyProfileContainer>
   );
 };

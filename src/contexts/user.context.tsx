@@ -60,9 +60,12 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       if (user) {
         const userData = await getUserDocFromAuth(user);
         setUsername(userData?.displayName);
+        setUserdata(userData?.userdata);
         setIsLoggedIn(authState.SignedIn);
       } else {
         setIsLoggedIn(authState.LoggedOut);
+        setUsername('');
+        setUserdata(initialUserdata);
       }
     });
 
