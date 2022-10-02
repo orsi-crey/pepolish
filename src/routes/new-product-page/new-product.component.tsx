@@ -3,9 +3,9 @@ import { Button } from 'react-md';
 import { useEffect, useState } from 'react';
 import { DocumentData } from 'firebase/firestore';
 
-import ProductTable from '../../components/product-table/product-table.component';
+import ProductTable from '../../components/product-table.component';
 import { Polish } from '../../store/product/product.types';
-import NewProductButtons from '../../components/new-product-buttons/new-product-buttons';
+import NewProductButtons from '../../components/new-product-buttons';
 
 import { PaddedDiv, ProductContainer } from './new-product.styles';
 import { addNewItem } from '../../utils/firestore/firestore.utils';
