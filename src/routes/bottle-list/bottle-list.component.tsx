@@ -1,11 +1,4 @@
-import {
-  Table,
-  TableHeader,
-  TableRow,
-  TableCell,
-  TableBody,
-  Button,
-} from 'react-md';
+import { Table, TableHeader, TableRow, TableCell, TableBody, Button } from 'react-md';
 import { useNavigate } from 'react-router-dom';
 
 import { BottleListContainer } from './bottle-list.styles';
@@ -15,38 +8,23 @@ import { DocumentData } from 'firebase/firestore';
 const BottleList = () => {
   const navigate = useNavigate();
 
-  const bottleListQuery = getListQuery('bottles');
-  const bottleList = bottleListQuery?.data?.docs;
-  type indexableData = {
-    [key: string]: DocumentData;
-  };
-
-  const productListQuery = getListQuery('products');
-
-  const productList: indexableData = {};
-  productListQuery?.data?.docs.forEach((doc) => {
-    Object.defineProperty(productList, doc.id, { value: doc.data() });
-  });
-
-  const userListQuery = getListQuery('users');
-  const userList: indexableData = {};
-  userListQuery?.data?.docs.forEach((doc) => {
-    Object.defineProperty(userList, doc.id, { value: doc.data() });
-  });
+  const bottleList = getListQuery('bottles').data;
+  const productList = getListQuery('products').data;
+  const userList = getListQuery('users').data;
 
   const showBottlePage = (id: string) => {
     navigate(`/bottles/${id}`);
   };
 
   const getName = (productId: string) => {
-    if (productId && productList[productId]) {
+    if (productList && productList[productId]) {
       return `${productList[productId].brand} - ${productList[productId].name}`;
     }
     return '';
   };
 
   const getUser = (userId: string) => {
-    if (userId && userList[userId]) {
+    if (userList && userList[userId]) {
       return userList[userId].displayName;
     }
     return '';
@@ -55,9 +33,7 @@ const BottleList = () => {
   const addPolishRow = (id: string, bottle: DocumentData) => {
     return (
       <TableRow key={id} onClick={() => showBottlePage(id)}>
-        <TableCell>
-          {bottle.photoUrl && <img src={bottle.photoUrl} />}
-        </TableCell>
+        <TableCell>{bottle.photoUrl && <img src={bottle.photoUrl} />}</TableCell>
         <TableCell>{getName(bottle.productId)}</TableCell>
         <TableCell>{getUser(bottle.userId)}</TableCell>
         <TableCell>{getUser(bottle.locationUserId)}</TableCell>
@@ -72,7 +48,7 @@ const BottleList = () => {
       <Button themeType="contained" onClick={() => navigate('/bottles/new')}>
         Add bottle to the list
       </Button>
-      {bottleListQuery.isSuccess && (
+      {bottleList && (
         <Table fullWidth>
           <TableHeader>
             <TableRow>
@@ -84,9 +60,7 @@ const BottleList = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {bottleList?.map((bottle) =>
-              addPolishRow(bottle.id, bottle.data())
-            )}
+            {bottleList && Object.getOwnPropertyNames(bottleList).map((bottleId: any) => addPolishRow(bottleId, bottleList[bottleId]))}
           </TableBody>
         </Table>
       )}
