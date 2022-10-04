@@ -1,9 +1,9 @@
-import { DocumentData, QueryDocumentSnapshot } from 'firebase/firestore';
+import { DocumentData } from 'firebase/firestore';
 import { useState } from 'react';
 import { Button, TextField } from 'react-md';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
-import { getItemQuery, getItemsByWhereQuery, getListQuery, getListSubsetQuery } from '../../utils/firestore/firestore.utils';
+import { getListQuery } from '../../utils/firestore/firestore.utils';
 
 import { UserProfileContainer } from './user-profile.styles';
 
@@ -11,55 +11,60 @@ const UserProfile = () => {
   const { userId } = useParams();
   const navigate = useNavigate();
   const [user, setUser] = useState({} as DocumentData);
-  const [products, setProducts] = useState([] as QueryDocumentSnapshot<DocumentData>[]);
+  const [hasBottles, setHasBottles] = useState(false);
+  const [bottles, setBottles] = useState([] as string[]);
 
-  const userQuery = getListQuery('users');
-  const productsQuery = getListQuery('products');
-  const bottlesQuery = getListQuery('bottles');
+  const bottleList = getListQuery('bottles').data;
+  const productList = getListQuery('products').data;
+  const userList = getListQuery('users').data;
 
-  // get all relevant info and save in state
-  if (userQuery && userQuery.data && Object.keys(user).length === 0) {
-    const userToSet = userQuery.data.docs.find((doc) => doc.id === userId);
-    if (userToSet) setUser(userToSet.data());
+  if (userList && userId && Object.keys(user).length === 0) {
+    setUser(userList[userId]);
   }
 
-  const productIds: string[] = [];
-  if (bottlesQuery && bottlesQuery.data && productIds.length === 0) {
-    const relevantProducts = bottlesQuery.data.docs.filter((doc) => doc.data().userId === userId);
-    relevantProducts.forEach((doc) => {
-      productIds.push(doc.data().productId);
-    });
-  }
-  if (productsQuery?.data?.docs && products.length === 0 && productIds.length > 0) {
-    setProducts(productsQuery?.data?.docs?.filter((doc) => productIds.includes(doc.id)));
+  // 1. get bottles of this user
+  // 2. go thru bottles to save product ids
+  // 3. also save if the user has any bottles or not
+  if (bottleList && productList && bottles.length === 0) {
+    const relevantBottles = Object.getOwnPropertyNames(bottleList).filter((bottleId: string) => bottleList[bottleId].userId === userId);
+    if (relevantBottles.length !== 0) {
+      setHasBottles(true);
+      setBottles(relevantBottles);
+    }
   }
 
   const ownedProducts = () => {
-    if (products.length === 0) {
+    if (!hasBottles) {
       return <div>No polishes yet!</div>;
     }
-    return products.map((item) => (
-      <div key={item.id}>
-        • <Link to={`/bottles/${item.id}`}>{`${item.data().brand} - ${item.data().name}`}</Link>
-      </div>
-    ));
+    return (
+      productList &&
+      bottleList &&
+      bottles.map((item) => {
+        const bottle = bottleList[item];
+        return (
+          <div key={item}>
+            • <Link to={`/bottles/${item}`}>{`${productList[bottle.productId].brand} - ${productList[bottle.productId].name}`}</Link>
+          </div>
+        );
+      })
+    );
   };
-  console.log(user);
 
   return (
     <UserProfileContainer>
       <Button themeType="contained" onClick={() => navigate('/users')}>
         Back to user list
       </Button>
-      {userQuery && userQuery.isSuccess && userQuery.data && (
+      {userList && (
         <>
           <div>
-            <img src={user?.profilePic} />
+            <img src={user?.userdata?.profilePic} />
           </div>
           <p>Name:</p>
           <TextField id="displayName" name="Display name" disabled={true} value={user?.displayName} />
           <p>City:</p>
-          <TextField id="city" name="City" disabled={true} value={user?.city} />
+          <TextField id="city" name="City" disabled={true} value={user?.userdata?.city} />
           <p>Polishes owned by {user?.displayName}:</p>
           {ownedProducts()}
         </>

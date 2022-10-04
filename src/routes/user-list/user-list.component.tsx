@@ -3,36 +3,33 @@ import { useNavigate } from 'react-router-dom';
 
 import { UserListContainer } from './user-list.styles';
 import { getListQuery } from '../../utils/firestore/firestore.utils';
-import { DocumentData, QueryDocumentSnapshot } from 'firebase/firestore';
-import { useState } from 'react';
 
 const UserList = () => {
   const navigate = useNavigate();
-  const [users, setUsers] = useState([] as QueryDocumentSnapshot<DocumentData>[]);
 
-  const userListQuery = getListQuery('users');
-  if (userListQuery.isSuccess && users.length === 0) {
-    setUsers(userListQuery?.data?.docs);
-  }
+  const userList = getListQuery('users').data;
 
   const showUserPage = (id: string) => {
     navigate(`/users/${id}`);
   };
 
-  const addUserRow = (id: string, user: DocumentData) => {
+  const addUserRows = () => {
     return (
-      <TableRow key={id} onClick={() => showUserPage(id)}>
-        <TableCell>{<img src={user.userdata?.profilePic} />}</TableCell>
-        <TableCell>{user.displayName}</TableCell>
-        <TableCell>{user.userdata?.city}</TableCell>
-      </TableRow>
+      userList &&
+      Object.getOwnPropertyNames(userList).map((userId: string) => (
+        <TableRow key={userId} onClick={() => showUserPage(userId)}>
+          <TableCell>{<img src={userList[userId].userdata?.profilePic} />}</TableCell>
+          <TableCell>{userList[userId].displayName}</TableCell>
+          <TableCell>{userList[userId].userdata?.city}</TableCell>
+        </TableRow>
+      ))
     );
   };
 
   return (
     <UserListContainer>
       {/* <div>filter will be here</div> */}
-      {userListQuery.isSuccess && (
+      {userList && (
         <Table fullWidth>
           <TableHeader>
             <TableRow>
@@ -41,7 +38,7 @@ const UserList = () => {
               <TableCell>City</TableCell>
             </TableRow>
           </TableHeader>
-          <TableBody>{users.map((user) => addUserRow(user.id, user.data()))}</TableBody>
+          <TableBody>{addUserRows()}</TableBody>
         </Table>
       )}
     </UserListContainer>
