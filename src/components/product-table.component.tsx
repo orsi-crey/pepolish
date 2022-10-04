@@ -1,21 +1,19 @@
+import { useState } from 'react';
 import { AutoComplete, Form, TextField } from 'react-md';
 import { ProductTableProps } from '../routes/product-page/product.component';
-import { getListFilteredFieldsQuery } from '../utils/firestore/firestore.utils';
+import { getListQuery } from '../utils/firestore/firestore.utils';
 import { sortAndUniqList } from '../utils/helperFunctions';
 
 import ChipField from './chip-field.component';
 
 const ProductTable = ({ product, editable, setproduct }: ProductTableProps) => {
-  const allBrandsQuery = getListFilteredFieldsQuery('products', 'brand');
+  const [brands, setBrands] = useState([] as string[]);
+  const productList = getListQuery('products').data;
 
-  const sortedBrands = () => {
-    if (allBrandsQuery && allBrandsQuery.isSuccess && allBrandsQuery.data) {
-      const allBrands = allBrandsQuery.data;
-      return sortAndUniqList(allBrands);
-    } else {
-      return [];
-    }
-  };
+  if (productList && brands.length === 0) {
+    const allBrands = Object.getOwnPropertyNames(productList).map((productId) => productList[productId].brand);
+    setBrands(sortAndUniqList(allBrands));
+  }
 
   const setEffectChipsFromChild = (chips: string[]) => {
     setproduct({ ...product, effects: chips });
@@ -37,7 +35,7 @@ const ProductTable = ({ product, editable, setproduct }: ProductTableProps) => {
         name="Brand"
         disabled={!editable}
         value={product.brand}
-        data={sortedBrands()}
+        data={brands}
         onAutoComplete={(event) => {
           setproduct({
             ...product,
@@ -78,17 +76,9 @@ const ProductTable = ({ product, editable, setproduct }: ProductTableProps) => {
         }
       />
       <p>Effects:</p>
-      <ChipField
-        chips={product.effects}
-        disabled={!editable}
-        setchip={setEffectChipsFromChild}
-      />
+      <ChipField chips={product.effects} disabled={!editable} setchip={setEffectChipsFromChild} />
       <p>Multichrome:</p>
-      <ChipField
-        chips={product.multichrome}
-        disabled={!editable}
-        setchip={setMultichromeChipsFromChild}
-      />
+      <ChipField chips={product.multichrome} disabled={!editable} setchip={setMultichromeChipsFromChild} />
       <p>Volume:</p>
       <TextField
         id="volume"
@@ -105,11 +95,7 @@ const ProductTable = ({ product, editable, setproduct }: ProductTableProps) => {
         }
       />
       <p>Other:</p>
-      <ChipField
-        chips={product.other}
-        disabled={!editable}
-        setchip={setOtherChipsFromChild}
-      />
+      <ChipField chips={product.other} disabled={!editable} setchip={setOtherChipsFromChild} />
       {editable && (
         <>
           <p>Photo URL:</p>

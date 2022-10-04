@@ -25,11 +25,14 @@ const UserProfile = () => {
   // 1. get bottles of this user
   // 2. go thru bottles to save product ids
   // 3. also save if the user has any bottles or not
+  // 4. if not, set bottles to fake array so we skip this check
   if (bottleList && productList && bottles.length === 0) {
     const relevantBottles = Object.getOwnPropertyNames(bottleList).filter((bottleId: string) => bottleList[bottleId].userId === userId);
     if (relevantBottles.length !== 0) {
       setHasBottles(true);
       setBottles(relevantBottles);
+    } else {
+      setBottles(['']);
     }
   }
 

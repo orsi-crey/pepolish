@@ -30,15 +30,21 @@ const BottleList = () => {
     return '';
   };
 
-  const addPolishRow = (id: string, bottle: DocumentData) => {
+  const addPolishRows = () => {
     return (
-      <TableRow key={id} onClick={() => showBottlePage(id)}>
-        <TableCell>{bottle.photoUrl && <img src={bottle.photoUrl} />}</TableCell>
-        <TableCell>{getName(bottle.productId)}</TableCell>
-        <TableCell>{getUser(bottle.userId)}</TableCell>
-        <TableCell>{getUser(bottle.locationUserId)}</TableCell>
-        <TableCell>{bottle.fullPercentage} %</TableCell>
-      </TableRow>
+      bottleList &&
+      Object.getOwnPropertyNames(bottleList).map((bottleId: string) => {
+        const bottle = bottleList[bottleId];
+        return (
+          <TableRow key={bottleId} onClick={() => showBottlePage(bottleId)}>
+            <TableCell>{bottle.photoUrl && <img src={bottle.photoUrl} />}</TableCell>
+            <TableCell>{getName(bottle.productId)}</TableCell>
+            <TableCell>{getUser(bottle.userId)}</TableCell>
+            <TableCell>{getUser(bottle.locationUserId)}</TableCell>
+            <TableCell>{bottle.fullPercentage} %</TableCell>
+          </TableRow>
+        );
+      })
     );
   };
 
@@ -59,9 +65,7 @@ const BottleList = () => {
               <TableCell>fullPercentage</TableCell>
             </TableRow>
           </TableHeader>
-          <TableBody>
-            {bottleList && Object.getOwnPropertyNames(bottleList).map((bottleId: any) => addPolishRow(bottleId, bottleList[bottleId]))}
-          </TableBody>
+          <TableBody>{bottleList && addPolishRows()}</TableBody>
         </Table>
       )}
     </BottleListContainer>

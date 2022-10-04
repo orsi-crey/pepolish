@@ -22,6 +22,7 @@ import EditProductButtons from '../../components/edit-product-buttons';
 import { PaddedDiv, PaddedMediaContainer, ProductContainer } from './product.styles';
 import { UserContext, authState } from '../../contexts/user.context';
 import { uploadDataToUser } from '../../utils/firebase/firebase.utils';
+import { sortAndUniqList } from '../../utils/helperFunctions';
 
 export type ProductButtonProps = {
   editable: boolean;
@@ -46,28 +47,36 @@ const Product = () => {
   const [editable, setEditable] = useState(false);
   const [product, setProduct] = useState({} as Polish | DocumentData);
   const [showImageFull, setShowImageFull] = useState(false);
-  const [users, setUsers] = useState([] as QueryDocumentSnapshot<DocumentData>[]);
+  const [users, setUsers] = useState([] as string[]);
+  const [hasUsers, setHasUsers] = useState(false);
 
-  const productsQuery = getListQuery('products');
-  const bottlesQuery = getListQuery('bottles');
-  const userQuery = getListQuery('users');
+  const productListQuery = getListQuery('products');
+  const productList = productListQuery.data;
+  const bottleList = getListQuery('bottles').data;
+  const userList = getListQuery('users').data;
   const mutation = updateItem(productId, 'products');
 
   // get all relevant info and save in state
-  if (productsQuery && productsQuery.data && Object.keys(product).length === 0) {
-    const productToSet = productsQuery.data.docs.find((doc) => doc.id === productId);
-    if (productToSet) setProduct(productToSet.data());
+  if (productList && productId && Object.keys(product).length === 0) {
+    const productToSet = productList[productId];
+    setProduct(productToSet);
   }
 
-  const userIds: string[] = [];
-  if (bottlesQuery && bottlesQuery.data && userIds.length === 0) {
-    const relevantBottles = bottlesQuery.data.docs.filter((doc) => doc.data().productId === productId);
-    relevantBottles.forEach((doc) => {
-      userIds.push(doc.data().userId);
-    });
-  }
-  if (userQuery?.data?.docs && users.length === 0) {
-    setUsers(userQuery?.data?.docs?.filter((doc) => userIds.includes(doc.id)));
+  // 1. get this product's bottles
+  // 2. go thru bottles to save user ids
+  // 3. also save if there are any bottles of this product
+  // 4. if not, set users to fake array so we skip this check
+  if (bottleList && userList && users.length === 0) {
+    const relevantBottleIds = Object.getOwnPropertyNames(bottleList).filter(
+      (bottleId: string) => bottleList[bottleId].productId === productId
+    );
+    const relevantUsers = relevantBottleIds.map((bottleId: string) => bottleList[bottleId].userId);
+    if (relevantUsers.length !== 0) {
+      setHasUsers(true);
+      setUsers(sortAndUniqList(relevantUsers));
+    } else {
+      setUsers(['']);
+    }
   }
 
   useEffect(() => {
@@ -94,15 +103,18 @@ const Product = () => {
   };
 
   // checks who has a bottle of the current polish
-  // todo: remove duplicates if a user has more than one bottle
   const owningUsers = () => {
-    return users?.map((item: DocumentData) => {
-      return (
-        <div key={item.id}>
-          • <Link to={`/users/${item.id}`}>{item.data().displayName}</Link>
-        </div>
-      );
-    });
+    return (
+      hasUsers &&
+      userList &&
+      users?.map((userId: string) => {
+        return (
+          <div key={userId}>
+            • <Link to={`/users/${userId}`}>{userList[userId].displayName}</Link>
+          </div>
+        );
+      })
+    );
   };
 
   const setEditableFromChild = (editable: boolean) => {
@@ -114,13 +126,13 @@ const Product = () => {
     else {
       mutation && mutation.mutate(product);
       // it seemed like refetch does nothing?
-      productsQuery?.remove();
+      productListQuery?.remove();
       setEditable(false);
     }
   };
 
   const cancelClickedFromChild = () => {
-    if (productsQuery && productsQuery.data) setProduct(productsQuery.data);
+    if (productList && productId) setProduct(productList[productId]);
     setEditable(false);
   };
 
@@ -140,7 +152,7 @@ const Product = () => {
           </Button>
         )}
       </PaddedDiv>
-      {productsQuery && productsQuery.isSuccess && productsQuery.data && (
+      {productList && (
         <>
           {isLoggedIn === authState.SignedIn && (
             <PaddedDiv>
@@ -181,7 +193,7 @@ const Product = () => {
                 )}
               </PaddedMediaContainer>
               <Divider />
-              {users.length > 0 && (
+              {hasUsers && (
                 <>
                   <p>Users who own this polish:</p>
                   {owningUsers()}
