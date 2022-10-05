@@ -10,16 +10,23 @@ import { HomeContainer } from './home.styles';
 const Home = () => {
   const navigate = useNavigate();
   const { isLoggedIn, username, userdata } = useContext(UserContext);
-  const productsQuery = getListQuery('products');
+
+  const productList = getListQuery('products').data;
 
   const favoritePolishes = () => {
-    return productsQuery?.data?.docs
-      .filter((doc) => userdata.favorites.includes(doc.id))
-      .map((doc) => (
-        <div key={doc.id}>
-          <Link to={`/products/${doc.id}`}>{`${doc.data().brand} - ${doc.data().name}`}</Link>
-        </div>
-      ));
+    return (
+      productList &&
+      Object.getOwnPropertyNames(productList)
+        .filter((productId) => userdata.favorites.includes(productId))
+        .map((productId) => {
+          const product = productList[productId];
+          return (
+            <div key={productId}>
+              <Link to={`/products/${productId}`}>{`${product.brand} - ${product.name}`}</Link>
+            </div>
+          );
+        })
+    );
   };
 
   const homeLinks = () => {
@@ -45,8 +52,8 @@ const Home = () => {
         return (
           <div>
             <div>Hi {username}!</div>
-            {productsQuery && <div>Your favorite polishes: </div>}
-            {userdata.favorites.length > 0 ? productsQuery && favoritePolishes() : 'No favorite polishes yet!'}
+            {productList && <div>Your favorite polishes: </div>}
+            {userdata.favorites.length > 0 ? productList && favoritePolishes() : 'No favorite polishes yet!'}
           </div>
         );
 
