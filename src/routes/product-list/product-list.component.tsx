@@ -42,7 +42,7 @@ const ProductList = () => {
 
   return (
     <ProductListContainer>
-      <div>filter will be here</div>
+      {/* <div>filter will be here</div> */}
       <Button themeType="contained" onClick={() => navigate('/products/new')}>
         Add polish to the list
       </Button>

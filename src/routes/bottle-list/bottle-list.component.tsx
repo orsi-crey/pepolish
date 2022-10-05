@@ -49,7 +49,7 @@ const BottleList = () => {
 
   return (
     <BottleListContainer>
-      <div>filter will be here</div>
+      {/* <div>filter will be here</div> */}
       <Button themeType="contained" onClick={() => navigate('/bottles/new')}>
         Add bottle to the list
       </Button>
