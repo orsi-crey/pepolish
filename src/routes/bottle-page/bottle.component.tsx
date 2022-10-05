@@ -4,11 +4,7 @@ import { useState } from 'react';
 import { DocumentData } from 'firebase/firestore';
 
 import BottleTable from '../../components/bottle-table.component';
-import {
-  getListQuery,
-  mutationResult,
-  updateItem,
-} from '../../utils/firestore/firestore.utils';
+import { getListQuery, mutationResult, updateItem } from '../../utils/firestore/firestore.utils';
 import { PolishBottle } from '../../store/product/product.types';
 import EditBottleButtons from '../../components/edit-bottle-buttons';
 
@@ -56,6 +52,7 @@ const Bottle = () => {
 
   const bottleListQuery = getListQuery('bottles');
   const bottleList = bottleListQuery.data;
+  const productList = getListQuery('products').data;
   const userList = getListQuery('users').data;
   const mutation = updateItem(bottleId, 'bottles');
 
@@ -75,13 +72,19 @@ const Bottle = () => {
 
   const setProductFromChild = (data: ProductData) => {
     setSelectedProduct(data);
+    if (productList) {
+      const productId = Object.getOwnPropertyNames(productList).filter(
+        (productId) => productList[productId].brand === data.brand && productList[productId].name === data.name
+      );
+      setBottle({ ...bottle, productId });
+    }
   };
 
   const setUsernameFromChild = (name: string) => {
     setSelectedUser(name);
     if (userList) {
       const userId = Object.getOwnPropertyNames(userList).filter((userId) => userList[userId].displayName === name);
-      setBottle({...bottle, userId });
+      setBottle({ ...bottle, userId });
     }
   };
 
@@ -89,7 +92,7 @@ const Bottle = () => {
     setSelectedLocationUser(name);
     if (userList) {
       const locationUserId = Object.getOwnPropertyNames(userList).filter((userId) => userList[userId].displayName === name);
-      setBottle({...bottle, locationUserId });
+      setBottle({ ...bottle, locationUserId });
     }
   };
 

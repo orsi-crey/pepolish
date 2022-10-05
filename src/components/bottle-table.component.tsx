@@ -2,9 +2,7 @@ import { useEffect, useState } from 'react';
 import { Button, Form, Select, TextField } from 'react-md';
 import { ArrowDropDownSVGIcon } from '@react-md/material-icons';
 import { BottleTableProps } from '../routes/bottle-page/bottle.component';
-import {
-  getListQuery,
-} from '../utils/firestore/firestore.utils';
+import { getListQuery } from '../utils/firestore/firestore.utils';
 import { sortAndUniqList } from '../utils/helperFunctions';
 import ProductModal from './product-modal/product-modal.component';
 
@@ -32,8 +30,6 @@ const BottleTable = ({
   if (productList && brands.length === 0 && names.length === 0) {
     const allBrands = Object.getOwnPropertyNames(productList).map((productId) => productList[productId].brand);
     setBrands(sortAndUniqList(allBrands));
-    const allNames = Object.getOwnPropertyNames(productList).map((productId) => productList[productId].name);
-    setNames(sortAndUniqList(allNames));
   }
 
   if (userList && userNames.length === 0) {
@@ -42,7 +38,6 @@ const BottleTable = ({
   }
 
   const getBrand = () => (productList ? productList[bottle.productId].brand : '');
-  // Name needs to be filtered! 
   const getName = () => (productList ? productList[bottle.productId].name : '');
   const getUserName = () => (userList ? userList[bottle.userId].displayName : '');
   const getLocationUserName = () => (userList ? userList[bottle.locationUserId].displayName : '');
@@ -64,6 +59,15 @@ const BottleTable = ({
       setselectedlocationuser(userList[bottle.locationUserId].displayName);
     }
   }, [userList]);
+
+  useEffect(() => {
+    if (productList && brand) {
+      const allNames = Object.getOwnPropertyNames(productList)
+        .filter((productId) => productList[productId].brand === brand)
+        .map((productId) => productList[productId].name);
+      setNames(sortAndUniqList(allNames));
+    }
+  }, [brand]);
 
   return (
     <Form>
