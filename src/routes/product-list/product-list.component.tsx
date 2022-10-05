@@ -1,11 +1,14 @@
 import { Table, TableHeader, TableRow, TableCell, TableBody, Button } from 'react-md';
+import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { ProductListContainer } from './product-list.styles';
 import { getListQuery } from '../../utils/firestore/firestore.utils';
+import { authState, UserContext } from '../../contexts/user.context';
 
 const ProductList = () => {
   const navigate = useNavigate();
+  const { isLoggedIn } = useContext(UserContext);
 
   const productList = getListQuery('products').data;
 
@@ -43,9 +46,11 @@ const ProductList = () => {
   return (
     <ProductListContainer>
       {/* <div>filter will be here</div> */}
-      <Button themeType="contained" onClick={() => navigate('/products/new')}>
-        Add polish to the list
-      </Button>
+      {isLoggedIn === authState.SignedIn && (
+        <Button themeType="contained" onClick={() => navigate('/products/new')}>
+          Add polish to the list
+        </Button>
+      )}
       {productList && (
         <Table fullWidth>
           <TableHeader>

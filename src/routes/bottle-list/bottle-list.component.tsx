@@ -1,11 +1,14 @@
 import { Table, TableHeader, TableRow, TableCell, TableBody, Button } from 'react-md';
 import { useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
 
 import { BottleListContainer } from './bottle-list.styles';
 import { getListQuery } from '../../utils/firestore/firestore.utils';
+import { authState, UserContext } from '../../contexts/user.context';
 
 const BottleList = () => {
   const navigate = useNavigate();
+  const { isLoggedIn } = useContext(UserContext);
 
   const bottleList = getListQuery('bottles').data;
   const productList = getListQuery('products').data;
@@ -50,9 +53,11 @@ const BottleList = () => {
   return (
     <BottleListContainer>
       {/* <div>filter will be here</div> */}
-      <Button themeType="contained" onClick={() => navigate('/bottles/new')}>
-        Add bottle to the list
-      </Button>
+      {isLoggedIn === authState.SignedIn && (
+        <Button themeType="contained" onClick={() => navigate('/bottles/new')}>
+          Add bottle to the list
+        </Button>
+      )}
       {bottleList && (
         <Table fullWidth>
           <TableHeader>
