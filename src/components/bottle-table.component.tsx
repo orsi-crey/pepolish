@@ -1,13 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Button, Form, Select, TextField } from 'react-md';
+import { ArrowDropDownSVGIcon } from '@react-md/material-icons';
 import { BottleTableProps } from '../routes/bottle-page/bottle.component';
 import {
-  getItemQuery,
-  getItemsByWhereFilteredFieldsQuery,
-  getListFilteredFieldsQuery,
+  getListQuery,
 } from '../utils/firestore/firestore.utils';
 import { sortAndUniqList } from '../utils/helperFunctions';
-import { ArrowDropDownSVGIcon } from '@react-md/material-icons';
 import ProductModal from './product-modal/product-modal.component';
 
 const BottleTable = ({
@@ -22,121 +20,56 @@ const BottleTable = ({
   setselectedlocationuser,
   newBottle,
 }: BottleTableProps) => {
+  const [brands, setBrands] = useState([] as string[]);
+  const [names, setNames] = useState([] as string[]);
+  const [userNames, setUserNames] = useState([] as string[]);
   const [brand, setBrand] = useState('');
   const [isVisible, setIsVisible] = useState(false);
-  const productQuery = getItemQuery(bottle.productId, 'products', !newBottle);
-  const userQuery = getItemQuery(bottle.userId, 'users', !newBottle);
-  const locationUserQuery = getItemQuery(
-    bottle.locationUserId,
-    'users',
-    !newBottle
-  );
-  const allBrandsQuery = getListFilteredFieldsQuery('products', 'brand');
-  const allNamesQuery = getItemsByWhereFilteredFieldsQuery(
-    brand,
-    'brand',
-    'products',
-    brand.length > 0
-  );
-  const allUserNamesQuery = getListFilteredFieldsQuery('users', 'displayName');
 
-  const getBrand = () => {
-    if (productQuery && productQuery.isSuccess && productQuery.data) {
-      return productQuery.data?.brand;
-    } else {
-      return '';
-    }
-  };
+  const productList = getListQuery('products').data;
+  const userList = getListQuery('users').data;
 
-  const getName = () => {
-    if (productQuery && productQuery.isSuccess && productQuery.data) {
-      return productQuery.data?.name;
-    } else {
-      return '';
-    }
-  };
+  if (productList && brands.length === 0 && names.length === 0) {
+    const allBrands = Object.getOwnPropertyNames(productList).map((productId) => productList[productId].brand);
+    setBrands(sortAndUniqList(allBrands));
+    const allNames = Object.getOwnPropertyNames(productList).map((productId) => productList[productId].name);
+    setNames(sortAndUniqList(allNames));
+  }
 
-  const getUserName = () => {
-    if (userQuery && userQuery.isSuccess && userQuery.data) {
-      return userQuery.data?.displayName;
-    } else {
-      return '';
-    }
-  };
+  if (userList && userNames.length === 0) {
+    const allUsernames = Object.getOwnPropertyNames(userList).map((userId) => userList[userId].displayName);
+    setUserNames(sortAndUniqList(allUsernames));
+  }
 
-  const getLocationUserName = () => {
-    if (
-      locationUserQuery &&
-      locationUserQuery.isSuccess &&
-      locationUserQuery.data
-    ) {
-      return locationUserQuery.data?.displayName;
-    } else {
-      return '';
-    }
-  };
-
-  const sortedBrands = () => {
-    if (allBrandsQuery && allBrandsQuery.isSuccess && allBrandsQuery.data) {
-      return sortAndUniqList(allBrandsQuery.data);
-    } else {
-      return [];
-    }
-  };
-
-  const sortedNames = () => {
-    if (allNamesQuery && allNamesQuery.isSuccess && allNamesQuery.data) {
-      return sortAndUniqList(allNamesQuery.data);
-    } else {
-      return [];
-    }
-  };
-
-  const sortedUserNames = () => {
-    if (
-      allUserNamesQuery &&
-      allUserNamesQuery.isSuccess &&
-      allUserNamesQuery.data
-    ) {
-      return sortAndUniqList(allUserNamesQuery.data);
-    } else {
-      return [];
-    }
-  };
+  const getBrand = () => (productList ? productList[bottle.productId].brand : '');
+  // Name needs to be filtered! 
+  const getName = () => (productList ? productList[bottle.productId].name : '');
+  const getUserName = () => (userList ? userList[bottle.userId].displayName : '');
+  const getLocationUserName = () => (userList ? userList[bottle.locationUserId].displayName : '');
 
   useEffect(() => {
-    if (productQuery.isSuccess && productQuery.data) {
+    if (productList && !newBottle) {
       setselectedproduct({
         ...selectedProduct,
-        brand: productQuery.data?.brand,
-        name: productQuery.data?.name,
+        brand: productList[bottle.productId].brand,
+        name: productList[bottle.productId].name,
       });
-      setBrand(productQuery.data?.brand);
+      setBrand(productList[bottle.productId].brand);
     }
-  }, [productQuery.isSuccess]);
+  }, [productList]);
 
   useEffect(() => {
-    if (userQuery.isSuccess && userQuery.data) {
-      setselecteduser(userQuery.data?.displayName);
+    if (userList && !newBottle) {
+      setselecteduser(userList[bottle.userId].displayName);
+      setselectedlocationuser(userList[bottle.locationUserId].displayName);
     }
-  }, [userQuery.isSuccess]);
-
-  useEffect(() => {
-    if (locationUserQuery.isSuccess && locationUserQuery.data) {
-      setselectedlocationuser(locationUserQuery.data?.displayName);
-    }
-  }, [locationUserQuery.isSuccess]);
+  }, [userList]);
 
   return (
     <Form>
       <p>Product:</p>
       {!editable ? (
-        <TextField
-          id="productId"
-          name="Product Id"
-          disabled={!editable}
-          value={`${getBrand()} - ${getName()}`}
-        />
+        <TextField id="productId" name="Product Id" disabled={!editable} value={`${getBrand()} - ${getName()}`} />
       ) : (
         <>
           (required)
@@ -144,7 +77,7 @@ const BottleTable = ({
             id="brand"
             name="Brand"
             value={brand}
-            options={sortedBrands()}
+            options={brands}
             onChange={(item) => setBrand(item)}
             rightChildren={<ArrowDropDownSVGIcon />}
           />
@@ -153,7 +86,7 @@ const BottleTable = ({
             name="Name"
             value={selectedProduct.name}
             disabled={brand.length === 0}
-            options={sortedNames()}
+            options={names}
             onChange={(item) =>
               setselectedproduct({
                 ...selectedProduct,
@@ -163,9 +96,7 @@ const BottleTable = ({
             }
             rightChildren={<ArrowDropDownSVGIcon />}
           />
-          <Button 
-            themeType='outline'
-            onClick={() => setIsVisible(true)}>
+          <Button themeType="outline" onClick={() => setIsVisible(true)}>
             Can't find polish in list? Add new!
           </Button>
           <ProductModal
@@ -184,12 +115,7 @@ const BottleTable = ({
       )}
       <p>User:</p>
       {!editable ? (
-        <TextField
-          id="userName"
-          name="Username"
-          disabled={!editable}
-          value={getUserName()}
-        />
+        <TextField id="userName" name="Username" disabled={!editable} value={getUserName()} />
       ) : (
         <>
           (required)
@@ -197,7 +123,7 @@ const BottleTable = ({
             id="username"
             name="Username"
             value={selectedUser}
-            options={sortedUserNames()}
+            options={userNames}
             onChange={(item) => setselecteduser(item)}
             rightChildren={<ArrowDropDownSVGIcon />}
           />
@@ -205,12 +131,7 @@ const BottleTable = ({
       )}
       <p>Location User:</p>
       {!editable ? (
-        <TextField
-          id="locationUsername"
-          name="Location Username"
-          disabled={!editable}
-          value={getLocationUserName()}
-        />
+        <TextField id="locationUsername" name="Location Username" disabled={!editable} value={getLocationUserName()} />
       ) : (
         <>
           (required)
@@ -218,7 +139,7 @@ const BottleTable = ({
             id="locationUsername"
             name="Location Username"
             value={selectedLocationUser}
-            options={sortedUserNames()}
+            options={userNames}
             onChange={(item) => setselectedlocationuser(item)}
             rightChildren={<ArrowDropDownSVGIcon />}
           />

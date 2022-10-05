@@ -1,23 +1,11 @@
 import { useNavigate, useParams } from 'react-router-dom';
-import {
-  ArrowBackSVGIcon,
-  Button,
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  Grid,
-  GridCell,
-  TextIconSpacing,
-} from 'react-md';
-import { useEffect, useState } from 'react';
+import { ArrowBackSVGIcon, Button, Dialog, DialogContent, DialogHeader, DialogTitle, Grid, GridCell, TextIconSpacing } from 'react-md';
+import { useState } from 'react';
 import { DocumentData } from 'firebase/firestore';
 
 import BottleTable from '../../components/bottle-table.component';
 import {
-  getItemQuery,
-  getItemsByWhereQuery,
-  getProductIDWhereQuery,
+  getListQuery,
   mutationResult,
   updateItem,
 } from '../../utils/firestore/firestore.utils';
@@ -66,40 +54,19 @@ const Bottle = () => {
   const [selectedLocationUser, setSelectedLocationUser] = useState('');
   const [showImageFull, setShowImageFull] = useState(false);
 
-  const getProductIDQuery = getProductIDWhereQuery(
-    selectedProduct.brand,
-    selectedProduct.name,
-    selectedProduct.brand.length > 0 && selectedProduct.name.length > 0
-  );
-  const getUserName = getItemsByWhereQuery(
-    selectedUser,
-    'displayName',
-    'users',
-    selectedUser.length > 0
-  );
-  const getLocationUserName = getItemsByWhereQuery(
-    selectedLocationUser,
-    'displayName',
-    'users',
-    selectedLocationUser.length > 0
-  );
-
-  const bottleQuery = getItemQuery(bottleId, 'bottles');
-
-  if (bottleQuery && bottleQuery.data && Object.keys(bottle).length === 0) {
-    setBottle(bottleQuery.data);
-  }
-
+  const bottleListQuery = getListQuery('bottles');
+  const bottleList = bottleListQuery.data;
+  const userList = getListQuery('users').data;
   const mutation = updateItem(bottleId, 'bottles');
 
+  if (bottleList && userList && bottleId && Object.keys(bottle).length === 0) {
+    setBottle(bottleList[bottleId]);
+  }
+
   const bottleMissingData = () => {
-    if (
-      bottle.productId.length > 0 &&
-      bottle.userId.length > 0 &&
-      bottle.locationUserId.length > 0
-    )
+    if (bottle.productId.length > 0 && bottle.userId.length > 0 && bottle.locationUserId.length > 0) {
       return false;
-    else return true;
+    } else return true;
   };
 
   const setEditableFromChild = (editable: boolean) => {
@@ -112,26 +79,30 @@ const Bottle = () => {
 
   const setUsernameFromChild = (name: string) => {
     setSelectedUser(name);
+    if (userList) {
+      const userId = Object.getOwnPropertyNames(userList).filter((userId) => userList[userId].displayName === name);
+      setBottle({...bottle, userId });
+    }
   };
 
   const setLocationUsernameFromChild = (name: string) => {
-    setSelectedLocationUser('');
     setSelectedLocationUser(name);
+    if (userList) {
+      const locationUserId = Object.getOwnPropertyNames(userList).filter((userId) => userList[userId].displayName === name);
+      setBottle({...bottle, locationUserId });
+    }
   };
 
   const saveClickedFromChild = () => {
-    if (bottleMissingData())
-      alert('Please fill all required fields before saving!');
+    if (bottleMissingData()) alert('Please fill all required fields before saving!');
     else {
       mutation && mutation.mutate(bottle);
-      // it seemed like refetch does nothing?
-      bottleQuery?.remove();
       setEditable(false);
     }
   };
 
   const cancelClickedFromChild = () => {
-    if (bottleQuery && bottleQuery.data) setBottle(bottleQuery.data);
+    if (bottleList && bottleId) setBottle(bottleList[bottleId]);
     setEditable(false);
   };
 
@@ -139,37 +110,14 @@ const Bottle = () => {
     setBottle(bottle);
   };
 
-  useEffect(() => {
-    if (getProductIDQuery.isSuccess && getProductIDQuery.data?.docs) {
-      const productId = getProductIDQuery.data?.docs[0].id;
-      setBottle({ ...bottle, productId });
-    }
-  }, [getProductIDQuery.dataUpdatedAt]);
-
-  useEffect(() => {
-    if (getUserName.isSuccess && getUserName.data?.docs) {
-      const userId = getUserName.data?.docs[0].id;
-      setBottle({ ...bottle, userId });
-    }
-  }, [getUserName.dataUpdatedAt]);
-
-  useEffect(() => {
-    if (getLocationUserName.isSuccess && getLocationUserName.data?.docs) {
-      const locationUserId = getLocationUserName.data?.docs[0].id;
-      setBottle({ ...bottle, locationUserId });
-    }
-  }, [getLocationUserName.dataUpdatedAt]);
-
   return (
     <BottleContainer>
       <PaddedDiv>
-        <Button themeType="contained" onClick={() => navigate('/products')}>
-          <TextIconSpacing icon={<ArrowBackSVGIcon />}>
-            Back to product list
-          </TextIconSpacing>
+        <Button themeType="contained" onClick={() => navigate('/bottles')}>
+          <TextIconSpacing icon={<ArrowBackSVGIcon />}>Back to bottle list</TextIconSpacing>
         </Button>
       </PaddedDiv>
-      {bottleQuery && bottleQuery.isSuccess && bottleQuery.data && (
+      {bottleList && (
         <>
           <PaddedDiv>
             <EditBottleButtons
@@ -200,10 +148,7 @@ const Bottle = () => {
               <PaddedMediaContainer>
                 {bottle.photoUrl ? (
                   <>
-                    <img
-                      onClick={() => setShowImageFull(true)}
-                      src={bottle.photoUrl}
-                    />
+                    <img onClick={() => setShowImageFull(true)} src={bottle.photoUrl} />
                     <Dialog
                       id={`${bottleId}-img`}
                       visible={showImageFull}
@@ -211,15 +156,10 @@ const Bottle = () => {
                       aria-labelledby="dialog-title"
                     >
                       <DialogHeader>
-                        <DialogTitle id="dialog-title">
-                          {'Photo'}
-                        </DialogTitle>
+                        <DialogTitle id="dialog-title">{'Photo'}</DialogTitle>
                       </DialogHeader>
                       <DialogContent>
-                        <img
-                          onClick={() => setShowImageFull(false)}
-                          src={bottle.photoUrl}
-                        />
+                        <img onClick={() => setShowImageFull(false)} src={bottle.photoUrl} />
                       </DialogContent>
                     </Dialog>
                   </>

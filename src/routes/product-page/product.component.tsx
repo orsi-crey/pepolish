@@ -12,7 +12,7 @@ import {
   TextIconSpacing,
 } from 'react-md';
 import { useContext, useEffect, useState } from 'react';
-import { DocumentData, QueryDocumentSnapshot } from 'firebase/firestore';
+import { DocumentData } from 'firebase/firestore';
 
 import ProductTable from '../../components/product-table.component';
 import { getListQuery, mutationResult, updateItem } from '../../utils/firestore/firestore.utils';

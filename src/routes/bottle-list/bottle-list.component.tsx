@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 
 import { BottleListContainer } from './bottle-list.styles';
 import { getListQuery } from '../../utils/firestore/firestore.utils';
-import { DocumentData } from 'firebase/firestore';
 
 const BottleList = () => {
   const navigate = useNavigate();
