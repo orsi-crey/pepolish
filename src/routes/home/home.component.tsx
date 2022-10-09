@@ -14,18 +14,17 @@ const Home = () => {
   const productList = getListQuery('products').data;
 
   const favoritePolishes = () => {
+    console.log(userdata.favorites);
     return (
       productList &&
-      Object.getOwnPropertyNames(productList)
-        .filter((productId) => userdata.favorites.includes(productId))
-        .map((productId) => {
-          const product = productList[productId];
-          return (
-            <div key={productId}>
-              <Link to={`/products/${productId}`}>{`${product.brand} - ${product.name}`}</Link>
-            </div>
-          );
-        })
+      userdata?.favorites?.map((productId) => {
+        const product = productList.get(productId);
+        return (
+          <div key={productId}>
+            <Link to={`/products/${productId}`}>{`${product?.brand} - ${product?.name}`}</Link>
+          </div>
+        );
+      })
     );
   };
 

@@ -11,7 +11,7 @@ const ProductTable = ({ product, editable, setproduct }: ProductTableProps) => {
   const productList = getListQuery('products').data;
 
   if (productList && brands.length === 0) {
-    const allBrands = Object.getOwnPropertyNames(productList).map((productId) => productList[productId].brand);
+    const allBrands = Array.from(productList.values()).map((product) => product.brand);
     setBrands(sortAndUniqList(allBrands));
   }
 
@@ -79,7 +79,7 @@ const ProductTable = ({ product, editable, setproduct }: ProductTableProps) => {
       <ChipField chips={product.effects} disabled={!editable} setchip={setEffectChipsFromChild} />
       <p>Multichrome:</p>
       <ChipField chips={product.multichrome} disabled={!editable} setchip={setMultichromeChipsFromChild} />
-      <p>Volume:</p>
+      <p>Volume (ml):</p>
       <TextField
         id="volume"
         name="Volume (ml)"

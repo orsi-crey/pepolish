@@ -19,10 +19,6 @@ import { UseMutationResult } from 'react-query';
 
 import { auth, db } from '../firebase/firebase.utils';
 
-type indexableData = {
-  [key: string]: DocumentData;
-};
-
 export const getListQuery = (collName: string) => {
   const ref = collection(db, collName);
 
@@ -34,9 +30,7 @@ export const getListQuery = (collName: string) => {
     },
     {
       select(snapshot) {
-        const list: indexableData = {};
-        snapshot.docs.map((docSnapshot) => Object.defineProperty(list, docSnapshot.id, { value: docSnapshot.data() }));
-        return list;
+        return new Map(snapshot.docs.map((docSnapshot) => [docSnapshot.id, docSnapshot.data()]));
       },
     }
   );

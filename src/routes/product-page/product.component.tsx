@@ -22,7 +22,6 @@ import EditProductButtons from '../../components/edit-product-buttons';
 import { PaddedDiv, PaddedMediaContainer, ProductContainer } from './product.styles';
 import { UserContext, authState } from '../../contexts/user.context';
 import { uploadDataToUser } from '../../utils/firebase/firebase.utils';
-import { sortAndUniqList } from '../../utils/helperFunctions';
 
 export type ProductButtonProps = {
   editable: boolean;
@@ -58,8 +57,7 @@ const Product = () => {
 
   // get all relevant info and save in state
   if (productList && productId && Object.keys(product).length === 0) {
-    const productToSet = productList[productId];
-    setProduct(productToSet);
+    setProduct(productList.get(productId) || {});
   }
 
   // 1. get this product's bottles
@@ -67,13 +65,16 @@ const Product = () => {
   // 3. also save if there are any bottles of this product
   // 4. if not, set users to fake array so we skip this check
   if (bottleList && userList && users.length === 0) {
-    const relevantBottleIds = Object.getOwnPropertyNames(bottleList).filter(
-      (bottleId: string) => bottleList[bottleId].productId === productId
-    );
-    const relevantUsers = relevantBottleIds.map((bottleId: string) => bottleList[bottleId].userId);
-    if (relevantUsers.length !== 0) {
+    const relevantUsers = new Set<string>();
+    bottleList.forEach((bottle, bottleId) => {
+      if (bottle.productId === productId) {
+        relevantUsers.add(bottle.userId);
+      }
+    });
+
+    if (relevantUsers.size > 0) {
       setHasUsers(true);
-      setUsers(sortAndUniqList(relevantUsers));
+      setUsers(Array.from(relevantUsers));
     } else {
       setUsers(['']);
     }
@@ -102,7 +103,6 @@ const Product = () => {
     else return true;
   };
 
-  // checks who has a bottle of the current polish
   const owningUsers = () => {
     return (
       hasUsers &&
@@ -110,13 +110,13 @@ const Product = () => {
       users?.map((userId: string) => {
         return (
           <div key={userId}>
-            • <Link to={`/users/${userId}`}>{userList[userId].displayName}</Link>
+            • <Link to={`/users/${userId}`}>{userList?.get(userId)?.displayName}</Link>
           </div>
         );
       })
     );
   };
-
+  
   const setEditableFromChild = (editable: boolean) => {
     setEditable(editable);
   };
@@ -132,7 +132,10 @@ const Product = () => {
   };
 
   const cancelClickedFromChild = () => {
-    if (productList && productId) setProduct(productList[productId]);
+    if (productId) {
+      const originalProduct = productList?.get(productId);
+      if (originalProduct) setProduct(originalProduct);
+    }
     setEditable(false);
   };
 

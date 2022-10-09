@@ -19,25 +19,27 @@ const ProductList = () => {
   const addPolishRows = () => {
     return (
       productList &&
-      Object.getOwnPropertyNames(productList).map((productId: string) => {
-        const product = productList[productId];
+      Array.from(productList.keys()).map((productId: string) => {
+        const product = productList.get(productId);
         return (
-          <TableRow key={productId} onClick={() => showProductPage(productId)}>
-            <TableCell>{product.imageUrl && <img src={product.imageUrl} />}</TableCell>
-            <TableCell>{product.brand}</TableCell>
-            <TableCell>{product.name}</TableCell>
-            <TableCell>{product.color}</TableCell>
-            <TableCell>
-              {product.effects?.map((effect: string) => (
-                <div key={effect}>{effect}</div>
-              ))}
-            </TableCell>
-            <TableCell>
-              {product.other?.map((item: string) => (
-                <div key={item}>{item}</div>
-              ))}
-            </TableCell>
-          </TableRow>
+          product && (
+            <TableRow key={productId} onClick={() => showProductPage(productId)}>
+              <TableCell>{product.imageUrl && <img src={product.imageUrl} />}</TableCell>
+              <TableCell>{product.brand}</TableCell>
+              <TableCell>{product.name}</TableCell>
+              <TableCell>{product.color}</TableCell>
+              <TableCell>
+                {product.effects?.map((effect: string) => (
+                  <div key={effect}>{effect}</div>
+                ))}
+              </TableCell>
+              <TableCell>
+                {product.other?.map((item: string) => (
+                  <div key={item}>{item}</div>
+                ))}
+              </TableCell>
+            </TableRow>
+          )
         );
       })
     );

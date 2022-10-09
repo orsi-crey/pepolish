@@ -69,7 +69,7 @@ const NewBottle = () => {
   useEffect(() => {
     if (productList) {
       const productId = Object.getOwnPropertyNames(productList).find(
-        (productId) => productList[productId].brand === selectedProduct.brand && productList[productId].name === selectedProduct.name
+        (productId) => productList?.get(productId)?.brand === selectedProduct.brand && productList?.get(productId)?.name === selectedProduct.name
       );
       setBottle({ ...bottle, productId: productId || '' });
     }
@@ -77,14 +77,14 @@ const NewBottle = () => {
 
   useEffect(() => {
     if (userList) {
-      const userId = Object.getOwnPropertyNames(userList).find((userId) => userList[userId].displayName === selectedUser);
+      const userId = Object.getOwnPropertyNames(userList).find((userId) => userList?.get(userId)?.displayName === selectedUser);
       setBottle({ ...bottle, userId: userId || '' });
     }
   }, [selectedUser]);
 
   useEffect(() => {
     if (userList) {
-      const locationUserId = Object.getOwnPropertyNames(userList).find((userId) => userList[userId].displayName === selectedLocationUser);
+      const locationUserId = Object.getOwnPropertyNames(userList).find((userId) => userList?.get(userId)?.displayName === selectedLocationUser);
       setBottle({ ...bottle, locationUserId: locationUserId || '' });
     }
   }, [selectedLocationUser]);

@@ -19,18 +19,24 @@ const UserProfile = () => {
   const userList = getListQuery('users').data;
 
   if (userList && userId && Object.keys(user).length === 0) {
-    setUser(userList[userId]);
+    setUser(userList?.get(userId) || {});
   }
 
   // 1. get bottles of this user
   // 2. go thru bottles to save product ids
   // 3. also save if the user has any bottles or not
   // 4. if not, set bottles to fake array so we skip this check
-  if (bottleList && productList && bottles.length === 0) {
-    const relevantBottles = Object.getOwnPropertyNames(bottleList).filter((bottleId: string) => bottleList[bottleId].userId === userId);
-    if (relevantBottles.length !== 0) {
+  if (bottleList && bottles.length === 0) {
+    const relevantBottles = new Set<string>();
+    bottleList.forEach((bottle, bottleId) => {
+      if (bottle.userId === userId) {
+        relevantBottles.add(bottleId);
+      }
+    });
+
+    if (relevantBottles.size > 0) {
       setHasBottles(true);
-      setBottles(relevantBottles);
+      setBottles(Array.from(relevantBottles));
     } else {
       setBottles(['']);
     }
@@ -43,11 +49,12 @@ const UserProfile = () => {
     return (
       productList &&
       bottleList &&
-      bottles.map((item) => {
-        const bottle = bottleList[item];
+      bottles.map((bottleId) => {
+        const bottle = bottleList.get(bottleId);
+        const product = productList.get(bottle?.productId)
         return (
-          <div key={item}>
-            • <Link to={`/bottles/${item}`}>{`${productList[bottle.productId].brand} - ${productList[bottle.productId].name}`}</Link>
+          <div key={bottleId}>
+            • <Link to={`/bottles/${bottleId}`}>{`${product?.brand} - ${product?.name}`}</Link>
           </div>
         );
       })

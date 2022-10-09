@@ -27,44 +27,44 @@ const BottleTable = ({
   const productList = getListQuery('products').data;
   const userList = getListQuery('users').data;
 
-  if (productList && brands.length === 0 && names.length === 0) {
-    const allBrands = Object.getOwnPropertyNames(productList).map((productId) => productList[productId].brand);
+  if (productList && brands.length === 0) {
+    const allBrands = Array.from(productList.values()).map((product) => product.brand);
     setBrands(sortAndUniqList(allBrands));
   }
 
   if (userList && userNames.length === 0) {
-    const allUsernames = Object.getOwnPropertyNames(userList).map((userId) => userList[userId].displayName);
+    const allUsernames = Array.from(userList.values()).map((user) => user?.displayName);
     setUserNames(sortAndUniqList(allUsernames));
   }
 
-  const getBrand = () => (productList ? productList[bottle.productId].brand : '');
-  const getName = () => (productList ? productList[bottle.productId].name : '');
-  const getUserName = () => (userList ? userList[bottle.userId].displayName : '');
-  const getLocationUserName = () => (userList ? userList[bottle.locationUserId].displayName : '');
+  const getBrand = () => (productList ? productList?.get(bottle.productId)?.brand : '');
+  const getName = () => (productList ? productList?.get(bottle.productId)?.name : '');
+  const getUserName = () => (userList ? userList?.get(bottle.userId)?.displayName : '');
+  const getLocationUserName = () => (userList ? userList?.get(bottle.locationUserId)?.displayName : '');
 
   useEffect(() => {
     if (productList && !newBottle) {
       setselectedproduct({
         ...selectedProduct,
-        brand: productList[bottle.productId].brand,
-        name: productList[bottle.productId].name,
+        brand: productList?.get(bottle.productId)?.brand,
+        name: productList?.get(bottle.productId)?.name,
       });
-      setBrand(productList[bottle.productId].brand);
+      setBrand(productList?.get(bottle.productId)?.brand);
     }
   }, [productList]);
 
   useEffect(() => {
     if (userList && !newBottle) {
-      setselecteduser(userList[bottle.userId].displayName);
-      setselectedlocationuser(userList[bottle.locationUserId].displayName);
+      setselecteduser(userList?.get(bottle.userId)?.displayName);
+      setselectedlocationuser(userList?.get(bottle.locationUserId)?.displayName);
     }
   }, [userList]);
 
   useEffect(() => {
     if (productList && brand) {
       const allNames = Object.getOwnPropertyNames(productList)
-        .filter((productId) => productList[productId].brand === brand)
-        .map((productId) => productList[productId].name);
+        .filter((productId) => productList?.get(productId)?.brand === brand)
+        .map((productId) => productList?.get(productId)?.name);
       setNames(sortAndUniqList(allNames));
     }
   }, [brand]);

@@ -16,13 +16,14 @@ const UserList = () => {
   const addUserRows = () => {
     return (
       userList &&
-      Object.getOwnPropertyNames(userList).map((userId: string) => (
-        <TableRow key={userId} onClick={() => showUserPage(userId)}>
-          <TableCell>{<img src={userList[userId].userdata?.profilePic} />}</TableCell>
-          <TableCell>{userList[userId].displayName}</TableCell>
-          <TableCell>{userList[userId].userdata?.city}</TableCell>
-        </TableRow>
-      ))
+      Array.from(userList.keys()).map((userId: string) => {
+        const user = userList?.get(userId);
+        return <TableRow key={userId} onClick={() => showUserPage(userId)}>
+          <TableCell>{<img src={user?.userdata?.profilePic} />}</TableCell>
+          <TableCell>{user?.displayName}</TableCell>
+          <TableCell>{user?.userdata?.city}</TableCell>
+        </TableRow>;
+      })
     );
   };
 

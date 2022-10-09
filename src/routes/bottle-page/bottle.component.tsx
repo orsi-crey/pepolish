@@ -1,6 +1,6 @@
+import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ArrowBackSVGIcon, Button, Dialog, DialogContent, DialogHeader, DialogTitle, Grid, GridCell, TextIconSpacing } from 'react-md';
-import { useState } from 'react';
 import { DocumentData } from 'firebase/firestore';
 
 import BottleTable from '../../components/bottle-table.component';
@@ -57,7 +57,7 @@ const Bottle = () => {
   const mutation = updateItem(bottleId, 'bottles');
 
   if (bottleList && userList && bottleId && Object.keys(bottle).length === 0) {
-    setBottle(bottleList[bottleId]);
+    setBottle(bottleList?.get(bottleId) || {});
   }
 
   const bottleMissingData = () => {
@@ -74,7 +74,7 @@ const Bottle = () => {
     setSelectedProduct(data);
     if (productList) {
       const productId = Object.getOwnPropertyNames(productList).filter(
-        (productId) => productList[productId].brand === data.brand && productList[productId].name === data.name
+        (productId) => productList?.get(productId)?.brand === data.brand && productList?.get(productId)?.name === data.name
       );
       setBottle({ ...bottle, productId });
     }
@@ -83,7 +83,7 @@ const Bottle = () => {
   const setUsernameFromChild = (name: string) => {
     setSelectedUser(name);
     if (userList) {
-      const userId = Object.getOwnPropertyNames(userList).filter((userId) => userList[userId].displayName === name);
+      const userId = Object.getOwnPropertyNames(userList).filter((userId) => userList?.get(userId)?.displayName === name);
       setBottle({ ...bottle, userId });
     }
   };
@@ -91,7 +91,7 @@ const Bottle = () => {
   const setLocationUsernameFromChild = (name: string) => {
     setSelectedLocationUser(name);
     if (userList) {
-      const locationUserId = Object.getOwnPropertyNames(userList).filter((userId) => userList[userId].displayName === name);
+      const locationUserId = Object.getOwnPropertyNames(userList).filter((userId) => userList?.get(userId)?.displayName === name);
       setBottle({ ...bottle, locationUserId });
     }
   };
@@ -105,7 +105,7 @@ const Bottle = () => {
   };
 
   const cancelClickedFromChild = () => {
-    if (bottleList && bottleId) setBottle(bottleList[bottleId]);
+    if (bottleList && bottleId) setBottle(bottleList?.get(bottleId) || {});
     setEditable(false);
   };
 
