@@ -10,16 +10,20 @@ import EditBottleButtons from '../../components/edit-bottle-buttons';
 
 import { BottleContainer, PaddedDiv, PaddedMediaContainer } from './bottle.styles';
 import { ProductData } from './bottle.types';
+import {
+  getDisplayName,
+  getProductBrand,
+  getProductIdByProductData,
+  getProductName,
+  getUserIdByDisplayname,
+} from '../../utils/helperFunctions';
 
 const Bottle = () => {
   const navigate = useNavigate();
   const { bottleId } = useParams();
   const [editable, setEditable] = useState(false);
   const [bottle, setBottle] = useState({} as PolishBottle | DocumentData);
-  const [selectedProduct, setSelectedProduct] = useState({
-    brand: '',
-    name: '',
-  });
+  const [selectedProduct, setSelectedProduct] = useState({} as ProductData);
   const [selectedUser, setSelectedUser] = useState('');
   const [selectedLocationUser, setSelectedLocationUser] = useState('');
   const [showImageFull, setShowImageFull] = useState(false);
@@ -32,6 +36,18 @@ const Bottle = () => {
 
   if (bottleList && userList && bottleId && Object.keys(bottle).length === 0) {
     setBottle(bottleList?.get(bottleId) || {});
+  }
+
+  if (userList && Object.keys(bottle).length > 0 && selectedUser === '' && selectedLocationUser === '') {
+    setSelectedUser(getDisplayName(userList, bottle.userId));
+    setSelectedLocationUser(getDisplayName(userList, bottle.locationUserId));
+  }
+
+  if (productList && Object.keys(bottle).length > 0 && Object.keys(selectedProduct).length === 0) {
+    setSelectedProduct({
+      brand: getProductBrand(productList, bottle.productId),
+      name: getProductName(productList, bottle.productId),
+    });
   }
 
   const bottleMissingData = () => {
@@ -47,27 +63,21 @@ const Bottle = () => {
   const setProductFromChild = (data: ProductData) => {
     setSelectedProduct(data);
     if (productList) {
-      const productId = Object.getOwnPropertyNames(productList).filter(
-        (productId) => productList?.get(productId)?.brand === data.brand && productList?.get(productId)?.name === data.name
-      );
+      const productId = getProductIdByProductData(productList, data);
       setBottle({ ...bottle, productId });
     }
   };
 
-  const setUsernameFromChild = (name: string) => {
-    setSelectedUser(name);
-    if (userList) {
-      const userId = Object.getOwnPropertyNames(userList).filter((userId) => userList?.get(userId)?.displayName === name);
-      setBottle({ ...bottle, userId });
-    }
+  const setUserFromChild = (displayName: string) => {
+    const userId = getUserIdByDisplayname(userList, displayName);
+    setSelectedUser(displayName);
+    setBottle({ ...bottle, userId });
   };
 
-  const setLocationUsernameFromChild = (name: string) => {
-    setSelectedLocationUser(name);
-    if (userList) {
-      const locationUserId = Object.getOwnPropertyNames(userList).filter((userId) => userList?.get(userId)?.displayName === name);
-      setBottle({ ...bottle, locationUserId });
-    }
+  const setLocationUserFromChild = (locationDisplayName: string) => {
+    const locationUserId = getUserIdByDisplayname(userList, locationDisplayName);
+    setSelectedLocationUser(locationDisplayName);
+    setBottle({ ...bottle, locationUserId });
   };
 
   const saveClickedFromChild = () => {
@@ -116,8 +126,8 @@ const Bottle = () => {
                 editable={editable}
                 setbottle={setBottleFromChild}
                 setselectedproduct={setProductFromChild}
-                setselecteduser={setUsernameFromChild}
-                setselectedlocationuser={setLocationUsernameFromChild}
+                setselecteduser={setUserFromChild}
+                setselectedlocationuser={setLocationUserFromChild}
                 newBottle={false}
               ></BottleTable>
             </GridCell>

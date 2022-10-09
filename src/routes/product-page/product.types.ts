@@ -1,5 +1,5 @@
-import { DocumentData } from "firebase/firestore";
-import { mutationResult } from "../../utils/firestore/firestore.utils";
+import { DocumentData } from 'firebase/firestore';
+import { mutationResult } from '../../utils/firestore/firestore.utils';
 
 export type Polish = {
   id: string;

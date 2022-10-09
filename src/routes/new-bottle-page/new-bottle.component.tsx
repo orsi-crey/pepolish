@@ -10,25 +10,18 @@ import { addNewItem, getListQuery } from '../../utils/firestore/firestore.utils'
 import { ProductData } from '../bottle-page/bottle.types';
 
 import { BottleContainer, PaddedDiv } from './new-bottle.styles';
+import { getProductIdByProductData, getUserIdByDisplayname } from '../../utils/helperFunctions';
 
 const NewBottle = () => {
-  const emptyBottle: PolishBottle = {
-    productId: ' ',
-    userId: ' ',
-    locationUserId: ' ',
-    fullPercentage: 0,
-    photoUrl: '',
-  };
-
   const navigate = useNavigate();
-  const mutation = addNewItem('bottles');
-  const [bottle, setBottle] = useState(emptyBottle);
+  const [bottle, setBottle] = useState({} as PolishBottle | DocumentData);
   const [selectedProduct, setSelectedProduct] = useState({} as ProductData);
   const [selectedUser, setSelectedUser] = useState('');
   const [selectedLocationUser, setSelectedLocationUser] = useState('');
 
   const productList = getListQuery('products').data;
   const userList = getListQuery('users').data;
+  const mutation = addNewItem('bottles');
 
   const bottleMissingData = () => {
     if (bottle.productId.length > 0 && bottle.userId.length > 0 && bottle.locationUserId.length > 0) return false;
@@ -41,14 +34,22 @@ const NewBottle = () => {
 
   const setProductFromChild = (data: ProductData) => {
     setSelectedProduct(data);
+    if (productList) {
+      const productId = getProductIdByProductData(productList, data);
+      setBottle({ ...bottle, productId });
+    }
   };
 
-  const setUsernameFromChild = (name: string) => {
-    setSelectedUser(name);
+  const setUserFromChild = (displayName: string) => {
+    const userId = getUserIdByDisplayname(userList, displayName);
+    setSelectedUser(displayName);
+    setBottle({ ...bottle, userId });
   };
 
-  const setLocationUsernameFromChild = (name: string) => {
-    setSelectedLocationUser(name);
+  const setLocationUserFromChild = (locationDisplayName: string) => {
+    const locationUserId = getUserIdByDisplayname(userList, locationDisplayName);
+    setSelectedLocationUser(locationDisplayName);
+    setBottle({ ...bottle, locationUserId });
   };
 
   const saveClickedFromChild = () => {
@@ -62,29 +63,6 @@ const NewBottle = () => {
   const cancelClickedFromChild = () => {
     navigate('/bottles');
   };
-
-  useEffect(() => {
-    if (productList) {
-      const productId = Object.getOwnPropertyNames(productList).find(
-        (productId) => productList?.get(productId)?.brand === selectedProduct.brand && productList?.get(productId)?.name === selectedProduct.name
-      );
-      setBottle({ ...bottle, productId: productId || '' });
-    }
-  }, [selectedProduct.name]);
-
-  useEffect(() => {
-    if (userList) {
-      const userId = Object.getOwnPropertyNames(userList).find((userId) => userList?.get(userId)?.displayName === selectedUser);
-      setBottle({ ...bottle, userId: userId || '' });
-    }
-  }, [selectedUser]);
-
-  useEffect(() => {
-    if (userList) {
-      const locationUserId = Object.getOwnPropertyNames(userList).find((userId) => userList?.get(userId)?.displayName === selectedLocationUser);
-      setBottle({ ...bottle, locationUserId: locationUserId || '' });
-    }
-  }, [selectedLocationUser]);
 
   useEffect(() => {
     if (mutation.isSuccess) {
@@ -117,8 +95,8 @@ const NewBottle = () => {
         editable={true}
         setbottle={setBottleFromChild}
         setselectedproduct={setProductFromChild}
-        setselecteduser={setUsernameFromChild}
-        setselectedlocationuser={setLocationUsernameFromChild}
+        setselecteduser={setUserFromChild}
+        setselectedlocationuser={setLocationUserFromChild}
         newBottle={true}
       />
     </BottleContainer>

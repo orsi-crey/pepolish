@@ -3,7 +3,7 @@ import { Button, Form, Select, TextField } from 'react-md';
 import { ArrowDropDownSVGIcon } from '@react-md/material-icons';
 import { BottleTableProps } from '../routes/bottle-page/bottle.types';
 import { getListQuery } from '../utils/firestore/firestore.utils';
-import { sortAndUniqList } from '../utils/helperFunctions';
+import { getAllBrands, getAllDisplaynames, getDisplayName, getNamesOfBrand, getProductBrandAndName, sortAndUniqList } from '../utils/helperFunctions';
 import ProductModal from './product-modal/product-modal.component';
 
 const BottleTable = ({
@@ -16,85 +16,56 @@ const BottleTable = ({
   setselectedproduct,
   setselecteduser,
   setselectedlocationuser,
-  newBottle,
 }: BottleTableProps) => {
   const [brands, setBrands] = useState([] as string[]);
   const [names, setNames] = useState([] as string[]);
   const [userNames, setUserNames] = useState([] as string[]);
-  const [brand, setBrand] = useState('');
   const [isVisible, setIsVisible] = useState(false);
 
   const productList = getListQuery('products').data;
   const userList = getListQuery('users').data;
 
   if (productList && brands.length === 0) {
-    const allBrands = Array.from(productList.values()).map((product) => product.brand);
-    setBrands(sortAndUniqList(allBrands));
+    setBrands(getAllBrands(productList));
   }
 
   if (userList && userNames.length === 0) {
-    const allUsernames = Array.from(userList.values()).map((user) => user?.displayName);
-    setUserNames(sortAndUniqList(allUsernames));
+    setUserNames(getAllDisplaynames(userList));
   }
 
-  const getBrand = () => (productList ? productList?.get(bottle.productId)?.brand : '');
-  const getName = () => (productList ? productList?.get(bottle.productId)?.name : '');
-  const getUserName = () => (userList ? userList?.get(bottle.userId)?.displayName : '');
-  const getLocationUserName = () => (userList ? userList?.get(bottle.locationUserId)?.displayName : '');
-
   useEffect(() => {
-    if (productList && !newBottle) {
-      setselectedproduct({
-        ...selectedProduct,
-        brand: productList?.get(bottle.productId)?.brand,
-        name: productList?.get(bottle.productId)?.name,
-      });
-      setBrand(productList?.get(bottle.productId)?.brand);
+    if (productList && selectedProduct?.brand !== '') {
+      setNames(getNamesOfBrand(productList, selectedProduct?.brand));
     }
-  }, [productList]);
-
-  useEffect(() => {
-    if (userList && !newBottle) {
-      setselecteduser(userList?.get(bottle.userId)?.displayName);
-      setselectedlocationuser(userList?.get(bottle.locationUserId)?.displayName);
-    }
-  }, [userList]);
-
-  useEffect(() => {
-    if (productList && brand) {
-      const allNames = Object.getOwnPropertyNames(productList)
-        .filter((productId) => productList?.get(productId)?.brand === brand)
-        .map((productId) => productList?.get(productId)?.name);
-      setNames(sortAndUniqList(allNames));
-    }
-  }, [brand]);
+  }, [selectedProduct?.brand]);
 
   return (
     <Form>
       <p>Product:</p>
       {!editable ? (
-        <TextField id="productId" name="Product Id" disabled={!editable} value={`${getBrand()} - ${getName()}`} />
+        <TextField id="productId" name="Product Id" disabled={!editable} value={getProductBrandAndName(productList, bottle.productId)} />
       ) : (
         <>
           (required)
           <Select
             id="brand"
             name="Brand"
-            value={brand}
+            value={selectedProduct?.brand}
             options={brands}
-            onChange={(item) => setBrand(item)}
+            onChange={(item) => {
+              setselectedproduct({ brand: item, name: '' });
+            }}
             rightChildren={<ArrowDropDownSVGIcon />}
           />
           <Select
             id="name"
             name="Name"
-            value={selectedProduct.name}
-            disabled={brand.length === 0}
+            value={selectedProduct?.name || ''}
+            disabled={selectedProduct?.brand?.length === 0}
             options={names}
             onChange={(item) =>
               setselectedproduct({
                 ...selectedProduct,
-                brand: brand,
                 name: item,
               })
             }
@@ -106,7 +77,6 @@ const BottleTable = ({
           <ProductModal
             isVisible={isVisible}
             setProductFromModal={(brand, name) => {
-              setBrand(brand);
               setselectedproduct({
                 ...selectedProduct,
                 brand: brand,
@@ -119,7 +89,7 @@ const BottleTable = ({
       )}
       <p>User:</p>
       {!editable ? (
-        <TextField id="userName" name="Username" disabled={!editable} value={getUserName()} />
+        <TextField id="userName" name="Username" disabled={!editable} value={getDisplayName(userList, bottle.userId)} />
       ) : (
         <>
           (required)
@@ -135,7 +105,12 @@ const BottleTable = ({
       )}
       <p>Location User:</p>
       {!editable ? (
-        <TextField id="locationUsername" name="Location Username" disabled={!editable} value={getLocationUserName()} />
+        <TextField
+          id="locationUsername"
+          name="Location Username"
+          disabled={!editable}
+          value={getDisplayName(userList, bottle.locationUserId)}
+        />
       ) : (
         <>
           (required)
@@ -169,7 +144,7 @@ const BottleTable = ({
         id="photoUrl"
         name="Photo URL"
         disabled={!editable}
-        value={`${bottle.photoUrl}`}
+        value={bottle.photoUrl || ''} 
         onChange={(event) =>
           setbottle({
             ...bottle,
