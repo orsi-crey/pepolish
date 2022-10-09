@@ -1,5 +1,4 @@
 import { DocumentData } from 'firebase/firestore';
-import { PolishBottle } from '../product-page/product.types';
 import { mutationResult } from '../../utils/firestore/firestore.utils';
 
 export type BottleButtonProps = {
@@ -12,12 +11,12 @@ export type BottleButtonProps = {
 
 export type BottleTableProps = {
   bottleId: string | undefined;
-  bottle: PolishBottle | DocumentData;
+  bottle: DocumentData;
   selectedProduct: ProductData;
   selectedUser: string;
   selectedLocationUser: string;
   editable: boolean;
-  setbottle: (v: PolishBottle | DocumentData) => void;
+  setbottle: (v: DocumentData) => void;
   setselectedproduct: (v: ProductData) => void;
   setselecteduser: (v: string) => void;
   setselectedlocationuser: (v: string) => void;

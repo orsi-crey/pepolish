@@ -9,16 +9,12 @@ const UserList = () => {
 
   const userList = getListQuery('users').data;
 
-  const showUserPage = (id: string) => {
-    navigate(`/users/${id}`);
-  };
-
   const addUserRows = () => {
     return (
       userList &&
       Array.from(userList.keys()).map((userId: string) => {
         const user = userList?.get(userId);
-        return <TableRow key={userId} onClick={() => showUserPage(userId)}>
+        return <TableRow key={userId} onClick={() => navigate(`/users/${userId}`)}>
           <TableCell>{<img src={user?.userdata?.profilePic} />}</TableCell>
           <TableCell>{user?.displayName}</TableCell>
           <TableCell>{user?.userdata?.city}</TableCell>

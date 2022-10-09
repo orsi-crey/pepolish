@@ -1,3 +1,4 @@
+import { DocumentData } from 'firebase/firestore';
 import { useState } from 'react';
 import {
   AutoComplete,
@@ -9,7 +10,6 @@ import {
   Form,
   TextField,
 } from 'react-md';
-import { Polish } from '../../routes/product-page/product.types';
 import {
   addNewItem,
   getListQuery,
@@ -49,7 +49,7 @@ const ProductModal = ({
     setProduct({ ...product, other: chips });
   };
 
-  const emptyProduct: Polish = {
+  const emptyProduct: DocumentData = {
     id: '',
     brand: '',
     name: '',

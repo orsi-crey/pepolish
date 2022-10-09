@@ -16,9 +16,8 @@ import {
   getDocs,
   collection,
   QueryDocumentSnapshot,
+  DocumentData,
 } from 'firebase/firestore';
-
-import { Polish } from '../../routes/product-page/product.types';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyB7sKt1z5cSOFJXLCPvG3QAyc4i2R4hEdY',
@@ -92,9 +91,9 @@ const uploadDocFromAuth = async (userAuth: User | null, data: any) => {
 // note: obsolete a query miatt
 export const getProductListDoc = async () => {
   const productsSnapshot = await getDocs(collection(db, 'products'));
-  const products: Polish[] = [];
+  const products: DocumentData[] = [];
   productsSnapshot.forEach((product: QueryDocumentSnapshot) =>
-    products.push({ id: product.id, ...product.data() } as Polish)
+    products.push({ id: product.id, ...product.data() } as DocumentData)
   );
   return products;
 };
@@ -103,7 +102,7 @@ export const getProductListDoc = async () => {
 export const getProductDoc = async (productId: string) => {
   const productReference = doc(db, 'products', productId);
   const productSnapshot = await getDoc(productReference);
-  return { id: productSnapshot.id, ...productSnapshot.data() } as Polish;
+  return { id: productSnapshot.id, ...productSnapshot.data() } as DocumentData;
 };
 
 export const createAuthUserWithEmailAndPassword = async (

@@ -16,7 +16,6 @@ import { DocumentData } from 'firebase/firestore';
 
 import ProductTable from '../../components/product-table.component';
 import { getListQuery, updateItem } from '../../utils/firestore/firestore.utils';
-import { Polish } from './product.types';
 import EditProductButtons from '../../components/edit-product-buttons';
 
 import { PaddedDiv, PaddedMediaContainer, ProductContainer } from './product.styles';
@@ -29,7 +28,7 @@ const Product = () => {
   const { isLoggedIn, userdata, setUserdata } = useContext(UserContext);
   const [isFavorite, setIsFavorite] = useState(false);
   const [editable, setEditable] = useState(false);
-  const [product, setProduct] = useState({} as Polish | DocumentData);
+  const [product, setProduct] = useState({} as DocumentData);
   const [showImageFull, setShowImageFull] = useState(false);
   const [users, setUsers] = useState([] as string[]);
   const [hasUsers, setHasUsers] = useState(false);
@@ -101,10 +100,6 @@ const Product = () => {
       })
     );
   };
-  
-  const setEditableFromChild = (editable: boolean) => {
-    setEditable(editable);
-  };
 
   const saveClickedFromChild = () => {
     if (productMissingData()) alert('Please fill all required fields before saving!');
@@ -122,10 +117,6 @@ const Product = () => {
       if (originalProduct) setProduct(originalProduct);
     }
     setEditable(false);
-  };
-
-  const setProductFromChild = (product: Polish | DocumentData) => {
-    setProduct(product);
   };
 
   return (
@@ -146,7 +137,7 @@ const Product = () => {
             <PaddedDiv>
               <EditProductButtons
                 editable={editable}
-                seteditable={setEditableFromChild}
+                seteditable={(editable: boolean) => setEditable(editable)}
                 onSaveClicked={saveClickedFromChild}
                 onCancelClicked={cancelClickedFromChild}
                 mutation={mutation}
@@ -155,7 +146,12 @@ const Product = () => {
           )}
           <Grid>
             <GridCell colSpan={7}>
-              <ProductTable productId={productId} product={product} editable={editable} setproduct={setProductFromChild} />
+              <ProductTable
+                productId={productId}
+                product={product}
+                editable={editable}
+                setproduct={(product: DocumentData) => setProduct(product)}
+              />
             </GridCell>
             <GridCell colSpan={5}>
               <PaddedMediaContainer>

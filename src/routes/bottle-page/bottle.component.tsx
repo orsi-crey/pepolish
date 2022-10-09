@@ -5,7 +5,6 @@ import { DocumentData } from 'firebase/firestore';
 
 import BottleTable from '../../components/bottle-table.component';
 import { getListQuery, updateItem } from '../../utils/firestore/firestore.utils';
-import { PolishBottle } from '../product-page/product.types';
 import EditBottleButtons from '../../components/edit-bottle-buttons';
 
 import { BottleContainer, PaddedDiv, PaddedMediaContainer } from './bottle.styles';
@@ -22,7 +21,7 @@ const Bottle = () => {
   const navigate = useNavigate();
   const { bottleId } = useParams();
   const [editable, setEditable] = useState(false);
-  const [bottle, setBottle] = useState({} as PolishBottle | DocumentData);
+  const [bottle, setBottle] = useState({} as DocumentData);
   const [selectedProduct, setSelectedProduct] = useState({} as ProductData);
   const [selectedUser, setSelectedUser] = useState('');
   const [selectedLocationUser, setSelectedLocationUser] = useState('');
@@ -54,10 +53,6 @@ const Bottle = () => {
     if (bottle.productId.length > 0 && bottle.userId.length > 0 && bottle.locationUserId.length > 0) {
       return false;
     } else return true;
-  };
-
-  const setEditableFromChild = (editable: boolean) => {
-    setEditable(editable);
   };
 
   const setProductFromChild = (data: ProductData) => {
@@ -93,10 +88,6 @@ const Bottle = () => {
     setEditable(false);
   };
 
-  const setBottleFromChild = (bottle: PolishBottle | DocumentData) => {
-    setBottle(bottle);
-  };
-
   return (
     <BottleContainer>
       <PaddedDiv>
@@ -109,7 +100,7 @@ const Bottle = () => {
           <PaddedDiv>
             <EditBottleButtons
               editable={editable}
-              seteditable={setEditableFromChild}
+              seteditable={(editable: boolean) => setEditable(editable)}
               onSaveClicked={saveClickedFromChild}
               onCancelClicked={cancelClickedFromChild}
               mutation={mutation}
@@ -124,7 +115,7 @@ const Bottle = () => {
                 selectedUser={selectedUser}
                 selectedLocationUser={selectedLocationUser}
                 editable={editable}
-                setbottle={setBottleFromChild}
+                setbottle={(bottle: DocumentData) => setBottle(bottle)}
                 setselectedproduct={setProductFromChild}
                 setselecteduser={setUserFromChild}
                 setselectedlocationuser={setLocationUserFromChild}

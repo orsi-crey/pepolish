@@ -11,11 +11,7 @@ const ProductList = () => {
   const { isLoggedIn } = useContext(UserContext);
 
   const productList = getListQuery('products').data;
-
-  const showProductPage = (id: string) => {
-    navigate(`/products/${id}`);
-  };
-
+  
   const addPolishRows = () => {
     return (
       productList &&
@@ -23,7 +19,7 @@ const ProductList = () => {
         const product = productList.get(productId);
         return (
           product && (
-            <TableRow key={productId} onClick={() => showProductPage(productId)}>
+            <TableRow key={productId} onClick={() => navigate(`/products/${productId}`)}>
               <TableCell>{product.imageUrl && <img src={product.imageUrl} />}</TableCell>
               <TableCell>{product.brand}</TableCell>
               <TableCell>{product.name}</TableCell>
