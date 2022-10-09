@@ -18,7 +18,7 @@ import {
   QueryDocumentSnapshot,
 } from 'firebase/firestore';
 
-import { Polish } from '../../store/product/product.types';
+import { Polish } from '../../routes/product-page/product.types';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyB7sKt1z5cSOFJXLCPvG3QAyc4i2R4hEdY',

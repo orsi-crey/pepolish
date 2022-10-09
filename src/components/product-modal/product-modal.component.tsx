@@ -9,7 +9,7 @@ import {
   Form,
   TextField,
 } from 'react-md';
-import { Polish } from '../../store/product/product.types';
+import { Polish } from '../../routes/product-page/product.types';
 import {
   addNewItem,
   getListQuery,

@@ -1,5 +1,5 @@
 import { Button } from 'react-md';
-import { BottleButtonProps } from '../routes/bottle-page/bottle.component';
+import { BottleButtonProps } from '../routes/bottle-page/bottle.types';
 
 const NewBottleButtons = ({
   onSaveClicked,

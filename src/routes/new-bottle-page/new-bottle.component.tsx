@@ -4,12 +4,12 @@ import { useEffect, useState } from 'react';
 import { DocumentData } from 'firebase/firestore';
 
 import BottleTable from '../../components/bottle-table.component';
-import { PolishBottle } from '../../store/product/product.types';
+import { PolishBottle } from '../product-page/product.types';
 import NewBottleButtons from '../../components/new-bottle-buttons';
+import { addNewItem, getListQuery } from '../../utils/firestore/firestore.utils';
+import { ProductData } from '../bottle-page/bottle.types';
 
 import { BottleContainer, PaddedDiv } from './new-bottle.styles';
-import { addNewItem, getListQuery } from '../../utils/firestore/firestore.utils';
-import { ProductData } from '../bottle-page/bottle.component';
 
 const NewBottle = () => {
   const emptyBottle: PolishBottle = {
@@ -23,10 +23,7 @@ const NewBottle = () => {
   const navigate = useNavigate();
   const mutation = addNewItem('bottles');
   const [bottle, setBottle] = useState(emptyBottle);
-  const [selectedProduct, setSelectedProduct] = useState({
-    brand: '',
-    name: '',
-  });
+  const [selectedProduct, setSelectedProduct] = useState({} as ProductData);
   const [selectedUser, setSelectedUser] = useState('');
   const [selectedLocationUser, setSelectedLocationUser] = useState('');
 

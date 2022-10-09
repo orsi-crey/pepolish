@@ -15,28 +15,13 @@ import { useContext, useEffect, useState } from 'react';
 import { DocumentData } from 'firebase/firestore';
 
 import ProductTable from '../../components/product-table.component';
-import { getListQuery, mutationResult, updateItem } from '../../utils/firestore/firestore.utils';
-import { Polish } from '../../store/product/product.types';
+import { getListQuery, updateItem } from '../../utils/firestore/firestore.utils';
+import { Polish } from './product.types';
 import EditProductButtons from '../../components/edit-product-buttons';
 
 import { PaddedDiv, PaddedMediaContainer, ProductContainer } from './product.styles';
 import { UserContext, authState } from '../../contexts/user.context';
 import { uploadDataToUser } from '../../utils/firebase/firebase.utils';
-
-export type ProductButtonProps = {
-  editable: boolean;
-  seteditable: (v: boolean) => void;
-  onSaveClicked: () => void;
-  onCancelClicked: () => void;
-  mutation: mutationResult | undefined;
-};
-
-export type ProductTableProps = {
-  product: Polish | DocumentData;
-  productId: string | undefined;
-  editable: boolean;
-  setproduct: (v: Polish | DocumentData) => void;
-};
 
 const Product = () => {
   const navigate = useNavigate();

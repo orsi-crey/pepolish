@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { DocumentData } from 'firebase/firestore';
 
 import ProductTable from '../../components/product-table.component';
-import { Polish } from '../../store/product/product.types';
+import { Polish } from '../product-page/product.types';
 import NewProductButtons from '../../components/new-product-buttons';
 
 import { PaddedDiv, ProductContainer } from './new-product.styles';

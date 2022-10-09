@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { AutoComplete, Form, TextField } from 'react-md';
-import { ProductTableProps } from '../routes/product-page/product.component';
+import { ProductTableProps } from '../routes/product-page/product.types';
 import { getListQuery } from '../utils/firestore/firestore.utils';
 import { sortAndUniqList } from '../utils/helperFunctions';
 

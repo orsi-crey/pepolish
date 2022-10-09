@@ -1,5 +1,5 @@
 import { Button } from 'react-md';
-import { ProductButtonProps } from '../routes/product-page/product.component';
+import { ProductButtonProps } from '../routes/product-page/product.types';
 
 const EditProductButtons = ({
   editable,

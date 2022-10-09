@@ -4,38 +4,12 @@ import { ArrowBackSVGIcon, Button, Dialog, DialogContent, DialogHeader, DialogTi
 import { DocumentData } from 'firebase/firestore';
 
 import BottleTable from '../../components/bottle-table.component';
-import { getListQuery, mutationResult, updateItem } from '../../utils/firestore/firestore.utils';
-import { PolishBottle } from '../../store/product/product.types';
+import { getListQuery, updateItem } from '../../utils/firestore/firestore.utils';
+import { PolishBottle } from '../product-page/product.types';
 import EditBottleButtons from '../../components/edit-bottle-buttons';
 
 import { BottleContainer, PaddedDiv, PaddedMediaContainer } from './bottle.styles';
-
-export type BottleButtonProps = {
-  editable: boolean;
-  seteditable: (v: boolean) => void;
-  onSaveClicked: () => void;
-  onCancelClicked: () => void;
-  mutation: mutationResult | undefined;
-};
-
-export type BottleTableProps = {
-  bottleId: string | undefined;
-  bottle: PolishBottle | DocumentData;
-  selectedProduct: ProductData;
-  selectedUser: string;
-  selectedLocationUser: string;
-  editable: boolean;
-  setbottle: (v: PolishBottle | DocumentData) => void;
-  setselectedproduct: (v: ProductData) => void;
-  setselecteduser: (v: string) => void;
-  setselectedlocationuser: (v: string) => void;
-  newBottle: boolean;
-};
-
-export type ProductData = {
-  brand: string;
-  name: string;
-};
+import { ProductData } from './bottle.types';
 
 const Bottle = () => {
   const navigate = useNavigate();

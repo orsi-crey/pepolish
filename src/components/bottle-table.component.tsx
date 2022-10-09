@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Button, Form, Select, TextField } from 'react-md';
 import { ArrowDropDownSVGIcon } from '@react-md/material-icons';
-import { BottleTableProps } from '../routes/bottle-page/bottle.component';
+import { BottleTableProps } from '../routes/bottle-page/bottle.types';
 import { getListQuery } from '../utils/firestore/firestore.utils';
 import { sortAndUniqList } from '../utils/helperFunctions';
 import ProductModal from './product-modal/product-modal.component';
