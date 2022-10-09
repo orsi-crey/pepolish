@@ -12,7 +12,7 @@ import {
 import { Polish } from '../../store/product/product.types';
 import {
   addNewItem,
-  getListFilteredFieldsQuery,
+  getListQuery,
 } from '../../utils/firestore/firestore.utils';
 import { sortAndUniqList } from '../../utils/helperFunctions';
 
@@ -28,16 +28,14 @@ const ProductModal = ({
   closeModal: () => void;
   setProductFromModal: (b: string, n: string) => void;
 }) => {
-  const allBrandsQuery = getListFilteredFieldsQuery('products', 'brand');
+  const [brands, setBrands] = useState([] as string[]);
 
-  const sortedBrands = () => {
-    if (allBrandsQuery && allBrandsQuery.isSuccess && allBrandsQuery.data) {
-      const allBrands = allBrandsQuery.data;
-      return sortAndUniqList(allBrands);
-    } else {
-      return [];
-    }
-  };
+  const productList = getListQuery('products').data;
+
+  if (productList && brands.length === 0) {
+    const allBrands = Array.from(productList.values()).map((product) => product.brand);
+    setBrands(sortAndUniqList(allBrands));
+  }
 
   const setEffectChipsFromChild = (chips: string[]) => {
     setProduct({ ...product, effects: chips });
@@ -106,7 +104,7 @@ const ProductModal = ({
               id="brand"
               name="Brand"
               value={product.brand}
-              data={sortedBrands()}
+              data={brands}
               onAutoComplete={(event) => {
                 setProduct({
                   ...product,

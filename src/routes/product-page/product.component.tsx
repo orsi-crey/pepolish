@@ -66,7 +66,7 @@ const Product = () => {
   // 4. if not, set users to fake array so we skip this check
   if (bottleList && userList && users.length === 0) {
     const relevantUsers = new Set<string>();
-    bottleList.forEach((bottle, bottleId) => {
+    bottleList.forEach((bottle) => {
       if (bottle.productId === productId) {
         relevantUsers.add(bottle.userId);
       }

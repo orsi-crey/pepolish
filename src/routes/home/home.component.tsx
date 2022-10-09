@@ -30,36 +30,36 @@ const Home = () => {
 
   const homeLinks = () => {
     switch (isLoggedIn) {
-      case authState.LoggedOut:
-        return (
-          <>
-            <div>Hi!</div>
-            <div>
-              <div>
-                <Button theme="primary" themeType="contained" onClick={() => navigate('/sign-in')}>
-                  Click to log in
-                </Button>
-              </div>
-              <MediaContainer>
-                <img src="pepolish.png"></img>
-              </MediaContainer>
-            </div>
-          </>
-        );
-
-      case authState.SignedIn:
-        return (
+    case authState.LoggedOut:
+      return (
+        <>
+          <div>Hi!</div>
           <div>
-            <div>Hi {username}!</div>
-            {productList && <div>Your favorite polishes: </div>}
-            {userdata.favorites.length > 0 ? productList && favoritePolishes() : 'No favorite polishes yet!'}
+            <div>
+              <Button theme="primary" themeType="contained" onClick={() => navigate('/sign-in')}>
+                  Click to log in
+              </Button>
+            </div>
+            <MediaContainer>
+              <img src="pepolish.png"></img>
+            </MediaContainer>
           </div>
-        );
+        </>
+      );
 
-      case authState.Loading:
-        return <div>loading...</div>;
-      default:
-        return;
+    case authState.SignedIn:
+      return (
+        <div>
+          <div>Hi {username}!</div>
+          {productList && <div>Your favorite polishes: </div>}
+          {userdata.favorites.length > 0 ? productList && favoritePolishes() : 'No favorite polishes yet!'}
+        </div>
+      );
+
+    case authState.Loading:
+      return <div>loading...</div>;
+    default:
+      return;
     }
   };
 

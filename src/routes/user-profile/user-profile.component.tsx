@@ -51,7 +51,7 @@ const UserProfile = () => {
       bottleList &&
       bottles.map((bottleId) => {
         const bottle = bottleList.get(bottleId);
-        const product = productList.get(bottle?.productId)
+        const product = productList.get(bottle?.productId);
         return (
           <div key={bottleId}>
             • <Link to={`/bottles/${bottleId}`}>{`${product?.brand} - ${product?.name}`}</Link>
