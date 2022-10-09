@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Button, Form, Select, TextField } from 'react-md';
+import { Link } from 'react-router-dom';
 import { ArrowDropDownSVGIcon } from '@react-md/material-icons';
 import { BottleTableProps } from '../routes/bottle-page/bottle.types';
 import { getListQuery } from '../utils/firestore/firestore.utils';
-import { getAllBrands, getAllDisplaynames, getDisplayName, getNamesOfBrand, getProductBrandAndName, sortAndUniqList } from '../utils/helperFunctions';
+import { getAllBrands, getAllDisplaynames, getDisplayName, getNamesOfBrand, getProductBrandAndName } from '../utils/helperFunctions';
 import ProductModal from './product-modal/product-modal.component';
 
 const BottleTable = ({
@@ -43,7 +44,9 @@ const BottleTable = ({
     <Form>
       <p>Product:</p>
       {!editable ? (
-        <TextField id="productId" name="Product Id" disabled={!editable} value={getProductBrandAndName(productList, bottle.productId)} />
+        <Link id="productId" to={`/products/${bottle.productId}`}>
+          {getProductBrandAndName(productList, bottle.productId)}
+        </Link>
       ) : (
         <>
           (required)
@@ -89,7 +92,9 @@ const BottleTable = ({
       )}
       <p>User:</p>
       {!editable ? (
-        <TextField id="userName" name="Username" disabled={!editable} value={getDisplayName(userList, bottle.userId)} />
+        <Link id="userId" to={`/users/${bottle.userId}`}>
+          {getDisplayName(userList, bottle.userId)}
+        </Link>
       ) : (
         <>
           (required)
@@ -105,12 +110,9 @@ const BottleTable = ({
       )}
       <p>Location User:</p>
       {!editable ? (
-        <TextField
-          id="locationUsername"
-          name="Location Username"
-          disabled={!editable}
-          value={getDisplayName(userList, bottle.locationUserId)}
-        />
+        <Link id="locationUserId" to={`/users/${bottle.locationUserId}`}>
+          {getDisplayName(userList, bottle.locationUserId)}
+        </Link>
       ) : (
         <>
           (required)
@@ -144,7 +146,7 @@ const BottleTable = ({
         id="photoUrl"
         name="Photo URL"
         disabled={!editable}
-        value={bottle.photoUrl || ''} 
+        value={bottle.photoUrl || ''}
         onChange={(event) =>
           setbottle({
             ...bottle,
