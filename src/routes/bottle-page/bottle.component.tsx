@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ArrowBackSVGIcon, Button, Dialog, DialogContent, DialogHeader, DialogTitle, Grid, GridCell, TextIconSpacing } from 'react-md';
 import { DocumentData } from 'firebase/firestore';
@@ -16,10 +16,12 @@ import {
   getProductName,
   getUserIdByDisplayname,
 } from '../../utils/helperFunctions';
+import { authState, UserContext } from '../../contexts/user.context';
 
 const Bottle = () => {
   const navigate = useNavigate();
   const { bottleId } = useParams();
+  const { isLoggedIn } = useContext(UserContext);
   const [editable, setEditable] = useState(false);
   const [bottle, setBottle] = useState({} as DocumentData);
   const [selectedProduct, setSelectedProduct] = useState({} as ProductData);
@@ -97,6 +99,7 @@ const Bottle = () => {
       </PaddedDiv>
       {bottleList && (
         <>
+        {isLoggedIn === authState.SignedIn && (
           <PaddedDiv>
             <EditBottleButtons
               editable={editable}
@@ -106,6 +109,7 @@ const Bottle = () => {
               mutation={mutation}
             />
           </PaddedDiv>
+          )}
           <Grid>
             <GridCell colSpan={7}>
               <BottleTable
