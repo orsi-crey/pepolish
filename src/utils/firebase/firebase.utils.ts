@@ -1,23 +1,6 @@
 import { initializeApp } from 'firebase/app';
-import {
-  createUserWithEmailAndPassword,
-  getAuth,
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-  signOut,
-  User,
-} from 'firebase/auth';
-import {
-  getFirestore,
-  doc,
-  getDoc,
-  setDoc,
-  updateDoc,
-  getDocs,
-  collection,
-  QueryDocumentSnapshot,
-  DocumentData,
-} from 'firebase/firestore';
+import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut, User } from 'firebase/auth';
+import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyB7sKt1z5cSOFJXLCPvG3QAyc4i2R4hEdY',
@@ -29,16 +12,13 @@ const firebaseConfig = {
   measurementId: 'G-ZB8KFHLLMR',
 };
 
-const app = initializeApp(firebaseConfig);
+initializeApp(firebaseConfig);
 
 export const auth = getAuth();
 
 export const db = getFirestore();
 
-export const createUserDocFromAuth = async (
-  userAuth: User,
-  additionalInfo = {}
-) => {
+export const createUserDocFromAuth = async (userAuth: User, additionalInfo = {}) => {
   if (!userAuth) return;
 
   const userDocRef = doc(db, 'users', userAuth.uid);
@@ -65,74 +45,18 @@ export const createUserDocFromAuth = async (
   return userDocRef;
 };
 
-export const getUserDocFromAuth = async (userAuth: User | null) => {
-  if (!userAuth) return;
-
-  const userDocRef = doc(db, 'users', userAuth.uid);
-  const userSnapshot = await getDoc(userDocRef);
-  return userSnapshot.data();
-};
-
-const uploadDocFromAuth = async (userAuth: User | null, data: any) => {
-  if (!userAuth) return;
-
-  const userDocRef = doc(db, 'users', userAuth.uid);
-
-  try {
-    await updateDoc(userDocRef, {
-      ...data,
-    });
-  } catch (error) {
-    alert('error uploading data');
-    console.log('error uploading data: ', error);
-  }
-};
-
-// note: obsolete a query miatt
-export const getProductListDoc = async () => {
-  const productsSnapshot = await getDocs(collection(db, 'products'));
-  const products: DocumentData[] = [];
-  productsSnapshot.forEach((product: QueryDocumentSnapshot) =>
-    products.push({ id: product.id, ...product.data() } as DocumentData)
-  );
-  return products;
-};
-
-// note: obsolete a query miatt
-export const getProductDoc = async (productId: string) => {
-  const productReference = doc(db, 'products', productId);
-  const productSnapshot = await getDoc(productReference);
-  return { id: productSnapshot.id, ...productSnapshot.data() } as DocumentData;
-};
-
-export const createAuthUserWithEmailAndPassword = async (
-  email: string,
-  password: string
-) => {
+export const createAuthUserWithEmailAndPassword = async (email: string, password: string) => {
   if (!email || !password) return;
 
   return await createUserWithEmailAndPassword(auth, email, password);
 };
 
-export const signInAuthUserWithEmailAndPassword = async (
-  email: string,
-  password: string
-) => {
+export const signInAuthUserWithEmailAndPassword = async (email: string, password: string) => {
   if (!email || !password) return;
 
   return await signInWithEmailAndPassword(auth, email, password);
 };
 
-export const onAuthStateChangedListener = (callback: any) =>
-  onAuthStateChanged(auth, callback);
+export const onAuthStateChangedListener = (callback: any) => onAuthStateChanged(auth, callback);
 
 export const signOutUser = async () => signOut(auth);
-
-export const getAllUserData = async () => getUserDocFromAuth(auth.currentUser);
-
-export const uploadDataToUser = async (data: any) =>
-  uploadDocFromAuth(auth.currentUser, data);
-
-export const getProductList = async () => getProductListDoc();
-
-export const getProduct = async (productId: string) => getProductDoc(productId);

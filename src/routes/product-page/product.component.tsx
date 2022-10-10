@@ -11,7 +11,7 @@ import {
   GridCell,
   TextIconSpacing,
 } from 'react-md';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { DocumentData } from 'firebase/firestore';
 
 import ProductTable from '../../components/product-table.component';
@@ -20,13 +20,12 @@ import EditProductButtons from '../../components/edit-product-buttons';
 
 import { PaddedDiv, PaddedMediaContainer, ProductContainer } from './product.styles';
 import { UserContext, authState } from '../../contexts/user.context';
-import { uploadDataToUser } from '../../utils/firebase/firebase.utils';
+import FavoriteToggle from '../../components/favorite-toggle.component';
 
 const Product = () => {
   const navigate = useNavigate();
   const { productId } = useParams();
-  const { isLoggedIn, userdata, setUserdata } = useContext(UserContext);
-  const [isFavorite, setIsFavorite] = useState(false);
+  const { isLoggedIn } = useContext(UserContext);
   const [editable, setEditable] = useState(false);
   const [product, setProduct] = useState({} as DocumentData);
   const [showImageFull, setShowImageFull] = useState(false);
@@ -37,7 +36,7 @@ const Product = () => {
   const productList = productListQuery.data;
   const bottleList = getListQuery('bottles').data;
   const userList = getListQuery('users').data;
-  const mutation = updateItem(productId, 'products');
+  const productMutation = updateItem(productId, 'products');
 
   // get all relevant info and save in state
   if (productList && productId && Object.keys(product).length === 0) {
@@ -64,24 +63,6 @@ const Product = () => {
     }
   }
 
-  useEffect(() => {
-    setIsFavorite(userdata?.favorites?.includes(productId ? productId : ''));
-  }, [isLoggedIn, userdata.favorites]);
-
-  const toggleFavorite = () => {
-    const favorites = userdata?.favorites;
-    const index = favorites.indexOf(productId ? productId : '');
-    if (isFavorite && index !== -1) {
-      setUserdata({ ...userdata, favorites: favorites.splice(index, 1) });
-    }
-    if (!isFavorite && index === -1 && productId) {
-      favorites.push(productId);
-      setUserdata({ ...userdata, favorites: favorites });
-    }
-    uploadDataToUser({ userdata: userdata });
-    setIsFavorite(!isFavorite);
-  };
-
   const productMissingData = () => {
     if (product.brand.length > 0 && product.name.length > 0 && product.color.length > 0) return false;
     else return true;
@@ -104,8 +85,7 @@ const Product = () => {
   const saveClickedFromChild = () => {
     if (productMissingData()) alert('Please fill all required fields before saving!');
     else {
-      mutation && mutation.mutate(product);
-      // it seemed like refetch does nothing?
+      productMutation && productMutation.mutate(product);
       productListQuery?.remove();
       setEditable(false);
     }
@@ -121,16 +101,18 @@ const Product = () => {
 
   return (
     <ProductContainer>
-      <PaddedDiv>
-        <Button themeType="contained" onClick={() => navigate('/products')}>
-          <TextIconSpacing icon={<ArrowBackSVGIcon />}>Back to product list</TextIconSpacing>
-        </Button>
-        {isLoggedIn === authState.SignedIn && (
-          <Button buttonType="icon" themeType="contained" onClick={toggleFavorite}>
-            {isFavorite ? '💔' : '❤️'}
+      <Grid>
+        <GridCell colSpan={11} tablet={{ colSpan: 7 }} phone={{ colSpan: 4 }}>
+          <Button themeType="contained" onClick={() => navigate('/products')}>
+            <TextIconSpacing icon={<ArrowBackSVGIcon />}>Back to product list</TextIconSpacing>
           </Button>
+        </GridCell>
+        {isLoggedIn === authState.SignedIn && (
+          <GridCell colSpan={1} phone={{ colSpan: 4 }} style={{ margin: 'auto' }}>
+            <FavoriteToggle productId={productId || ' '} />
+          </GridCell>
         )}
-      </PaddedDiv>
+      </Grid>
       {productList && (
         <>
           {isLoggedIn === authState.SignedIn && (
@@ -140,7 +122,7 @@ const Product = () => {
                 seteditable={(editable: boolean) => setEditable(editable)}
                 onSaveClicked={saveClickedFromChild}
                 onCancelClicked={cancelClickedFromChild}
-                mutation={mutation}
+                mutation={productMutation}
               />
             </PaddedDiv>
           )}

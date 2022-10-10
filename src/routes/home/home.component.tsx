@@ -1,27 +1,36 @@
 import { Button } from '@react-md/button';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { MediaContainer } from 'react-md';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { authState, UserContext } from '../../contexts/user.context';
 import { getListQuery } from '../../utils/firestore/firestore.utils';
+import { getProductBrandAndName } from '../../utils/helperFunctions';
 import { HomeContainer } from './home.styles';
 
 const Home = () => {
   const navigate = useNavigate();
-  const { isLoggedIn, username, userdata } = useContext(UserContext);
+  const { ownUserId, isLoggedIn } = useContext(UserContext);
+  const [favorites, setFavorites] = useState([]);
+  const [displayName, setDisplayName] = useState('');
+  const hasFavorites = favorites[0] !== ' ' && favorites.length > 0;
 
+  const userList = getListQuery('users').data;
   const productList = getListQuery('products').data;
 
+  if (userList && favorites.length === 0 && displayName.length === 0) {
+    const getOwnUserdata = userList?.get(ownUserId);
+    setFavorites(getOwnUserdata?.userdata?.favorites || [' ']);
+    setDisplayName(getOwnUserdata?.displayName || '');
+  }
+
   const favoritePolishes = () => {
-    console.log(userdata.favorites);
     return (
       productList &&
-      userdata?.favorites?.map((productId) => {
-        const product = productList.get(productId);
+      favorites?.map((productId) => {
         return (
           <div key={productId}>
-            <Link to={`/products/${productId}`}>{`${product?.brand} - ${product?.name}`}</Link>
+            <Link to={`/products/${productId}`}>{getProductBrandAndName(productList, productId)}</Link>
           </div>
         );
       })
@@ -50,9 +59,9 @@ const Home = () => {
     case authState.SignedIn:
       return (
         <div>
-          <div>Hi {username}!</div>
+          <div>Hi {displayName}!</div>
           {productList && <div>Your favorite polishes: </div>}
-          {userdata.favorites.length > 0 ? productList && favoritePolishes() : 'No favorite polishes yet!'}
+          {hasFavorites ? productList && favoritePolishes() : 'No favorite polishes yet!'}
         </div>
       );
 

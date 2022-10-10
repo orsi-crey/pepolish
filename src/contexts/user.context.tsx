@@ -1,71 +1,42 @@
-import { User } from 'firebase/auth';
 import { createContext, ReactNode, useEffect, useState } from 'react';
+import { User } from 'firebase/auth';
 
-import { onAuthStateChangedListener, getUserDocFromAuth } from '../utils/firebase/firebase.utils';
-
-type userData = {
-  name: string,
-  city: string,
-  profilePic: string,
-  favorites: string[]
-}
-
-export const initialUserdata = {
-  name: '',
-  city: '',
-  profilePic: '',
-  favorites: ['']
-};
+import { onAuthStateChangedListener } from '../utils/firebase/firebase.utils';
 
 export enum authState {
   SignedIn,
   LoggedOut,
-  Loading
+  Loading,
 }
 
 export type UserContextType = {
-  username: string | null,
-  setUsername: (value: string) => void,
-  userdata: userData
-  setUserdata: (value: userData) => void,
-  isLoggedIn: authState,
-  setIsLoggedIn: (value: authState) => void,
-  clearUserData: () => void
-}
+  ownUserId: string;
+  setOwnUserId: (value: string) => void;
+  isLoggedIn: authState;
+  setIsLoggedIn: (value: authState) => void;
+};
 
 export const UserContext = createContext<UserContextType>({
-  username: null,
-  setUsername: () => { },
-  userdata: initialUserdata,
-  setUserdata: () => { },
+  ownUserId: ' ',
+  setOwnUserId: () => {},
   isLoggedIn: authState.Loading,
-  setIsLoggedIn: () => { },
-  clearUserData: () => { }
+  setIsLoggedIn: () => {},
 });
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
-  const [username, setUsername] = useState('');
-  const [userdata, setUserdata] = useState(initialUserdata);
+  const [ownUserId, setOwnUserId] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(authState.Loading);
-  const clearUserData = () => {
-    setUsername('');
-    setUserdata(initialUserdata);
-    setIsLoggedIn(authState.LoggedOut);
-  };
 
-  const value = { username, setUsername, userdata, setUserdata, isLoggedIn, setIsLoggedIn, clearUserData };
+  const value = { ownUserId, setOwnUserId, isLoggedIn, setIsLoggedIn };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChangedListener(async (user: User) => {
       if (user) {
-        const userData = await getUserDocFromAuth(user);
-        setUsername(userData?.displayName);
-        setUserdata(userData?.userdata);
+        setOwnUserId(user.uid);
         setIsLoggedIn(authState.SignedIn);
       } else {
         setIsLoggedIn(authState.LoggedOut);
-        setUsername('');
-        setUserdata(initialUserdata);
+        setOwnUserId(' ');
       }
     });
 

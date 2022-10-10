@@ -14,7 +14,7 @@ const SignUpForm = () => {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const { setUsername, setIsLoggedIn } = useContext(UserContext);
+  const { setOwnUserId, setIsLoggedIn } = useContext(UserContext);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -24,11 +24,11 @@ const SignUpForm = () => {
 
       if (userCredential) {
         await createUserDocFromAuth(userCredential.user, { displayName });
-        setUsername(displayName);
+        setOwnUserId(userCredential.user.uid);
         setIsLoggedIn(authState.SignedIn);
         navigate('/');
       }
-    } catch (error: any) {
+    } catch (error) {
       alert('error signing up');
       console.log(error);
     }

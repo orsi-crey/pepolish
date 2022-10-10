@@ -12,7 +12,7 @@ export const ProductContainer = styled.div`
 `;
 
 export const PaddedDiv = styled.div`
-    padding: 5px;
+  padding: 5px;
 `;
 
 export const PaddedMediaContainer = styled(MediaContainer)`

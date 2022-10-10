@@ -1,16 +1,5 @@
-import {
-  useFirestoreCollectionMutation,
-  useFirestoreDocumentMutation,
-  useFirestoreQuery,
-} from '@react-query-firebase/firestore';
-import {
-  collection,
-  doc,
-  DocumentData,
-  DocumentReference,
-  FirestoreError,
-  WithFieldValue,
-} from 'firebase/firestore';
+import { useFirestoreCollectionMutation, useFirestoreDocumentMutation, useFirestoreQuery } from '@react-query-firebase/firestore';
+import { collection, doc, DocumentData, DocumentReference, FirestoreError, WithFieldValue } from 'firebase/firestore';
 import { UseMutationResult } from 'react-query';
 
 import { db } from '../firebase/firebase.utils';
@@ -47,7 +36,9 @@ export const updateItem = (id: string | undefined, collName: string) => {
   }
   const coll = collection(db, collName);
   const ref = doc(coll, id);
-  const mutation = useFirestoreDocumentMutation(ref);
+  const mutation = useFirestoreDocumentMutation(ref, {
+    merge: true,
+  });
 
   return mutation;
 };

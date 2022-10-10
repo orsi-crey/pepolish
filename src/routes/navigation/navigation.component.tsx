@@ -8,22 +8,17 @@ import { NavigationContainer } from './navigation.styles';
 
 
 const Navigation = () => {
-  const { isLoggedIn, clearUserData } = useContext(UserContext);
-
-  const signOutHandler = () => {
-    signOutUser();
-    clearUserData();
-  };
+  const { isLoggedIn } = useContext(UserContext);
 
   const navLinks = () => {
     switch (isLoggedIn) {
     case authState.LoggedOut:
-      return <div><Link to='/sign-in'>Sign in</Link></div>;
+      return <div><Link to='/sign-in'>Sign in</Link> / <Link to='/sign-up'>Sign up</Link></div>;
     case authState.SignedIn:
       return <div className='flex-container'>
         <Link to='/'>🏠 Home</Link>
         <Link to='/my-profile'>📝 My Profile</Link>
-        <Link to='/' onClick={signOutHandler}>👋 Log out</Link>
+        <Link to='/' onClick={() => signOutUser()}>👋 Log out</Link>
       </div>;
     case authState.Loading:
       return <div>loading...</div>;

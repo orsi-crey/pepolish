@@ -4,7 +4,7 @@ import { useState, FormEvent, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { RemoveRedEyeSVGIcon } from '@react-md/material-icons';
 
-import { getUserDocFromAuth, signInAuthUserWithEmailAndPassword } from '../../utils/firebase/firebase.utils';
+import { signInAuthUserWithEmailAndPassword } from '../../utils/firebase/firebase.utils';
 import { UserContext, authState } from '../../contexts/user.context';
 
 import { StyledSignInForm } from './sign-in-form.styles';
@@ -15,7 +15,7 @@ const SignInForm = () => {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const { setUsername, setIsLoggedIn } = useContext(UserContext);
+  const { setOwnUserId, setIsLoggedIn } = useContext(UserContext);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -24,12 +24,11 @@ const SignInForm = () => {
       const userCredential = await signInAuthUserWithEmailAndPassword(email, password);
 
       if (userCredential) {
-        const userData = await getUserDocFromAuth(userCredential.user);
-        setUsername(userData?.displayName);
+        setOwnUserId(userCredential.user.uid);
         setIsLoggedIn(authState.SignedIn);
         navigate('/');
       }
-    } catch (error: any) {
+    } catch (error) {
       alert('error signing in');
       console.log(error);
     }
