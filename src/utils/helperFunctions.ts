@@ -1,12 +1,6 @@
 import { DocumentData } from 'firebase/firestore';
 import { ProductData } from '../routes/bottle-page/bottle.types';
 
-export const sortAndUniqList = (list: string[]) => {
-  return list.sort().filter((item, pos, ary) => {
-    return !pos || item != ary[pos - 1];
-  });
-};
-
 // ---------- things related to users ----------
 export const getDisplayName = (userList: Map<string, DocumentData> | undefined, userId: string): string => {
   return userList?.get(userId)?.displayName || '';

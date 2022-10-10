@@ -38,7 +38,7 @@ const BottleTable = ({
     if (productList && selectedProduct?.brand !== '') {
       setNames(getNamesOfBrand(productList, selectedProduct?.brand));
     }
-  }, [selectedProduct?.brand]);
+  }, [selectedProduct]);
 
   return (
     <Form>
@@ -53,7 +53,7 @@ const BottleTable = ({
           <Select
             id="brand"
             name="Brand"
-            value={selectedProduct?.brand}
+            value={selectedProduct?.brand || ''}
             options={brands}
             onChange={(item) => {
               setselectedproduct({ brand: item, name: '' });
@@ -86,7 +86,10 @@ const BottleTable = ({
                 name: name,
               });
             }}
-            closeModal={() => setIsVisible(false)}
+            closeModal={() => {
+              setIsVisible(false);
+              setBrands([]);
+            }}
           />
         </>
       )}

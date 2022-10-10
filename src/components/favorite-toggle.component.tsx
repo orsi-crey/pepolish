@@ -14,24 +14,24 @@ const FavoriteToggle = ({ productId }: { productId: string }) => {
   const userMutation = updateItem(ownUserId, 'users');
 
   if (isLoggedIn === authState.SignedIn && userList && Object.keys(ownUserData).length === 0) {
-    setOwnUserData({ userdata: { favorites: [] }, ...userList?.get(ownUserId) });
+    setOwnUserData(userList?.get(ownUserId) || {});
   }
-  console.log(ownUserData);
+
   const toggleFavorite = () => {
-    const favorites = ownUserData?.userdata?.favorites;
+    const favorites = ownUserData?.userdata?.favorites || [];
     const index = favorites?.indexOf(productId ? productId : '');
 
     // removing fav
     if (isFavorite && index !== -1) {
       favorites.splice(index, 1);
-      setOwnUserData({ ...ownUserData, userdata: { favorites: favorites } });
     }
     // adding fav
     if (!isFavorite && index === -1 && productId) {
       favorites.push(productId);
-      setOwnUserData({ ...ownUserData, userdata: { favorites: favorites } });
     }
-    userMutation && userMutation.mutate(ownUserData);
+    const userdataToSet = { ...ownUserData, userdata: { ...ownUserData.userdata, favorites: favorites } };
+    userMutation && userMutation.mutate(userdataToSet);
+    setOwnUserData(userdataToSet);
   };
 
   useEffect(() => {
